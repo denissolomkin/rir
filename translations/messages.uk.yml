@@ -26,6 +26,7 @@ title:
   add_comment: Додати коментар
   comment_error: Виникла помилка під час публікації вашого коментаря
   post_new: Створення запису
+  edit_user: Редагування облікового запису
 action:
   show: Показати
   show_post: Показати запис
@@ -44,6 +45,8 @@ action:
   browse_app: Перейти до публічного розділу
   browse_admin: Перейти до панелі керування
   edit_contents: Редагувати зміст
+  change_password: Змiнити пароль
+  edit_user: Редагувати обліковий запис
 delete_post_modal:
   title: Ви впевнені, що хочете видалити цей запис?
   body: Ця дія не може бути скасована.
@@ -63,6 +66,8 @@ label:
   published_at: Опубліковано
   tags: Теги
   actions: Дії
+  fullname: Повне ім'я
+  email: Електронна пошта
 menu:
   toggle_nav: Переключити навігацію
   choose_language: Вибрати мову
@@ -70,11 +75,14 @@ menu:
   back_to_blog: Назад до блогу
   homepage: Головна сторінка
   admin: Панель керування
+  users: Користувачi
   resource:
     list: Реєстр ресурсiв
     meta: Мета ресурсiв
     access_level: Рiвнi доступу
   logout: Вийти
+  login: Ввiйти
+  account: Обліковий запис
   rss: RSS Записів Блогу
   search: Пошук
 resource:
@@ -88,17 +96,13 @@ resource:
     deleted: видалено
     disabled: вимкнуто
     on_moderation: на модерації
-post:
+  search_for: Шукати...
+  search_no_results: Нічого не знайдено
   to_publish_a_comment: опублікувати коментар
   num_comments: '{count, plural, one {# коментар} many {# коментаря} other {# коментарів}}'
   commented_on: прокоментовано
   no_comments: Будьте першими, хто прокоментує цей запис.
-  no_posts_found: Жодного запису не знайдено.
-  created_successfully: Запис успішно створений!
-  updated_successfully: Запис успішно оновлений!
-  deleted_successfully: Запис успішно видалений!
-  search_for: Шукати...
-  search_no_results: Нічого не знайдено
+  no_resources_found: Жодного запису не знайдено.
 notification:
   comment_created:
     0: Ваш запис отримав коментар!
@@ -116,6 +120,12 @@ help:
   reload_fixtures: 'Якщо ці користувачі не працюють, перезавантажте фікстури додатку, виконавши в консолі наступну команду:'
   add_user: 'Якщо ви хочете створити нових користувачів, скористайтеся наступною командою:'
   more_information: Для додаткової інформації зверніться до <a href="https://symfony.com/doc">Symfony документації</a>.
+user:
+  roles:
+    admin: адміністратор
+    author: автор
+    moderator: модератор
+    user: звичайний користувач
 rss:
   title: KPI ресурси блог
   description: Найновіші записи, опубліковані в KPI ресурси блозі

@@ -76,17 +76,26 @@ menu:
   back_to_blog: Назад к блогу
   homepage: Главная страница
   admin: Панель управления
+  users: Пользователи
   resource_list: Реестр ресурсов
-  user: Аккаунт
+  account: Аккаунт
+  login: Войти
   logout: Выйти
   rss: RSS Записей Блога
   search: Поиск
-post:
+resource:
+  status:
+    draft: черновик
+    published: опубликован
+    deleted: удален
+    disabled: отключен
+    on_moderation: на модерации
   to_publish_a_comment: опубликовать комментарий
   num_comments: '{count, plural, one {# комментарий} few {# комментария} other {# комментариев}}'
   commented_on: прокомментировано
   no_comments: Будьте первыми кто прокомментирует эту запись.
-  no_posts_found: Ни одной записи не найдено.
+  no_resources_found: Ни одной записи не найдено.
+  published_successfully: Запись успешно опубликована!
   created_successfully: Запись успешно создана!
   updated_successfully: Запись успешно обновлена!
   deleted_successfully: Запись успешно удалена!

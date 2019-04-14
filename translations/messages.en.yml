@@ -77,16 +77,17 @@ menu:
   homepage: Homepage
   admin: Backend
   resource_list: Resource list
-  user: Account
+  account: Account
   logout: Logout
+  login: Login
   rss: Blog Posts RSS
   search: Search
-post:
+resource:
   to_publish_a_comment: to publish a comment
   num_comments: '{count, plural, one {# comment} other {# comments}}'
   commented_on: commented on
   no_comments: Be the first to comment on this post.
-  no_posts_found: No posts found.
+  no_resources_found: No posts found.
   created_successfully: Post created successfully!
   updated_successfully: Post updated successfully!
   deleted_successfully: Post deleted successfully!

@@ -30,6 +30,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class User implements UserInterface, \Serializable
 {
+
+    public const ROLE_ADMIN = 'user.roles.admin';
+    public const ROLE_MODERATOR = 'user.roles.moderator';
+    public const ROLE_AUTHOR =  'user.roles.author';
+    public const ROLE_USER =  'user.roles.user';
+
     /**
      * @var int
      *

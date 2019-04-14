@@ -26,6 +26,7 @@ class ResourceController extends AbstractController
      *   * 'admin_post_index' is the route with a name that follows the same
      *     structure as the rest of the controllers of this class.
      *
+     * @Route("/", methods={"GET"}, name="admin_index")
      * @Route("/", methods={"GET"}, name="admin_resource_index")
      */
     public function index(EntityManagerInterface $entityManager): Response

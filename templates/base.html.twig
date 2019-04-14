@@ -48,7 +48,6 @@
                                                 <i class="fa fa-lock" aria-hidden="true"></i> {{ 'menu.admin'|trans }}
                                             </a>
                                         </li>
-
                                     {% elseif is_granted('ROLE_MODERATOR') %}
                                         <li>
                                             <a href="{{ path('admin_index') }}">
@@ -64,7 +63,7 @@
                                     {% else %}
                                         <li>
                                             <a href="{{ path('security_login') }}">
-                                                <i class="fa fa-lock" aria-hidden="true"></i> {{ 'menu.admin'|trans }}
+                                                <i class="fa fa-user" aria-hidden="true"></i> {{ 'menu.login'|trans }}
                                             </a>
                                         </li>
                                     {% endif %}
@@ -84,7 +83,7 @@
                                         <ul class="dropdown-menu user" role="menu" aria-labelledby="user">
                                             <li>
                                                 <a href="{{ path('user_edit') }}">
-                                                    <i class="fa fa-edit" aria-hidden="true"></i> {{ 'menu.user'|trans }}
+                                                    <i class="fa fa-edit" aria-hidden="true"></i> {{ 'menu.account'|trans }}
                                                 </a>
                                             </li>
                                             <li class="divider"></li>
