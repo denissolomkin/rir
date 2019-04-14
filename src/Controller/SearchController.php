@@ -11,9 +11,13 @@ use App\Form\Type\DateTimePickerType;
 use App\Repository\ResourceKeywordRepository;
 use App\Repository\ResourceRepository;
 use App\Utils\FormExporter;
+use App\Utils\SearchFormPreparator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\DateIntervalType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,18 +33,23 @@ class SearchController extends AbstractController
     /**
      * @Route("search", methods={"GET"}, name="resource_search")
      */
-    public function search(Request $request, ResourceRepository $repository): Response
+    public function search(Request $request, ResourceRepository $repository, SearchFormPreparator $formPreparator): Response
     {
-        if (!$request->isXmlHttpRequest()) {;
+        if (!$request->isXmlHttpRequest()) {
+            ;
 
             $form = $this->createForm(ResourceType::class, new Resource)
                 ->add('editedAt', DateTimePickerType::class, [
                     'label' => 'label.resource.edited_at',
                     'help' => 'help.resource.edited',
                 ])
-                ->add('createdAt', DateTimePickerType::class, [
+                ->add('createdAt', DateType::class, [
                     'label' => 'label.resource.created_at',
                     'help' => 'help.resource.created',
+                ])
+                ->add('publishedAt', DateIntervalType::class, [
+                    'label' => 'label.resource.published_at',
+                    'help' => 'help.resource.published',
                 ])
                 ->add('id', IntegerType::class, [
                     'attr' => ['autofocus' => true],
@@ -49,15 +58,20 @@ class SearchController extends AbstractController
                 ->add('author', EntityType::class, [
                     'choice_label' => 'fullname',
                     'class' => User::class,
+                    'label' => 'label.resource.author',
                 ])
-                ->add('search', SubmitType::class);
+                ->add('search', SubmitType::class, [
+                    'label' => 'action.search',
+                    ]);
 
             $formView = $form->createView();
+            $exporter = new FormExporter($formView);
 
-            return $this->render('resource/search.html.twig', [
-                'json' => json_encode((new FormExporter($formView))->export(), JSON_UNESCAPED_UNICODE ^ JSON_PRETTY_PRINT),
-                'form' => $formView
-            ]);
+            return $this->render('resource/search.html.twig',
+                [
+                    'json' => $formPreparator->prepare($exporter->export()),
+                    'form' => $formView
+                ]);
         }
 
         $query = $request->query->get('q', '');

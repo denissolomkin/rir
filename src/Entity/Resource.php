@@ -161,6 +161,27 @@ class Resource
     private $editedAt;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $publishedAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $approvedAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $expiredAt;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="string")
@@ -194,25 +215,10 @@ class Resource
      */
     private $accessLevel;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime")
-     */
-    private $approvedAt;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime")
-     */
-    private $expiredAt;
-
     public function __construct()
     {
         $this->createdAt = new \DateTime();
         $this->editedAt = new \DateTime();
-        $this->approvedAt = new \DateTime();
         $this->status = self::STATUS_DRAFT;
 
         $this->keywords = new ArrayCollection();
@@ -506,6 +512,25 @@ class Resource
         $this->editedAt = $editedAt;
         return $this;
     }
+
+    /**
+     * @return \DateTime
+     */
+    public function getPublishedAt(): ?\DateTime
+    {
+        return $this->publishedAt;
+    }
+
+    /**
+     * @param \DateTime $publishedAt
+     * @return Resource
+     */
+    public function setPublishedAt(\DateTime $publishedAt): ?Resource
+    {
+        $this->publishedAt = $publishedAt;
+        return $this;
+    }
+
 
     /**
      * @return string

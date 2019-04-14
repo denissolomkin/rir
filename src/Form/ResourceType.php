@@ -11,6 +11,7 @@ use App\Form\Type\KeywordsInputType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\LanguageType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -48,7 +49,7 @@ class ResourceType extends AbstractType
                 'help' => 'help.resource_size',
                 'label' => 'label.resource.size',
             ])
-            ->add('language', TextType::class, [
+            ->add('language', LanguageType::class, [
                 'help' => 'help.resource_language',
                 'label' => 'label.resource.language',
             ])

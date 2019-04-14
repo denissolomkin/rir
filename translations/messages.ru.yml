@@ -25,10 +25,13 @@ title:
   edit_post: 'Изменение записи #{id, number}'
   add_comment: Добавить комментарий
   comment_error: Произошла ошибка во время публикации вашего комментария
-  edit_user: Изменить пользователя
+  user:
+    edit: Изменить пользователя
+    list: Список пользователей
   change_password: Изменить пароль
   post_new: Создание записи
 action:
+  search: Искать
   show: Показать
   show_post: Показать запись
   show_code: Показать код

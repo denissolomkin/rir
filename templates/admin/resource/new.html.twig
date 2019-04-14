@@ -3,14 +3,14 @@
 {% block body_id 'admin_resource_new' %}
 
 {% block main %}
-    <h1>{{ 'title.resource_new'|trans }}</h1>
+    <h1>{{ 'title.resource.new'|trans }}</h1>
 
     {{ form(form) }}
 
     <a href="{{ path('admin_resource_index') }}" class="btn btn-link">
         <i class="fa fa-list-alt" aria-hidden="true"></i> {{ 'action.back_to_list'|trans }}
     </a>
-    {{ form_end(form) }}
+
 {% endblock %}
 
 {% block sidebar %}

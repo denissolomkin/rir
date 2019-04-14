@@ -25,10 +25,12 @@ title:
   edit_post: 'Edit post #{id, number}'
   add_comment: Add a comment
   comment_error: There was an error publishing your comment
-  edit_user: Edit user
+  user:
+    edit: Edit user
   change_password: Change password
   post_new: Post creation
 action:
+  search: Search
   show: Show
   show_post: Show post
   show_code: Show code

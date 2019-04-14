@@ -24,8 +24,9 @@
                 <div class="navbar navbar-default navbar-static-top" role="navigation">
                     <div class="container">
                         <div class="navbar-header col-md-3 col-lg-2">
-                            <a class="navbar-brand" href="{{ path('homepage') }}">
-                                <i class="fa fa-home" aria-hidden="true"></i> {{ 'menu.homepage'|trans }}
+
+                            <a class="navbar-brand" href="{{ path('resource_search') }}">
+                                <i class="fa fa-search"></i> {{ 'menu.search'|trans }}
                             </a>
 
                             <button type="button" class="navbar-toggle"
@@ -60,6 +61,7 @@
                                                 <i class="fa fa-lock" aria-hidden="true"></i> {{ 'menu.admin'|trans }}
                                             </a>
                                         </li>
+                                    {% elseif is_granted('ROLE_USER') %}
                                     {% else %}
                                         <li>
                                             <a href="{{ path('security_login') }}">
@@ -68,10 +70,6 @@
                                         </li>
                                     {% endif %}
                                 {% endblock %}
-
-                                <li>
-                                    <a href="{{ path('resource_search') }}"> <i class="fa fa-search"></i> {{ 'menu.search'|trans }}</a>
-                                </li>
 
                                 {% if app.user %}
                                     <li class="dropdown">

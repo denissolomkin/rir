@@ -52,7 +52,7 @@ class ResourceController extends AbstractController
 
         $form = $this->createForm(ResourceType::class, $object)
             ->add('saveAndPublish', SubmitType::class)
-            ->add('saveAsDraft', SubmitType::class);;
+            ->add('saveAsDraft', SubmitType::class);
 
         $form->handleRequest($request);
 
@@ -65,7 +65,9 @@ class ResourceController extends AbstractController
             if ($form->get('saveAsDraft')->isClicked()) {
                 $object->setStatus(Resource::STATUS_DRAFT);
             } elseif ($form->get('saveAndPublish')->isClicked()) {
-                $object->setStatus(Resource::STATUS_ON_MODERATION);
+                $object
+                    ->setStatus(Resource::STATUS_ON_MODERATION)
+                    ->setPublishedAt(new \DateTime());
             }
 
             $em = $this->getDoctrine()->getManager();
@@ -84,6 +86,35 @@ class ResourceController extends AbstractController
         ]);
     }
 
+
+    /**
+     * Displays a form to edit an existing Resource entity.
+     *
+     * @Route("/{id<\d+>}/edit",methods={"GET", "POST"}, name="admin_resource_edit")
+     */
+    public function edit(Request $request, Resource $object): Response
+    {
+        $form = $this->createForm(ResourceType::class, $object)
+            ->add('save', SubmitType::class);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $object->setEditedAt(new \DateTime());
+            $this->getDoctrine()->getManager()->flush();
+
+            $this->addFlash('success', 'resource.updated_successfully');
+
+            return $this->redirectToRoute('admin_resource_edit', ['id' => $object->getId()]);
+        }
+
+        return $this->render('admin/resource/edit.html.twig', [
+            'form' => $form->createView(),
+            'item' => $object,
+        ]);
+    }
+
     /**
      * publish an existing Resource entity.
      *
@@ -92,9 +123,11 @@ class ResourceController extends AbstractController
     public function publish(Request $request, Resource $object): Response
     {
 
-        if($object->getStatus() === Resource::STATUS_DRAFT) {
+        if ($object->getStatus() === Resource::STATUS_DRAFT) {
 
-            $object->setStatus(Resource::STATUS_ON_MODERATION);
+            $object
+                ->setStatus(Resource::STATUS_ON_MODERATION)
+                ->setPublishedAt(new \DateTime());
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($object);
@@ -108,27 +141,28 @@ class ResourceController extends AbstractController
     }
 
     /**
-     * Displays a form to edit an existing Resource entity.
+     * approve an existing Resource entity.
      *
-     * @Route("/{id<\d+>}/edit",methods={"GET", "POST"}, name="admin_resource_edit")
+     * @Route("/{id<\d+>}/approve",methods={"GET", "POST"}, name="admin_resource_approve")
      */
-    public function edit(Request $request, Resource $object): Response
+    public function approve(Request $request, Resource $object): Response
     {
-        $form = $this->createForm(ResourceType::class, $object);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+        if ($object->getStatus() === Resource::STATUS_ON_MODERATION) {
 
-            $this->addFlash('success', 'resource.updated_successfully');
+            $object
+                ->setStatus(Resource::STATUS_PUBLISHED)
+                ->setApprovedAt(new \DateTime());
 
-            return $this->redirectToRoute('admin_resource_edit', ['id' => $object->getId()]);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($object);
+            $em->flush();
+
+            $this->addFlash('success', 'resource.approved_successfully');
         }
 
-        return $this->render('admin/resource/edit.html.twig', [
-            'form' => $form->createView(),
-            'post' => $object,
-        ]);
+        return $this->redirectToRoute('admin_resource_index');
+
     }
 
     /**
