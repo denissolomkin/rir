@@ -13,6 +13,12 @@ namespace App\DataFixtures;
 
 use App\Entity\Comment;
 use App\Entity\Post;
+use App\Entity\Resource;
+use App\Entity\ResourceAccessLevel;
+use App\Entity\ResourceDocumentType;
+use App\Entity\ResourcePurpose;
+use App\Entity\ResourceStatus;
+use App\Entity\ResourceType;
 use App\Entity\Tag;
 use App\Entity\User;
 use App\Utils\Slugger;
@@ -34,6 +40,10 @@ class AppFixtures extends Fixture
         $this->loadUsers($manager);
         $this->loadTags($manager);
         $this->loadPosts($manager);
+        $this->loadAccessLevels($manager);
+        $this->loadResourceTypes($manager);
+        $this->loadDocumentTypes($manager);
+        $this->loadPurposes($manager);
     }
 
     private function loadUsers(ObjectManager $manager): void
@@ -60,7 +70,7 @@ class AppFixtures extends Fixture
             $tag->setName($name);
 
             $manager->persist($tag);
-            $this->addReference('tag-'.$name, $tag);
+            $this->addReference('tag-' . $name, $tag);
         }
 
         $manager->flush();
@@ -82,7 +92,7 @@ class AppFixtures extends Fixture
                 $comment = new Comment();
                 $comment->setAuthor($this->getReference('john_user'));
                 $comment->setContent($this->getRandomText(random_int(255, 512)));
-                $comment->setPublishedAt(new \DateTime('now + '.$i.'seconds'));
+                $comment->setPublishedAt(new \DateTime('now + ' . $i . 'seconds'));
 
                 $post->addComment($comment);
             }
@@ -91,6 +101,96 @@ class AppFixtures extends Fixture
         }
 
         $manager->flush();
+    }
+
+
+    private function loadAccessLevels(ObjectManager $manager): void
+    {
+        foreach ($this->getAccessLevelData() as $datum) {
+
+            $object = new ResourceAccessLevel();
+            $object->setName($datum);
+            $manager->persist($object);
+        }
+
+        $manager->flush();
+    }
+
+    private function loadResourceTypes(ObjectManager $manager): void
+    {
+        foreach ($this->getResourceTypeData() as $datum) {
+
+            $object = new ResourceType();
+            $object->setName($datum);
+            $manager->persist($object);
+        }
+
+        $manager->flush();
+    }
+
+    private function loadDocumentTypes(ObjectManager $manager): void
+    {
+        foreach ($this->getDocumentTypeData() as $datum) {
+
+            $object = new ResourceDocumentType();
+            $object->setName($datum);
+            $manager->persist($object);
+        }
+
+        $manager->flush();
+    }
+
+    private function loadPurposes(ObjectManager $manager): void
+    {
+        foreach ($this->getPurposeData() as $datum) {
+
+            $object = new ResourcePurpose();
+            $object->setName($datum);
+            $manager->persist($object);
+        }
+
+        $manager->flush();
+    }
+
+    private function getDocumentTypeData(): array
+    {
+        return [
+            'наказ',
+            'розпорядження',
+            'лист',
+        ];
+    }
+
+    private function getPurposeData(): array
+    {
+        return [
+            'масова інформація',
+            'освіта',
+            'бізнес',
+            'переписка',
+        ];
+    }
+
+    private function getAccessLevelData(): array
+    {
+        return [
+            'відкритий',
+            'дсв',
+            'секретний',
+            'совсекретний',
+        ];
+    }
+
+    private function getResourceTypeData(): array
+    {
+        return [
+            'текст',
+            'електронні таблиці',
+            'рисунок',
+            'відео',
+            'аудіо',
+            'сайт',
+        ];
     }
 
     private function getUserData(): array
@@ -128,7 +228,7 @@ class AppFixtures extends Fixture
                 Slugger::slugify($title),
                 $this->getRandomText(),
                 $this->getPostContent(),
-                new \DateTime('now - '.$i.'days'),
+                new \DateTime('now - ' . $i . 'days'),
                 // Ensure that the first post is written by Jane Doe to simplify tests
                 $this->getReference(['jane_admin', 'tom_admin'][0 === $i ? 0 : random_int(0, 1)]),
                 $this->getRandomTags(),
@@ -179,7 +279,7 @@ class AppFixtures extends Fixture
         $phrases = $this->getPhrases();
         shuffle($phrases);
 
-        while (mb_strlen($text = implode('. ', $phrases).'.') > $maxLength) {
+        while (mb_strlen($text = implode('. ', $phrases) . '.') > $maxLength) {
             array_pop($phrases);
         }
 
@@ -232,6 +332,8 @@ MARKDOWN;
         shuffle($tagNames);
         $selectedTags = \array_slice($tagNames, 0, random_int(2, 4));
 
-        return array_map(function ($tagName) { return $this->getReference('tag-'.$tagName); }, $selectedTags);
+        return array_map(function ($tagName) {
+            return $this->getReference('tag-' . $tagName);
+        }, $selectedTags);
     }
 }

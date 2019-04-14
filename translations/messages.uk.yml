@@ -1,0 +1,121 @@
+note: ПРИМІТКА
+tip: ПОРАДА
+not_available: Недоступно
+mit_license: MIT Ліцензія
+http_error:
+  name: Помилка {status_code, number}
+  description: Виникла невідма помилка (HTTP {status_code, number}), котра завадила виконати ваш запит.
+  suggestion: Спробуйте завантажити цю сторінку знову через декілька хвилин або <a href="{url}">поверніться на головну сторінку</a>.
+http_error_403:
+  description: У вас немає дозволу на доступ до цього ресурсу.
+  suggestion: Зробіть запит на доступ до цього ресурсу у вашого менеджера або системного адміністратора.
+http_error_404:
+  description: Ми не змогли знайти сторінку що ви запросили.
+  suggestion: Перевірте коректність введеного URL або <a href="{url}">поверніться на головну сторінку</a>.
+http_error_500:
+  description: Виникла внутрішня помилка сервера.
+  suggestion: Спробуйте завантажити цю сторінку знову через декілька хвилин або <a href="{url}">поверніться на головну сторінку</a>.
+title:
+  homepage: Ласкаво просимо до <strong>Symfony Demo</strong> додатку
+  source_code: Вихідний код, який використовувався для побудови цієї сторінки
+  controller_code: Код контролеру
+  twig_template_code: Код шаблону Twig
+  login: Авторизація
+  post_list: Список записів
+  edit_post: 'Редагування запису #{id, number}'
+  add_comment: Додати коментар
+  comment_error: Виникла помилка під час публікації вашого коментаря
+  post_new: Створення запису
+action:
+  show: Показати
+  show_post: Показати запис
+  show_code: Показати
+  create: Створити новий запис
+  edit: Редагувати
+  publish: Опубліковати
+  delete: Видалити
+  edit_post: Редагувати запис
+  save: Зберегти зміни
+  delete_post: Видалити запис
+  create_post: Створити новий запис
+  back_to_list: Назад до списку записів
+  publish_comment: Опублікувати коментар
+  sign_in: Ввійти
+  browse_app: Перейти до публічного розділу
+  browse_admin: Перейти до панелі керування
+  edit_contents: Редагувати зміст
+delete_post_modal:
+  title: Ви впевнені, що хочете видалити цей запис?
+  body: Ця дія не може бути скасована.
+label:
+  delete: Видалити запис
+  cancel: Скасувати
+  create: Створити запис
+  save_and_create_new: Зберегти та створити новий
+  title: Назва
+  author: Автор
+  author_email: Email автора
+  username: Логін
+  password: Пароль
+  role: Роль
+  content: Зміст
+  summary: Короткий зміст
+  published_at: Опубліковано
+  tags: Теги
+  actions: Дії
+menu:
+  toggle_nav: Переключити навігацію
+  choose_language: Вибрати мову
+  post_list: Список записів
+  back_to_blog: Назад до блогу
+  homepage: Головна сторінка
+  admin: Панель керування
+  resource:
+    list: Реєстр ресурсiв
+    meta: Мета ресурсiв
+    access_level: Рiвнi доступу
+  logout: Вийти
+  rss: RSS Записів Блогу
+  search: Пошук
+resource:
+  published_successfully: Запис успішно опублікуваний!
+  created_successfully: Запис успішно створений!
+  updated_successfully: Запис успішно оновлений!
+  deleted_successfully: Запис успішно видалений!
+  status:
+    draft: чернетка
+    published: опублікувано
+    deleted: видалено
+    disabled: вимкнуто
+    on_moderation: на модерації
+post:
+  to_publish_a_comment: опублікувати коментар
+  num_comments: '{count, plural, one {# коментар} many {# коментаря} other {# коментарів}}'
+  commented_on: прокоментовано
+  no_comments: Будьте першими, хто прокоментує цей запис.
+  no_posts_found: Жодного запису не знайдено.
+  created_successfully: Запис успішно створений!
+  updated_successfully: Запис успішно оновлений!
+  deleted_successfully: Запис успішно видалений!
+  search_for: Шукати...
+  search_no_results: Нічого не знайдено
+notification:
+  comment_created:
+    0: Ваш запис отримав коментар!
+    description: Ваш запис "{title}" отримав новий коментар. Ви можете прочитати цей коментар, перейшовши за <a href="{link}">цим посиланням</a>
+help:
+  app_description: Цей <strong>демо додаток</strong> створено на основі Symfony фреймворку для того, щоб показати рекомендований спосіб розробки Symfony додатків.
+  show_code: Натисніть на цю кнопку для перегляду вихідного коду <strong>контролеру</strong> та <strong>шаблону</strong>, які використовувалися для побудови цієї сторінки.
+  browse_app: Перейти до <strong>публічного розділу</strong> демо додатку.
+  browse_admin: Перейти до <strong>панелі керування</strong> демо додатку.
+  login_users: Використовуйте будь-якого з наступних користувачів
+  role_user: звичайний користувач
+  role_admin: адміністратор
+  role_author: автор
+  role_moderator: модератор
+  reload_fixtures: 'Якщо ці користувачі не працюють, перезавантажте фікстури додатку, виконавши в консолі наступну команду:'
+  add_user: 'Якщо ви хочете створити нових користувачів, скористайтеся наступною командою:'
+  more_information: Для додаткової інформації зверніться до <a href="https://symfony.com/doc">Symfony документації</a>.
+rss:
+  title: KPI ресурси блог
+  description: Найновіші записи, опубліковані в KPI ресурси блозі

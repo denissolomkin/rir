@@ -18,14 +18,25 @@
 {% endblock %}
 
 {% block header_navigation_links %}
+
     <li>
-        <a href="{{ path('admin_post_index') }}">
-            <i class="fa fa-list-alt" aria-hidden="true"></i> {{ 'menu.post_list'|trans }}
+        <a href="{{ path('admin_resource_index') }}">
+            <i class="fa fa-list-alt" aria-hidden="true"></i> {{ 'menu.resource.list'|trans }}
         </a>
     </li>
-    <li>
-        <a href="{{ path('blog_index') }}">
-            <i class="fa fa-home" aria-hidden="true"></i> {{ 'menu.back_to_blog'|trans }}
+
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" id="meta">
+            <i class="fa fa-tags" aria-hidden="true"></i></i> {{ 'menu.resource.meta'|trans }}
+            <span class="caret"></span>
+            <span class="sr-only">{{ 'menu.resource.meta'|trans }}</span>
         </a>
+        <ul class="dropdown-menu meta" role="menu" aria-labelledby="meta">
+            <li>
+                <a href="{{ path('admin_resource_access_level_index') }}">
+                    <i class="fa fa-edit" aria-hidden="true"></i> {{ 'menu.resource.access_level'|trans }}
+                </a>
+            </li>
+        </ul>
     </li>
 {% endblock %}

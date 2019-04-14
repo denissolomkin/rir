@@ -8,8 +8,8 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <title>{% block title %}Symfony Demo application{% endblock %}</title>
-        <link rel="alternate" type="application/rss+xml" title="{{ 'rss.title'|trans }}" href="{{ path('blog_rss') }}">
+        <title>{% block title %}The Dynamic Register of Electronic Informational Resources{% endblock %}</title>
+        <link rel="alternate" type="application/rss+xml" title="{{ 'rss.title'|trans }}" href="{{ path('resource_rss') }}">
         {% block stylesheets %}
             {{ encore_entry_link_tags('css/app') }}
         {% endblock %}
@@ -25,7 +25,7 @@
                     <div class="container">
                         <div class="navbar-header col-md-3 col-lg-2">
                             <a class="navbar-brand" href="{{ path('homepage') }}">
-                                Symfony Demo
+                                <i class="fa fa-home" aria-hidden="true"></i> {{ 'menu.homepage'|trans }}
                             </a>
 
                             <button type="button" class="navbar-toggle"
@@ -41,15 +41,29 @@
                             <ul class="nav navbar-nav navbar-right">
 
                                 {% block header_navigation_links %}
-                                    <li>
-                                        <a href="{{ path('blog_index') }}">
-                                            <i class="fa fa-home" aria-hidden="true"></i> {{ 'menu.homepage'|trans }}
-                                        </a>
-                                    </li>
 
                                     {% if is_granted('ROLE_ADMIN') %}
                                         <li>
-                                            <a href="{{ path('admin_post_index') }}">
+                                            <a href="{{ path('admin_index') }}">
+                                                <i class="fa fa-lock" aria-hidden="true"></i> {{ 'menu.admin'|trans }}
+                                            </a>
+                                        </li>
+
+                                    {% elseif is_granted('ROLE_MODERATOR') %}
+                                        <li>
+                                            <a href="{{ path('admin_index') }}">
+                                                <i class="fa fa-lock" aria-hidden="true"></i> {{ 'menu.admin'|trans }}
+                                            </a>
+                                        </li>
+                                    {% elseif is_granted('ROLE_AUTHOR') %}
+                                        <li>
+                                            <a href="{{ path('admin_resource_index') }}">
+                                                <i class="fa fa-lock" aria-hidden="true"></i> {{ 'menu.admin'|trans }}
+                                            </a>
+                                        </li>
+                                    {% else %}
+                                        <li>
+                                            <a href="{{ path('security_login') }}">
                                                 <i class="fa fa-lock" aria-hidden="true"></i> {{ 'menu.admin'|trans }}
                                             </a>
                                         </li>
@@ -57,7 +71,7 @@
                                 {% endblock %}
 
                                 <li>
-                                    <a href="{{ path('blog_search') }}"> <i class="fa fa-search"></i> {{ 'menu.search'|trans }}</a>
+                                    <a href="{{ path('resource_search') }}"> <i class="fa fa-search"></i> {{ 'menu.search'|trans }}</a>
                                 </li>
 
                                 {% if app.user %}
@@ -128,19 +142,18 @@
             <footer>
                 <div class="container">
                     <div class="row">
-                        <div id="footer-copyright" class="col-md-6">
-                            <p>&copy; {{ 'now'|date('Y') }} - The Symfony Project</p>
-                            <p>{{ 'mit_license'|trans }}</p>
+                        <div id="footer-copyright" class="col-md-10">
+                            <p>&copy; {{ 'now'|date('Y') }} - The National Technical University of Ukraine "Igor Sikorsky Kyiv Polytechnic Institute"</p>
                         </div>
-                        <div id="footer-resources" class="col-md-6">
+                        <div id="footer-resources" class="col-md-2">
                             <p>
-                                <a href="https://twitter.com/symfony" title="Symfony Twitter">
+                                <a href="https://twitter.com/kpiua" title="KPI Twitter">
                                     <i class="fa fa-twitter" aria-hidden="true"></i>
                                 </a>
-                                <a href="https://www.facebook.com/SensioLabs" title="SensioLabs Facebook">
+                                <a href="https://www.facebook.com/ntuu.kpi/" title="KPI Facebook">
                                     <i class="fa fa-facebook" aria-hidden="true"></i>
                                 </a>
-                                <a href="https://symfony.com/blog/" title="Symfony Blog">
+                                <a href="https://kpi.ua/rss.xml" title="KPI Blog">
                                     <i class="fa fa-rss" aria-hidden="true"></i>
                                 </a>
                             </p>

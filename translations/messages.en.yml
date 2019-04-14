@@ -1,0 +1,122 @@
+note: NOTE
+tip: TIP
+not_available: Not available
+mit_license: MIT License
+http_error:
+  name: Error {status_code, number}
+  description: There was an unknown error (HTTP {status_code, number}) that prevented to complete your request.
+  suggestion: Try loading this page again in some minutes or <a href="{url}">go back to the homepage</a>.
+http_error_403:
+  description: You don't have permission to access to this resource.
+  suggestion: Ask your manager or system administrator to grant you access to this resource.
+http_error_404:
+  description: We couldn't find the page you requested.
+  suggestion: Check out any misspelling in the URL or <a href="{url}">go back to the homepage</a>.
+http_error_500:
+  description: There was an internal server error.
+  suggestion: Try loading this page again in some minutes or <a href="{url}">go back to the homepage</a>.
+title:
+  homepage: Welcome to the <strong>Symfony Demo</strong> application
+  source_code: Source code used to render this page
+  controller_code: Controller code
+  twig_template_code: Twig template code
+  login: Secure Sign in
+  post_list: Post List
+  edit_post: 'Edit post #{id, number}'
+  add_comment: Add a comment
+  comment_error: There was an error publishing your comment
+  edit_user: Edit user
+  change_password: Change password
+  post_new: Post creation
+action:
+  show: Show
+  show_post: Show post
+  show_code: Show code
+  edit: Edit
+  edit_post: Edit post
+  save: Save changes
+  delete_post: Delete post
+  create_post: Create a new post
+  back_to_list: Back to the post list
+  publish_comment: Publish comment
+  sign_in: Sign in
+  browse_app: Browse application
+  browse_admin: Browse backend
+  edit_user: Edit user
+  change_password: Change password
+  edit_contents: Edit contents
+delete_post_modal:
+  title: Are you sure you want to delete this post?
+  body: This action cannot be undone.
+label:
+  delete_post: Delete post
+  cancel: Cancel
+  create_post: Create post
+  save_and_create_new: Save and create new
+  title: Title
+  author: Author
+  author_email: Author email
+  username: Username
+  fullname: Fullname
+  email: Email
+  password: Password
+  current_password: Current password
+  new_password: New password
+  new_password_confirm: Confirm password
+  role: Role
+  content: Content
+  summary: Summary
+  published_at: Published at
+  tags: Tags
+  actions: Actions
+menu:
+  toggle_nav: Toggle navigation
+  choose_language: Choose language
+  post_list: Post list
+  back_to_blog: Back to blog
+  homepage: Homepage
+  admin: Backend
+  resource_list: Resource list
+  user: Account
+  logout: Logout
+  rss: Blog Posts RSS
+  search: Search
+post:
+  to_publish_a_comment: to publish a comment
+  num_comments: '{count, plural, one {# comment} other {# comments}}'
+  commented_on: commented on
+  no_comments: Be the first to comment on this post.
+  no_posts_found: No posts found.
+  created_successfully: Post created successfully!
+  updated_successfully: Post updated successfully!
+  deleted_successfully: Post deleted successfully!
+  search_for: Search for...
+  search_no_results: No results found
+user:
+  updated_successfully: User updated successfully!
+notification:
+  comment_created:
+    0: Your post received a comment!
+    description: Your post "{title}" has received a new comment. You can read the comment by following <a href="{link}">this link</a>
+help:
+  app_description: This is a <strong>demo application</strong> built in the Symfony Framework to illustrate the recommended way of developing Symfony applications.
+  show_code: Click on this button to show the source code of the <strong>Controller</strong> and <strong>template</strong> used to render this page.
+  browse_app: Browse the <strong>public section</strong> of the demo application.
+  browse_admin: Browse the <strong>admin backend</strong> of the demo application.
+  login_users: Try either of the following users
+  role_user: regular user
+  role_admin: administrator
+  role_author: author
+  role_moderator: moderator
+  reload_fixtures: 'If these users don''t work, reload application fixtures by running this command from the terminal:'
+  add_user: 'If you want to create new users, run this other command:'
+  more_information: For more information, check out the <a href="https://symfony.com/doc">Symfony doc</a>.
+  post_summary: Summaries can't contain Markdown or HTML contents; only plain text.
+  post_publication: Set the date in the future to schedule the blog post publication.
+  post_content: Use Markdown to format the blog post contents. HTML is allowed too.
+  comment_content: Comments not complying with our Code of Conduct will be moderated.
+info:
+  change_password: After changing your password, you will be logged out of the application.
+rss:
+  title: KPI resources blog
+  description: Most recent posts published on the KPI resources blog

@@ -12,6 +12,8 @@
 namespace App\EventSubscriber;
 
 use App\Entity\Comment;
+use App\Entity\Resource;
+use App\Entity\ResourceComment;
 use App\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
@@ -47,18 +49,20 @@ class CommentNotificationSubscriber implements EventSubscriberInterface
 
     public function onCommentCreated(GenericEvent $event): void
     {
-        /** @var Comment $comment */
+        /** @var ResourceComment $comment */
         $comment = $event->getSubject();
-        $post = $comment->getPost();
 
-        $linkToPost = $this->urlGenerator->generate('blog_post', [
-            'slug' => $post->getSlug(),
+        /** @var Resource $resource */
+        $resource = $comment->getResource();
+
+        $linkToPost = $this->urlGenerator->generate('resource_item', [
+            'id' => $resource->getId(),
             '_fragment' => 'comment_'.$comment->getId(),
         ], UrlGeneratorInterface::ABSOLUTE_URL);
 
         $subject = $this->translator->trans('notification.comment_created');
         $body = $this->translator->trans('notification.comment_created.description', [
-            '%title%' => $post->getTitle(),
+            '%title%' => $resource->getTitle(),
             '%link%' => $linkToPost,
         ]);
 
@@ -67,7 +71,7 @@ class CommentNotificationSubscriber implements EventSubscriberInterface
         // See https://symfony.com/doc/current/email.html#sending-emails
         $message = (new \Swift_Message())
             ->setSubject($subject)
-            ->setTo($post->getAuthor()->getEmail())
+            ->setTo($resource->getAuthor()->getEmail())
             ->setFrom($this->sender)
             ->setBody($body, 'text/html')
         ;

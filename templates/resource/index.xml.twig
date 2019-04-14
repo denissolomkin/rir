@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+    <channel>
+        <title>{{ 'rss.title'|trans }}</title>
+        <description>{{ 'rss.description'|trans }}</description>
+        <pubDate>{{ 'now'|date('r', timezone='GMT') }}</pubDate>
+        <lastBuildDate>{{ (list|last).publishedAt|default('now')|date('r', timezone='GMT') }}</lastBuildDate>
+        <link>{{ url('resource_index') }}</link>
+        <language>{{ app.request.locale }}</language>
+
+        {% for item in list %}
+            <item>
+                <title>{{ item.title }}</title>
+                <description>{{ item.annotation }}</description>
+                <link>{{ url('resource_item', {'id': item.id}) }}</link>
+                <guid>{{ url('resource_item', {'id': item.id}) }}</guid>
+                <pubDate>{{ item.createdAt|date(format='r', timezone='GMT') }}</pubDate>
+                <author>{{ item.author.email }}</author>
+                {% for keyword in item.keywords %}
+                    <category>{{ keyword.name }}</category>
+                {% endfor %}
+            </item>
+        {% endfor %}
+    </channel>
+</rss>

@@ -1,0 +1,122 @@
+note: ПРИМЕЧАНИЕ
+tip: СОВЕТ
+not_available: Недоступно
+mit_license: MIT Лицензия
+http_error:
+  name: Ошибка {status_code, number}
+  description: Произошла неизвестная ошибка (HTTP {status_code, number}), которая помешала выполнить ваш запрос.
+  suggestion: Попробуйте загрузить эту страницу снова через несколько минут или <a href="{url}">вернитесь на главную страницу</a>.
+http_error_403:
+  description: У вас нет разрешения на доступ к этому ресурсу.
+  suggestion: Запросите доступ к этому ресурсу у вашего менеджера или системного администратора.
+http_error_404:
+  description: Мы не смогли найти запрашиваемую вами страницу.
+  suggestion: Проверьте корректность введенного URL или <a href="{url}">вернитесь на главную страницу</a>.
+http_error_500:
+  description: Произошла внутренняя ошибка сервера.
+  suggestion: Попробуйте загрузить эту страницу снова через несколько минут или <a href="{url}">вернитесь на главную страницу</a>.
+title:
+  homepage: Добро пожаловать в <strong>Symfony Demo</strong> приложение
+  source_code: Исходный код, который использовался для отображения этой страницы
+  controller_code: Код контроллера
+  twig_template_code: Код шаблона Twig
+  login: Авторизация
+  post_list: Список записей
+  edit_post: 'Изменение записи #{id, number}'
+  add_comment: Добавить комментарий
+  comment_error: Произошла ошибка во время публикации вашего комментария
+  edit_user: Изменить пользователя
+  change_password: Изменить пароль
+  post_new: Создание записи
+action:
+  show: Показать
+  show_post: Показать запись
+  show_code: Показать код
+  edit: Изменить
+  edit_post: Изменить запись
+  save: Сохранить изменения
+  delete_post: Удалить запись
+  create_post: Создать новую запись
+  back_to_list: Назад к списку записей
+  publish_comment: Опубликовать комментарий
+  sign_in: Войти
+  browse_app: Перейти в публичный раздел
+  browse_admin: Перейти в панель управления
+  edit_user: Изменить пользователя
+  change_password: Изменить пароль
+  edit_contents: Изменить содержание
+delete_post_modal:
+  title: Вы уверены, что хотите удалить эту запись?
+  body: Это действие не может быть отменено.
+label:
+  delete_post: Удалить запись
+  cancel: Отменить
+  create_post: Создать запись
+  save_and_create_new: Сохранить и создать новую
+  title: Название
+  author: Автор
+  author_email: Email автора
+  username: Логин
+  fullname: Полное имя
+  email: Email
+  password: Пароль
+  current_password: Текущий пароль
+  new_password: Новый пароль
+  new_password_confirm: Подтвердите пароль
+  role: Роль
+  content: Содержание
+  summary: Краткое содержание
+  published_at: Опубликовано
+  tags: Теги
+  actions: Действия
+menu:
+  toggle_nav: Переключить навигацию
+  choose_language: Выбрать язык
+  post_list: Список записей
+  back_to_blog: Назад к блогу
+  homepage: Главная страница
+  admin: Панель управления
+  resource_list: Реестр ресурсов
+  user: Аккаунт
+  logout: Выйти
+  rss: RSS Записей Блога
+  search: Поиск
+post:
+  to_publish_a_comment: опубликовать комментарий
+  num_comments: '{count, plural, one {# комментарий} few {# комментария} other {# комментариев}}'
+  commented_on: прокомментировано
+  no_comments: Будьте первыми кто прокомментирует эту запись.
+  no_posts_found: Ни одной записи не найдено.
+  created_successfully: Запись успешно создана!
+  updated_successfully: Запись успешно обновлена!
+  deleted_successfully: Запись успешно удалена!
+  search_for: Искать запись...
+  search_no_results: Ничего не найдено
+user:
+  updated_successfully: Информация о пользователе успешно обновлена!
+notification:
+  comment_created:
+    0: Ваша запись получила комментарий!
+    description: Ваша запись "{title}" получила новый комментарий. Вы можете прочесть этот коментарий, перейдя по <a href="{link}">этой ссылке</a>
+help:
+  app_description: Это <strong>демо приложение</strong> создано на основе Symfony фреймворка для того, чтобы показать рекомендованный способ разработки Symfony приложений.
+  show_code: Нажмите на эту кнопку для просмотра исходного кода <strong>Контроллера</strong> и <strong>шаблона</strong>, которые использовались для отображения этой страницы.
+  browse_app: Перейти в <strong>публичный раздел</strong> демо приложения.
+  browse_admin: Перейти в <strong>панель управления</strong> демо приложения.
+  login_users: Используйте любого из следующих пользователей
+  role_user: обычный пользователь
+  role_admin: администратор
+  role_author: автор
+  role_moderator: модератор
+  reload_fixtures: 'Если эти пользователи не работают, перезагрузите фикстуры приложения, выполнив в консоли следующую команду:'
+  add_user: 'Если вы хотите создать новых пользователей, воспользуйтесь следующей командой:'
+  more_information: Для дополнительной информации обратитесь к <a href="https://symfony.com/doc">Symfony документации</a>.
+  post_summary: В кратком содержании не допускается использование Markdown разметки и HTML-тегов, только простой текст.
+  post_publication: Установите дату в будущем, чтобы запланировать публикацию поста в блоге.
+  post_content: Используйте Markdown разметку для оформления записи. HTML тоже разрешён.
+  comment_content: Комментарии, не соответствующие нашему Кодексу поведения, будут модерироваться.
+info:
+  change_password: После изменения пароля Вам потребуется заново авторизоваться в приложении.
+rss:
+  title: KPI ресурсы блог
+  description: Самые последние записи, опубликованные в KPI ресурсы блоге

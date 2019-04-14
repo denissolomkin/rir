@@ -53,4 +53,6 @@ security:
         - { path: '^/(%app_locales%)/admin', roles: ROLE_ADMIN }
 
     role_hierarchy:
-        ROLE_ADMIN: ROLE_USER
+        ROLE_ADMIN: ROLE_MODERATOR
+        ROLE_MODERATOR: ROLE_AUTHOR
+        ROLE_AUTHOR: ROLE_USER
