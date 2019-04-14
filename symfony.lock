@@ -338,6 +338,9 @@
     "symfony/security-http": {
         "version": "4.2-dev"
     },
+    "symfony/serializer": {
+        "version": "v4.2.5"
+    },
     "symfony/stopwatch": {
         "version": "4.2-dev"
     },

@@ -216,12 +216,13 @@ class Resource
         $this->status = self::STATUS_DRAFT;
 
         $this->keywords = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     /**
      * @return int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -308,7 +309,7 @@ class Resource
     /**
      * @return User
      */
-    public function getAuthor(): User
+    public function getAuthor(): ?User
     {
         return $this->author;
     }

@@ -67,31 +67,4 @@ class ResourceController extends AbstractController
 
         return $this->render('resource/item.html.twig', ['item' => $resource]);
     }
-
-    /**
-     * @Route("/search", methods={"GET"}, name="resource_search")
-     */
-    public function search(Request $request, ResourceRepository  $repository): Response
-    {
-        if (!$request->isXmlHttpRequest()) {
-            return $this->render('resource/search.html.twig');
-        }
-
-        $query = $request->query->get('q', '');
-        $limit = $request->query->get('l', 10);
-        $foundResources = $repository->findBySearchQuery($query, $limit);
-
-        $results = [];
-        foreach ($foundResources as $resource) {
-            $results[] = [
-                'title' => htmlspecialchars($resource->getTitle(), ENT_COMPAT | ENT_HTML5),
-                'date' => $resource->getCreatedAt()->format('M d, Y'),
-                'author' => htmlspecialchars($resource->getAuthor()->getFullName(), ENT_COMPAT | ENT_HTML5),
-                'summary' => htmlspecialchars($resource->getAnnotation(), ENT_COMPAT | ENT_HTML5),
-                'url' => $this->generateUrl('resource_item', ['id' => $resource->getId()]),
-            ];
-        }
-
-        return $this->json($results);
-    }
 }
