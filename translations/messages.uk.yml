@@ -30,6 +30,11 @@ title:
     new: Створення ресурсу
     list: Список ресурсів
     edit: 'Редагування ресурсу #%id%'
+    media_type:
+      list: Редагування типiв ресурсу
+    access_level:
+      list: Список рiвнiв доступу
+      edit: Редагування рiвня доступу
 action:
   search: Шукати
   show: Показати
@@ -107,7 +112,7 @@ menu:
     meta: Атрибути
     access_level: Рiвнi доступу
     document_type: Вид документу
-    type: Тип
+    media_type: Тип ресурсу
     purpose: Призначення
     keyword: Ключові слова
   logout: Вийти

@@ -39,7 +39,7 @@ action:
   save: Save changes
   delete_post: Delete post
   create_post: Create a new post
-  back_to_list: Back to the post list
+  back_to_list: Back to the list
   publish_comment: Publish comment
   sign_in: Sign in
   browse_app: Browse application

@@ -1,0 +1,89 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body_id 'admin_resource_media_type_index' %}
+
+{% block main %}
+    <h1>{{ 'title.resource.media_type.list'|trans }}</h1>
+
+    <style>
+        .card {
+            width: 15%;
+            display: table-cell;
+        }
+
+        .card-header {
+            padding: .75rem 1.25rem;
+            margin-bottom: 0;
+            background-color: rgba(0, 0, 0, .03);
+            border-bottom: 1px solid rgba(0, 0, 0, .125);
+        }
+
+        ul.sortable {
+            font-size: inherit;
+            min-height: 50px;
+        }
+
+        ul.sortable li {
+            cursor: move;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script>
+        $(function () {
+            $("ul.sortable").sortable({
+                connectWith: "ul",
+                dropOnEmpty: true
+            }).disableSelection();
+
+
+            $(".save").on('click', function () {
+
+                let save = {};
+                let list = $('ul.sortable').get();
+                for (let ul in list) {
+
+                    ext = [];
+                    for (let li in list[ul].children) {
+                        if (list[ul].children.hasOwnProperty(li)) {
+                            ext.push(list[ul].children[li].getAttribute('data-id'));
+                        }
+                    }
+                    save[list[ul].getAttribute('data-id')] = ext;
+                }
+                $.post('{{ path('admin_resource_media_type_save') }}', {types: save});
+            });
+        });
+    </script>
+
+    {% if list is not empty %}
+        <div>
+            {% for type in list %}
+                <div class="card">
+                    <div class="card-header">
+                        {{ type.name }}
+                    </div>
+
+                    <ul class="sortable list-group list-group-flush" data-id="{{ type.id }}">
+                        {% for extension in type.extensions %}
+                            <li class="list-group-item" data-id="{{ extension.id }}">{{ extension.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+        <a href="#" class="btn btn-sm btn-primary save">
+            <i class="fa fa-save" aria-hidden="true"></i> Зберегти
+        </a>
+    {% else %}
+        {{ 'item.no_resource_media_types_found'|trans }}
+    {% endif %}
+{% endblock %}
+
+{% block sidebar %}
+
+    {{ parent() }}
+
+    {{ (_self) }}
+{% endblock %}

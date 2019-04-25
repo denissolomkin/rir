@@ -2,27 +2,18 @@
 
 namespace App\Controller;
 
-use App\Entity\Resource;
-use App\Entity\ResourceKeyword;
+use App\Entity\SearchResource;
 use App\Entity\User;
-use App\Form\ResourceType;
-use App\Form\SearchType;
-use App\Form\Type\DateTimePickerType;
-use App\Repository\ResourceKeywordRepository;
+use App\Form\SearchResourceType;
 use App\Repository\ResourceRepository;
+use App\Repository\SearchResourceRepository;
 use App\Utils\FormExporter;
 use App\Utils\SearchFormPreparator;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\DateIntervalType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @Route("/")
@@ -31,48 +22,57 @@ class SearchController extends AbstractController
 {
 
     /**
-     * @Route("search", methods={"GET"}, name="resource_search")
+     * @Route("search", methods={"GET","POST"}, name="resource_search", condition="!request.isXmlHttpRequest()")
      */
-    public function search(Request $request, ResourceRepository $repository, SearchFormPreparator $formPreparator): Response
+    public function search(
+        Request $request,
+        ResourceRepository $repository,
+        SearchResourceRepository $searchResourceRepository,
+        SearchFormPreparator $formPreparator,
+        UserInterface $user
+    ): Response
     {
-        if (!$request->isXmlHttpRequest()) {
-            ;
+        /** @var User $user*/
+        $searchResource = $searchResourceRepository->find($user->getId()) ?? new SearchResource();
+        $form = $this->createForm(SearchResourceType::class, $searchResource);
 
-            $form = $this->createForm(ResourceType::class, new Resource)
-                ->add('editedAt', DateTimePickerType::class, [
-                    'label' => 'label.resource.edited_at',
-                    'help' => 'help.resource.edited',
-                ])
-                ->add('createdAt', DateType::class, [
-                    'label' => 'label.resource.created_at',
-                    'help' => 'help.resource.created',
-                ])
-                ->add('publishedAt', DateIntervalType::class, [
-                    'label' => 'label.resource.published_at',
-                    'help' => 'help.resource.published',
-                ])
-                ->add('id', IntegerType::class, [
-                    'attr' => ['autofocus' => true],
-                    'label' => 'label.resource.title',
-                ])
-                ->add('author', EntityType::class, [
-                    'choice_label' => 'fullname',
-                    'class' => User::class,
-                    'label' => 'label.resource.author',
-                ])
-                ->add('search', SubmitType::class, [
-                    'label' => 'action.search',
-                    ]);
+        $form->handleRequest($request);
+        $result = null;
 
-            $formView = $form->createView();
-            $exporter = new FormExporter($formView);
 
-            return $this->render('resource/search.html.twig',
-                [
-                    'json' => $formPreparator->prepare($exporter->export()),
-                    'form' => $formView
-                ]);
+        // the isSubmitted() method is completely optional because the other
+        // isValid() method already checks whether the form is submitted.
+        // However, we explicitly add it to improve code readability.
+        // See https://symfony.com/doc/current/best_practices/forms.html#handling-form-submits
+        if ($form->isSubmitted() /*&& $form->isValid()*/) {
+
+            //$em = $this->getDoctrine()->getManager();
+            //$em->persist($searchResource);
+            //$em->flush();
+
+            $result = $repository->findBySearch($searchResource);
+
         }
+
+        $formView = $form->createView();
+        $exporter = new FormExporter($formView);
+
+        return $this->render('resource/search.html.twig',
+            [
+                'json' => $formPreparator->prepare($exporter->export()),
+                'form' => $formView,
+                'list' => $result
+            ]);
+    }
+
+    /**
+     * @Route("quick-search", methods={"GET"}, name="resource_quick_search", condition="request.isXmlHttpRequest()")
+     */
+    public function quickSearch(
+        Request $request,
+        ResourceRepository $repository
+    ): Response
+    {
 
         $query = $request->query->get('q', '');
         $limit = $request->query->get('l', 10);

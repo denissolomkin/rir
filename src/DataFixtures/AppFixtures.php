@@ -11,15 +11,14 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Comment;
-use App\Entity\Post;
 use App\Entity\Resource;
 use App\Entity\ResourceAccessLevel;
+use App\Entity\ResourceComment;
 use App\Entity\ResourceDocumentType;
+use App\Entity\ResourceExtension;
+use App\Entity\ResourceKeyword;
 use App\Entity\ResourcePurpose;
-use App\Entity\ResourceStatus;
-use App\Entity\ResourceType;
-use App\Entity\Tag;
+use App\Entity\ResourceMediaType;
 use App\Entity\User;
 use App\Utils\Slugger;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -38,12 +37,13 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $this->loadUsers($manager);
-        $this->loadTags($manager);
-        $this->loadPosts($manager);
+        $this->loadKeywords($manager);
         $this->loadAccessLevels($manager);
-        $this->loadResourceTypes($manager);
+        $this->loadMediaTypes($manager);
+        $this->loadExtensions($manager);
         $this->loadDocumentTypes($manager);
         $this->loadPurposes($manager);
+        $this->loadResources($manager);
     }
 
     private function loadUsers(ObjectManager $manager): void
@@ -63,41 +63,62 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 
-    private function loadTags(ObjectManager $manager): void
+    private function loadKeywords(ObjectManager $manager): void
     {
-        foreach ($this->getTagData() as $index => $name) {
-            $tag = new Tag();
-            $tag->setName($name);
+        foreach ($this->getKeywordData() as $index => $name) {
+            $keyword = new ResourceKeyword();
+            $keyword->setName($name);
 
-            $manager->persist($tag);
-            $this->addReference('tag-' . $name, $tag);
+            $manager->persist($keyword);
+            $this->addReference('keyword-' . $name, $keyword);
         }
 
         $manager->flush();
     }
 
-    private function loadPosts(ObjectManager $manager): void
+    private function loadResources(ObjectManager $manager): void
     {
-        foreach ($this->getPostData() as [$title, $slug, $summary, $content, $publishedAt, $author, $tags]) {
-            $post = new Post();
-            $post->setTitle($title);
-            $post->setSlug($slug);
-            $post->setSummary($summary);
-            $post->setContent($content);
-            $post->setPublishedAt($publishedAt);
-            $post->setAuthor($author);
-            $post->addTag(...$tags);
+        foreach ($this->getResourceData() as [$title,
+                 $slug,
+                 $summary,
+                 $content, $publishedAt, $author]
+        ) {
+
+
+            /** @var ResourceMediaType $randomMedia */
+            $randomMedia = $this->getRandomMedia();
+            $extension = $randomMedia->getExtensions()->next()
+                ? $randomMedia->getExtensions()->current()
+                : $randomMedia->getExtensions()->first();
+
+            $resource = new Resource();
+            $resource->setTitle($title)
+                ->setAnnotation($summary)
+                ->setPublishedAt($publishedAt)
+                ->setAuthor($author)
+                ->addKeyword(...$this->getRandomKeywords())
+                ->setPurpose($this->getRandomPurpose())
+                ->setDocumentType($this->getRandomDocument())
+                ->setAccessLevel($this->getRandomAccessLevel())
+                ->setMediaType($randomMedia)
+                ->setExtension($extension)
+                ->setSource('source')
+                ->setSize(rand(1, 50))
+                ->setTheme('theme')
+                ->setLanguage('en')
+                ->setCategory('category')
+            ;
 
             foreach (range(1, 5) as $i) {
-                $comment = new Comment();
+                $comment = new ResourceComment();
                 $comment->setAuthor($this->getReference('john_user'));
                 $comment->setContent($this->getRandomText(random_int(255, 512)));
                 $comment->setPublishedAt(new \DateTime('now + ' . $i . 'seconds'));
 
-                $post->addComment($comment);
+                $resource->addComment($comment);
             }
 
-            $manager->persist($post);
+            $manager->persist($resource);
         }
 
         $manager->flush();
@@ -111,18 +132,38 @@ class AppFixtures extends Fixture
             $object = new ResourceAccessLevel();
             $object->setName($datum);
             $manager->persist($object);
+            $this->addReference('access-' . $datum, $object);
         }
 
         $manager->flush();
     }
 
-    private function loadResourceTypes(ObjectManager $manager): void
+    private function loadMediaTypes(ObjectManager $manager): void
     {
-        foreach ($this->getResourceTypeData() as $datum) {
+        foreach ($this->getExtensionData() as $type => $extensions) {
 
-            $object = new ResourceType();
-            $object->setName($datum);
+            $object = new ResourceMediaType();
+            $object->setName($type);
             $manager->persist($object);
+            $this->addReference('media-' . $type, $object);
+        }
+    }
+
+    private function loadExtensions(ObjectManager $manager): void
+    {
+        foreach ($this->getExtensionData() as $type => $extensions) {
+
+            foreach ($extensions as $name) {
+
+                $extension = new ResourceExtension();
+                $extension->setName($name);
+
+                $manager->persist($extension);
+
+                /** @var ResourceMediaType $mediaType */
+                $mediaType = $this->getReference('media-' . $type);
+                $mediaType->addExtension($extension);
+            }
         }
 
         $manager->flush();
@@ -135,6 +176,7 @@ class AppFixtures extends Fixture
             $object = new ResourceDocumentType();
             $object->setName($datum);
             $manager->persist($object);
+            $this->addReference('document-' . $datum, $object);
         }
 
         $manager->flush();
@@ -147,6 +189,7 @@ class AppFixtures extends Fixture
             $object = new ResourcePurpose();
             $object->setName($datum);
             $manager->persist($object);
+            $this->addReference('purpose-' . $datum, $object);
         }
 
         $manager->flush();
@@ -181,15 +224,15 @@ class AppFixtures extends Fixture
         ];
     }
 
-    private function getResourceTypeData(): array
+    private function getExtensionData(): array
     {
         return [
-            'текст',
-            'електронні таблиці',
-            'рисунок',
-            'відео',
-            'аудіо',
-            'сайт',
+            'текст' => ['doc', 'txt', 'rtf'],
+            'електронні таблиці' => ['xls'],
+            'рисунок' => ['jpeg', 'jpg', 'png', 'gif', 'tiff', 'bmp'],
+            'відео' => ['avi', 'mov', 'mp4', 'mpg', 'mpeg'],
+            'аудіо' => ['mp3', 'ogg', 'wav'],
+            'сайт' => [],
         ];
     }
 
@@ -203,7 +246,7 @@ class AppFixtures extends Fixture
         ];
     }
 
-    private function getTagData(): array
+    private function getKeywordData(): array
     {
         return [
             'lorem',
@@ -218,12 +261,12 @@ class AppFixtures extends Fixture
         ];
     }
 
-    private function getPostData()
+    private function getResourceData()
     {
-        $posts = [];
+        $resources = [];
         foreach ($this->getPhrases() as $i => $title) {
-            // $postData = [$title, $slug, $summary, $content, $publishedAt, $author, $tags, $comments];
-            $posts[] = [
+            // $postData = [$title, $slug, $summary, $content, $publishedAt, $author, $tags, $purpose, $document, $accessLevel, $comments];
+            $resources[] = [
                 $title,
                 Slugger::slugify($title),
                 $this->getRandomText(),
@@ -231,11 +274,10 @@ class AppFixtures extends Fixture
                 new \DateTime('now - ' . $i . 'days'),
                 // Ensure that the first post is written by Jane Doe to simplify tests
                 $this->getReference(['jane_admin', 'tom_admin'][0 === $i ? 0 : random_int(0, 1)]),
-                $this->getRandomTags(),
             ];
         }
 
-        return $posts;
+        return $resources;
     }
 
     private function getPhrases(): array
@@ -326,14 +368,54 @@ tincidunt, faucibus nisl in, aliquet libero.
 MARKDOWN;
     }
 
-    private function getRandomTags(): array
+    private function getRandomKeywords(): array
     {
-        $tagNames = $this->getTagData();
-        shuffle($tagNames);
-        $selectedTags = \array_slice($tagNames, 0, random_int(2, 4));
+        $keywordNames = $this->getKeywordData();
+        shuffle($keywordNames);
+        $selectedTags = \array_slice($keywordNames, 0, random_int(2, 4));
 
         return array_map(function ($tagName) {
-            return $this->getReference('tag-' . $tagName);
+            return $this->getReference('keyword-' . $tagName);
         }, $selectedTags);
     }
+
+    private function getRandomPurpose(): ResourcePurpose
+    {
+        $data = $this->getPurposeData();
+        shuffle($data);
+
+        return $this->getReference('purpose-' . current($data));
+    }
+
+    private function getRandomDocument(): ResourceDocumentType
+    {
+        $data = $this->getDocumentTypeData();
+        shuffle($data);
+
+        return $this->getReference('document-' . current($data));
+    }
+
+    private function getRandomMedia(): ResourceMediaType
+    {
+        $data = array_keys($this->getExtensionData());
+        shuffle($data);
+        do {
+            /** @var ResourceMediaType $media */
+            $media = $this->getReference('media-' . current($data));
+            if ($media->getExtensions()->count()) {
+                return $media;
+            }
+        } while (next($data));
+
+        throw new \Exception('Available media not found');
+    }
+
+    private function getRandomAccessLevel(): ResourceAccessLevel
+    {
+        $data = $this->getAccessLevelData();
+        shuffle($data);
+
+        return $this->getReference('access-' . current($data));
+    }
+
 }

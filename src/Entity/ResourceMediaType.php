@@ -2,13 +2,15 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity()
- * @ORM\Table(name="rir_resource_type")
+ * @ORM\Table(name="rir_resource_media_type")
  */
-class ResourceType implements \JsonSerializable
+class ResourceMediaType implements \JsonSerializable
 {
     /**
      * @var int
@@ -26,6 +28,18 @@ class ResourceType implements \JsonSerializable
      */
     private $name;
 
+    /**
+     * @var ResourceExtension[]
+     *
+     * @ORM\OneToMany(targetEntity="App\Entity\ResourceExtension", mappedBy="mediaType")
+     */
+    private $extensions;
+
+    public function __construct()
+    {
+        $this->extensions = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -41,6 +55,30 @@ class ResourceType implements \JsonSerializable
         return $this->name;
     }
 
+    /**
+     * @return ResourceExtension[]
+     */
+    public function getExtensions(): Collection
+    {
+        return $this->extensions;
+    }
+
+    public function addExtension(ResourceExtension $extension): self
+    {
+        $extension->setMediaType($this);
+        if (!$this->extensions->contains($extension)) {
+            $this->extensions->add($extension);
+        }
+
+        return $this;
+    }
+
+    public function removeExtension(ResourceExtension $extension): self
+    {
+        $this->extensions->removeElement($extension);
+
+        return $this;
+    }
     /**
      * {@inheritdoc}
      */

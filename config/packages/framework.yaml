@@ -1,6 +1,9 @@
 framework:
     secret: '%env(APP_SECRET)%'
     csrf_protection: true
+    serializer:
+        circular_reference_handler: App\Handler\CircularHandler
+        max_depth_handler: App\Handler\MaxDepthHandler
     http_method_override: true
     trusted_hosts: ~
     session:

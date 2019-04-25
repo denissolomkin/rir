@@ -13,7 +13,7 @@ namespace App\Repository;
 
 use App\Entity\Resource;
 use App\Entity\ResourceKeyword;
-use App\Entity\Tag;
+use App\Entity\SearchResource;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query;
@@ -54,6 +54,55 @@ class ResourceRepository extends ServiceEntityRepository
         return $paginator;
     }
 
+    /**
+     * @return Resource[]
+     */
+    public function findBySearch(SearchResource $searchResource, int $limit = Resource::NUM_ITEMS): array
+    {
+        $query = $this->sanitizeSearchQuery($searchResource->getTitle());
+        $searchTerms = $this->extractSearchTerms($query);
+
+        $queryBuilder = $this->createQueryBuilder('p');
+
+        if (\count($searchTerms)) {
+
+            foreach ($searchTerms as $key => $term) {
+                $queryBuilder
+                    ->orWhere('p.title LIKE :t_' . $key)
+                    ->setParameter('t_' . $key, '%' . $term . '%');
+            }
+        }
+
+        if($author = $searchResource->getAuthor()){
+            $queryBuilder
+                ->andWhere('p.author = :author')
+                ->setParameter('author', $author);
+        }
+
+        if($resource = $searchResource->getResourceId()){
+            $queryBuilder
+                ->andWhere('p.id = :resource')
+                ->setParameter('resource', $resource);
+        }
+
+        if($annotation = $searchResource->getAnnotation()){
+            $queryBuilder
+                ->andWhere('p.annotation like %:annotation%')
+                ->setParameter('annotation', $annotation);
+        }
+
+        if($extension = $searchResource->getExtension()){
+            $queryBuilder
+                ->andWhere('p.extension = :extension')
+                ->setParameter('extension', $extension);
+        }
+
+        return $queryBuilder
+            ->orderBy('p.publishedAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
     /**
      * @return Resource[]
      */

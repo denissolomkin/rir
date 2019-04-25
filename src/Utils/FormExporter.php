@@ -3,6 +3,7 @@
 namespace App\Utils;
 
 use Symfony\Component\Form\FormView;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
@@ -23,7 +24,16 @@ class FormExporter
     public function export()
     {
 
-        $normalizers = array(new ObjectNormalizer());
+
+        $defaultContext = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object, $format, $context) {
+                return $object->getName();
+            },
+        ];
+
+        $normalizer = new ObjectNormalizer(null, null, null, null, null, null, $defaultContext);
+
+        $normalizers = array($normalizer);
         $serializer = new Serializer($normalizers, []);
 
         $data = array();
