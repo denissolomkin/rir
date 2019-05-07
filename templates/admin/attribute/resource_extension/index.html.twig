@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ResourceExtension index{% endblock %}
+
+{% block body %}
+    <h1>ResourceExtension index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for resource_extension in resource_extensions %}
+            <tr>
+                <td>{{ resource_extension.id }}</td>
+                <td>{{ resource_extension.name }}</td>
+                <td>
+                    <a href="{{ path('resource_extension_show', {'id': resource_extension.id}) }}">show</a>
+                    <a href="{{ path('resource_extension_edit', {'id': resource_extension.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('resource_extension_new') }}">Create new</a>
+{% endblock %}

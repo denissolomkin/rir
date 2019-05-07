@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ResourceDocumentType index{% endblock %}
+
+{% block body %}
+    <h1>ResourceDocumentType index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for resource_document_type in resource_document_types %}
+            <tr>
+                <td>{{ resource_document_type.id }}</td>
+                <td>{{ resource_document_type.name }}</td>
+                <td>
+                    <a href="{{ path('resource_document_type_show', {'id': resource_document_type.id}) }}">show</a>
+                    <a href="{{ path('resource_document_type_edit', {'id': resource_document_type.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('resource_document_type_new') }}">Create new</a>
+{% endblock %}
