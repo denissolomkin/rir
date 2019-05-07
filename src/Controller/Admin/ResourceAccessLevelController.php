@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/admin/resource/access-level")
+ * @Route("/admin/attribute/access-level")
  * @IsGranted("ROLE_ADMIN")
  */
 class ResourceAccessLevelController extends AbstractController

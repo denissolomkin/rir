@@ -37,6 +37,14 @@ class ResourceController extends AbstractController
     }
 
     /**
+     * @Route("/drug-and-drop", methods={"GET", "POST"}, name="admin_resource_drug_and_drop")
+     */
+    public function drugAndDrop(EntityManagerInterface $entityManager): Response
+    {
+        return $this->render('admin/resource/drug-and-drop.html.twig');
+    }
+
+    /**
      * Creates a new Resource entity.
      *
      * @Route("/new", methods={"GET", "POST"}, name="admin_resource_new")
