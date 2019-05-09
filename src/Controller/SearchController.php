@@ -2,17 +2,22 @@
 
 namespace App\Controller;
 
+use App\Entity\Resource;
 use App\Entity\SearchResource;
 use App\Entity\User;
 use App\Form\SearchResourceType;
 use App\Repository\ResourceRepository;
 use App\Repository\SearchResourceRepository;
+use App\Utils\EntityExporter;
 use App\Utils\FormExporter;
 use App\Utils\SearchFormPreparator;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -29,11 +34,15 @@ class SearchController extends AbstractController
         ResourceRepository $repository,
         SearchResourceRepository $searchResourceRepository,
         SearchFormPreparator $formPreparator,
-        UserInterface $user
+        TokenStorageInterface $tokenStorage
     ): Response
     {
-        /** @var User $user*/
-        $searchResource = $searchResourceRepository->find($user->getId()) ?? new SearchResource();
+
+        /** @var User $user */
+        $searchResource = $searchResourceRepository->find(
+                $tokenStorage->getToken()->getUser() instanceof UserInterface
+                ?? $tokenStorage->getToken()->getUser()->getId()
+            ) ?? new SearchResource();
         $form = $this->createForm(SearchResourceType::class, $searchResource);
 
         $form->handleRequest($request);
@@ -50,7 +59,14 @@ class SearchController extends AbstractController
             //$em->persist($searchResource);
             //$em->flush();
 
+            /** @var Collection $result */
             $result = $repository->findBySearch($searchResource);
+
+            if ($request->isXmlHttpRequest()) {
+                return new JsonResponse(array_map(function ($e) {
+                    return (new EntityExporter())->convert($e);
+                },$result));
+            }
 
         }
 

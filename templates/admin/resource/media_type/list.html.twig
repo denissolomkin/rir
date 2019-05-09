@@ -33,7 +33,7 @@
     <script>
         $(function () {
             $("ul.sortable").sortable({
-                connectWith: "ul",
+                connectWith: "ul.connect",
                 dropOnEmpty: true
             }).disableSelection();
 
@@ -57,21 +57,35 @@
         });
     </script>
 
-    {% if list is not empty %}
+    {% if mediaTypes is not empty %}
         <div>
-            {% for type in list %}
+            {% for type in mediaTypes %}
                 <div class="card">
                     <div class="card-header">
                         {{ type.name }}
                     </div>
 
-                    <ul class="sortable list-group list-group-flush" data-id="{{ type.id }}">
+                    <ul class="sortable list-group connect list-group-flush" data-id="{{ type.id }}">
                         {% for extension in type.extensions %}
                             <li class="list-group-item" data-id="{{ extension.id }}">{{ extension.name }}</li>
                         {% endfor %}
                     </ul>
                 </div>
             {% endfor %}
+
+            <div class="card">
+                <div class="card-header">
+                    Unsorted
+                </div>
+                <ul class="sortable list-group list-group-flush">
+                {% for extension in extensions %}
+                    {% if extension.mediaType is null %}
+                        <li class="list-group-item" data-id="{{ extension.id }}">{{ extension.name }}</li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
+
         </div>
         <a href="#" class="btn btn-sm btn-primary save">
             <i class="fa fa-save" aria-hidden="true"></i> Зберегти

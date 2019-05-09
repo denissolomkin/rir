@@ -370,7 +370,7 @@ abstract class AbstractResource
     /**
      * @return string
      */
-    public function getExtension(): ?string
+    public function getExtension(): ?ResourceExtension
     {
         return $this->extension;
     }

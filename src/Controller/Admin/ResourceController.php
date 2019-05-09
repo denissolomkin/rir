@@ -3,8 +3,11 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Resource;
+use App\Entity\ResourceExtension;
+use App\Entity\ResourceFile;
+use App\Form\ResourceFileType;
 use App\Form\ResourceType;
-use App\Utils\Slugger;
+use App\Utils\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,9 +42,129 @@ class ResourceController extends AbstractController
     /**
      * @Route("/drug-and-drop", methods={"GET", "POST"}, name="admin_resource_drug_and_drop")
      */
-    public function drugAndDrop(EntityManagerInterface $entityManager): Response
+    public function drugAndDrop(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response
     {
-        return $this->render('admin/resource/drug-and-drop.html.twig');
+
+        $resourceFile = new ResourceFile();
+        $uploadForm = $this->createForm(
+            ResourceFileType::class,
+            $resourceFile,
+            [
+                'action' => $this->generateUrl('admin_resource_upload'),
+            ]
+        );
+        $uploadForm->handleRequest($request);
+
+        if ($uploadForm->isSubmitted()) {
+            if ($uploadForm->isValid()) {
+
+            }
+
+        }
+        return $this->render('admin/resource/drug-and-drop.html.twig', [
+            'form' => $uploadForm->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/upload", methods={"POST"}, name="admin_resource_upload")
+     */
+    public function upload(
+        Request $request,
+        FileUploader $fileUploader,
+        EntityManagerInterface $entityManager): Response
+    {
+
+        $object = new Resource();
+        $object->setAuthor($this->getUser());
+
+        $resourceFile = new ResourceFile();
+        $uploadForm = $this->createForm(ResourceFileType::class, $resourceFile);
+        $uploadForm->handleRequest($request);
+
+        if ($uploadForm->isSubmitted() && $uploadForm->isValid()) {
+            // $file stores the uploaded PDF file
+            /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $file */
+            $file = $resourceFile->getUpload();
+
+            $resourceFile
+                ->setFilePath($file->getRealPath())
+                ->setFileName($file->getClientOriginalName())
+                ->setSize($file->getSize())
+                ->setExtension($file->guessClientExtension())
+                ->setUpload($fileUploader->upload($file));
+
+            $entityManager->persist($resourceFile);
+            $entityManager->flush();
+
+            $object
+                ->setFile($resourceFile)
+                ->setSize($resourceFile->getSize())
+                ->setTitle($resourceFile->getFileName())
+                ->setCategory($resourceFile->getFilePath());
+
+            $extension = $entityManager
+                ->getRepository(ResourceExtension::class)
+                ->findOneBy(['name' => $resourceFile->getExtension()]);
+
+            if ($extension) {
+
+                if ($extension->getMediaType()) {
+                    $object->setMediaType($extension->getMediaType());
+                }
+
+            } else {
+                $extension = new ResourceExtension();
+                $extension->setName($file->getExtension());
+                $entityManager->persist($extension);
+                $entityManager->flush();
+            }
+
+            $object->setExtension($extension);
+        }
+
+        $form = $this->createForm(ResourceType::class, $object)
+            ->add('saveAndPublish', SubmitType::class)
+            ->add('saveAsDraft', SubmitType::class);
+
+        $form->handleRequest($request);
+
+        // the isSubmitted() method is completely optional because the other
+        // isValid() method already checks whether the form is submitted.
+        // However, we explicitly add it to improve code readability.
+        // See https://symfony.com/doc/current/best_practices/forms.html#handling-form-submits
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            if ($form->get('saveAsDraft')->isClicked()) {
+                $object->setStatus(Resource::STATUS_DRAFT);
+            } elseif ($form->get('saveAndPublish')->isClicked()) {
+                $object
+                    ->setStatus(Resource::STATUS_ON_MODERATION)
+                    ->setPublishedAt(new \DateTime());
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($object);
+            $em->flush();
+
+            $this->addFlash('success', 'resource.created_successfully');
+
+
+            return $this->redirectToRoute('admin_resource_index');
+        }
+
+        return $this->render('admin/resource/new.html.twig', [
+            'item' => $object,
+            'form' => $form->createView(),
+        ]);
+
+        return $this->render('admin/resource/new.html.twig', [
+            'form' => $uploadForm->createView(),
+        ]);
+
     }
 
     /**
@@ -104,7 +227,6 @@ class ResourceController extends AbstractController
     {
         $form = $this->createForm(ResourceType::class, $object)
             ->add('save', SubmitType::class);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

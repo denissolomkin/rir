@@ -53,6 +53,12 @@ abstract class AbstractResourceType extends AbstractType
                 'choice_label' => 'name',
                 'required' => $required,
             ])
+            ->add('mediaType', EntityType::class, [
+                'class' => ResourceMediaType::class,
+                'label' => 'label.resource.type',
+                'choice_label' => 'name',
+                'required' => $required,
+            ])
             ->add('size', IntegerType::class, [
                 'help' => 'help.resource_size',
                 'label' => 'label.resource.size',
@@ -96,11 +102,6 @@ abstract class AbstractResourceType extends AbstractType
                 'choice_label' => 'name',
                 'required' => $required,
             ])
-            ->add('mediaType', EntityType::class, [
-                'class' => ResourceMediaType::class,
-                'label' => 'label.resource.type',
-                'choice_label' => 'name',
-                'required' => $required,
-            ]);
+        ;
     }
 }

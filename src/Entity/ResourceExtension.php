@@ -32,7 +32,7 @@ class ResourceExtension implements \JsonSerializable
      * @var ResourceMediaType
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\ResourceMediaType", inversedBy="extensions", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      * @Groups("group3")
      */
     private $mediaType;
@@ -57,7 +57,7 @@ class ResourceExtension implements \JsonSerializable
     /**
      * @return ResourceMediaType
      */
-    public function getMediaType(): ResourceMediaType
+    public function getMediaType(): ?ResourceMediaType
     {
         return $this->mediaType;
     }

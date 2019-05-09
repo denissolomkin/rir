@@ -25,9 +25,11 @@ class ResourceMediaTypeController extends AbstractController
     public function relation(EntityManagerInterface $entityManager): Response
     {
         $mediaTypes = $entityManager->getRepository(ResourceMediaType::class)->findAll();
+        $extensions = $entityManager->getRepository(ResourceExtension::class)->findAll();
 
         return $this->render('admin/resource/media_type/list.html.twig', [
-            'list' => $mediaTypes,
+            'mediaTypes' => $mediaTypes,
+            'extensions' => $extensions,
         ]);
     }
 
@@ -39,13 +41,14 @@ class ResourceMediaTypeController extends AbstractController
 
         $types = $request->request->get('types', []);
         foreach ($types as $typeId => $extensions) {
-            $mediaType = $entityManager->getRepository(ResourceMediaType::class)->find($typeId);
-            foreach ($extensions as $extension) {
-                $mediaType->addExtension(
-                    $entityManager->getRepository(ResourceExtension::class)->find($extension)
-                );
+            if ($mediaType = $entityManager->getRepository(ResourceMediaType::class)->find($typeId)) {
+                foreach ($extensions as $extension) {
+                    /** @var ResourceExtension $extension */
+                    $extension = $entityManager->getRepository(ResourceExtension::class)->find($extension);
+                    $mediaType->addExtension($extension);
+                }
+                $entityManager->persist($mediaType);
             }
-            $entityManager->persist($mediaType);
         }
 
         $entityManager->flush();
@@ -127,7 +130,7 @@ class ResourceMediaTypeController extends AbstractController
      */
     public function delete(Request $request, ResourceMediaType $resourceMediaType): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$resourceMediaType->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $resourceMediaType->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($resourceMediaType);
             $entityManager->flush();

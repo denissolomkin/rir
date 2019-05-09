@@ -51,6 +51,17 @@ class Resource extends AbstractResource
     protected $status;
 
     /**
+     * @var ResourceFile
+     *
+     * @ORM\OneToOne(
+     *      targetEntity="ResourceFile",
+     *      orphanRemoval=true,
+     *      cascade={"persist"}
+     * )
+     */
+    protected $file;
+
+    /**
      * Resource constructor.
      * @throws \Exception
      */
@@ -60,6 +71,24 @@ class Resource extends AbstractResource
 
         $this->status = self::STATUS_DRAFT;
         $this->comments = new ArrayCollection();
+    }
+
+    /**
+     * @return ResourceFile|null
+     */
+    public function getFile(): ?ResourceFile
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param ResourceFile $file
+     * @return Resource
+     */
+    public function setFile(ResourceFile $file): Resource
+    {
+        $this->file = $file;
+        return $this;
     }
 
     public function getComments(): Collection
