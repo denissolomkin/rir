@@ -3,6 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Resource;
+use App\Entity\ResourceFile;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,10 +20,10 @@ class ResourceType extends AbstractResourceType
         self::build($builder, $options, true);
 
         $builder
-            ->add('file', TextType::class, [
-                'label' => 'label.resource.file',
+            ->add('upload', EntityType::class, [
+                'class' => ResourceFile::class,
+                'choice_label' => 'fileName',
                 'required' => false,
-                'disabled' => true,
             ]);
     }
 

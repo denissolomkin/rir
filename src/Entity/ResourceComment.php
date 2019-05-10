@@ -27,7 +27,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @author Ryan Weaver <weaverryan@gmail.com>
  * @author Javier Eguiluz <javier.eguiluz@gmail.com>
  */
-class ResourceComment
+class ResourceComment implements \JsonSerializable
 {
     /**
      * @var int
@@ -133,5 +133,22 @@ class ResourceComment
     public function setResource(Resource $resource): void
     {
         $this->resource = $resource;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize(): string
+    {
+        // This entity implements JsonSerializable (http://php.net/manual/en/class.jsonserializable.php)
+        // so this method is used to customize its JSON representation when json_encode()
+        // is called, for example in tags|json_encode (app/Resources/views/form/fields.html.twig)
+
+        return $this->content;
+    }
+
+    public function __toString(): string
+    {
+        return $this->content;
     }
 }

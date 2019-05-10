@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ResourceRepository")
+ * @ORM\Entity
  * @ORM\Table(name="rir_resource_file")
  */
 class ResourceFile implements \JsonSerializable

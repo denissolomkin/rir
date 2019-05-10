@@ -1,8 +1,4 @@
-{% extends 'admin/layout.html.twig' %}
 
-{% block body_id 'admin_resource_index' %}
-
-{% block main %}
     <style>
         body {
             font-family: sans-serif;
@@ -64,7 +60,7 @@
     <div id="drop-area">
         <form class="my-form">
             <p>Upload multiple files with the file dialog or by dragging and dropping images onto the dashed region</p>
-            <input type="file" id="fileElem" multiple accept="image/*" onchange="handleFiles(this.files)">
+            <input type="file" id="fileElem" multiple onchange="handleFiles(this.files)"> <!--accept="image/*" -->
             <label class="button" for="fileElem">Select some files</label>
         </form>
         <progress id="progress-bar" max=100 value=0></progress>
@@ -163,26 +159,20 @@
 
             xhr.addEventListener('readystatechange', function (e) {
                 if (xhr.readyState == 4 && xhr.status == 200) {
+                    console.log(xhr.responseText)
                     updateProgress(i, 100) // <- Add this
+                    document.getElementById('drop-area').innerHTML = xhr.responseText
                 } else if (xhr.readyState == 4 && xhr.status != 200) {
                     // Error. Inform the user
                 }
             })
 
+            xhr.addEventListener("error", function(e) {
+                alert("Error callback");
+            }, false);
+
             formData.append('upload', file)
             xhr.send(formData)
-            console.log(xhr.response)
         }
     </script>
 
-
-
-{% endblock %}
-
-{% block sidebar %}
-
-    {{ form(form) }}
-    {{ parent() }}
-
-    {{ (_self) }}
-{% endblock %}

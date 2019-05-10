@@ -16,6 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\LanguageType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Intl\Intl;
 
 abstract class AbstractResourceType extends AbstractType
 {
@@ -25,6 +26,10 @@ abstract class AbstractResourceType extends AbstractType
      */
     public function build(FormBuilderInterface $builder, array $options, $required = true): void
     {
+        $languages = array_flip(['en','uk','ru']);
+        array_walk($languages, function(&$a, $b) { $a = Intl::getLanguageBundle()->getLanguageName($b); });
+        $languages = array_flip($languages);
+
         $builder
             ->add('title', null, [
                 'attr' => ['autofocus' => true],
@@ -67,7 +72,9 @@ abstract class AbstractResourceType extends AbstractType
             ->add('language', LanguageType::class, [
                 'help' => 'help.resource_language',
                 'label' => 'label.resource.language',
+                'choices' => $languages,
                 'required' => $required,
+                'choice_loader' => null,
             ])
             ->add('category', TextType::class, [
                 'help' => 'help.resource_category',

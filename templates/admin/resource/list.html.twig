@@ -9,6 +9,7 @@
         <thead>
             <tr>
                 <th scope="col">{{ 'label.title'|trans }}</th>
+                <th scope="col"><i class="fa fa-file" aria-hidden="true"></i> {{ 'label.upload'|trans }}</th>
                 <th scope="col" class="text-center"><i class="fa fa-cogs" aria-hidden="true"></i> {{ 'label.actions'|trans }}</th>
             </tr>
         </thead>
@@ -16,6 +17,7 @@
         {% for item in list %}
             <tr>
                 <td>{{ item.title }} [{{ constant('STATUSES', item)[item.status]|trans }}]</td>
+                <td>{%  if item.upload %} {{ item.upload.fileName  }}{% endif %}</td>
                 <td class="text-right">
                     <div class="item-actions">
 

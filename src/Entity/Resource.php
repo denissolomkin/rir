@@ -51,15 +51,13 @@ class Resource extends AbstractResource
     protected $status;
 
     /**
-     * @var ResourceFile
      *
-     * @ORM\OneToOne(
-     *      targetEntity="ResourceFile",
-     *      orphanRemoval=true,
-     *      cascade={"persist"}
+     * @ORM\ManyToOne(
+     *      targetEntity="ResourceFile"
      * )
+     * @ORM\JoinColumn(nullable=true)
      */
-    protected $file;
+    protected $upload;
 
     /**
      * Resource constructor.
@@ -76,18 +74,18 @@ class Resource extends AbstractResource
     /**
      * @return ResourceFile|null
      */
-    public function getFile(): ?ResourceFile
+    public function getUpload(): ?ResourceFile
     {
-        return $this->file;
+        return $this->upload;
     }
 
     /**
-     * @param ResourceFile $file
+     * @param ResourceFile $upload
      * @return Resource
      */
-    public function setFile(ResourceFile $file): Resource
+    public function setUpload(ResourceFile $upload): Resource
     {
-        $this->file = $file;
+        $this->upload = $upload;
         return $this;
     }
 

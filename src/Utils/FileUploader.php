@@ -16,10 +16,13 @@ class FileUploader
 
     public function upload(UploadedFile $file)
     {
-        $fileName = md5(uniqid()).'.'.$file->guessExtension();
+
+        //$fileName = Urlizer::urlize($file->getClientOriginalName()).'-'.uniqid().'.'.$file->guessExtension();
+
+        $fileName = md5(uniqid()) . '.' . $file->guessExtension();
 
         try {
-            $file->move($this->getTargetDirectory(), $fileName);
+            $file->move($this->getTargetDirectory() . '/' . $file->guessExtension(), $fileName);
         } catch (FileException $e) {
             // ... handle exception if something happens during file upload
         }

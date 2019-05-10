@@ -28,7 +28,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @author Ryan Weaver <weaverryan@gmail.com>
  * @author Javier Eguiluz <javier.eguiluz@gmail.com>
  */
-class User implements UserInterface, \Serializable
+class User implements UserInterface, \Serializable,  \JsonSerializable
 {
 
     public const ROLE_ADMIN = 'user.roles.admin';
@@ -190,5 +190,17 @@ class User implements UserInterface, \Serializable
     {
         // add $this->salt too if you don't use Bcrypt or Argon2i
         [$this->id, $this->username, $this->password] = unserialize($serialized, ['allowed_classes' => false]);
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize(): array
+    {
+        // This entity implements JsonSerializable (http://php.net/manual/en/class.jsonserializable.php)
+        // so this method is used to customize its JSON representation when json_encode()
+        // is called, for example in tags|json_encode (app/Resources/views/form/fields.html.twig)
+
+        extract(get_object_vars($this));
+        return compact('id', 'username');
     }
 }

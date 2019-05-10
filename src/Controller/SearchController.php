@@ -43,7 +43,7 @@ class SearchController extends AbstractController
                 $tokenStorage->getToken()->getUser() instanceof UserInterface
                 ?? $tokenStorage->getToken()->getUser()->getId()
             ) ?? new SearchResource();
-        $form = $this->createForm(SearchResourceType::class, $searchResource);
+        $form = $this->createForm(SearchResourceType::class, $searchResource, ['action' => $this->generateUrl('api_resource_search')]);
 
         $form->handleRequest($request);
         $result = null;
@@ -79,32 +79,5 @@ class SearchController extends AbstractController
                 'form' => $formView,
                 'list' => $result
             ]);
-    }
-
-    /**
-     * @Route("quick-search", methods={"GET"}, name="resource_quick_search", condition="request.isXmlHttpRequest()")
-     */
-    public function quickSearch(
-        Request $request,
-        ResourceRepository $repository
-    ): Response
-    {
-
-        $query = $request->query->get('q', '');
-        $limit = $request->query->get('l', 10);
-        $foundResources = $repository->findBySearchQuery($query, $limit);
-
-        $results = [];
-        foreach ($foundResources as $resource) {
-            $results[] = [
-                'title' => htmlspecialchars($resource->getTitle(), ENT_COMPAT | ENT_HTML5),
-                'date' => $resource->getCreatedAt()->format('M d, Y'),
-                'author' => htmlspecialchars($resource->getAuthor()->getFullName(), ENT_COMPAT | ENT_HTML5),
-                'summary' => htmlspecialchars($resource->getAnnotation(), ENT_COMPAT | ENT_HTML5),
-                'url' => $this->generateUrl('resource_item', ['id' => $resource->getId()]),
-            ];
-        }
-
-        return $this->json($results);
     }
 }
