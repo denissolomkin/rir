@@ -52,7 +52,7 @@ class ResourceController extends AbstractController
     }
 
     /**
-     * @Route("/resource/{id}/download", methods={"GET"}, name="resource_download")
+     * @Route("resource/{id}/download", methods={"GET"}, name="resource_download")
      */
     public function download(Resource $resource, FileUploader $fileUploader)
     {
@@ -69,7 +69,7 @@ class ResourceController extends AbstractController
     }
 
     /**
-     * @Route("/resource/{id}", methods={"GET"}, name="resource_item")
+     * @Route("resource/{id}", methods={"GET"}, name="resource_item")
      *
      * NOTE: The $post controller argument is automatically injected by Symfony
      * after performing a database query looking for a Post with the 'slug'

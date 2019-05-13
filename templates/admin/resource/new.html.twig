@@ -5,7 +5,7 @@
 {% block main %}
     <h1>{{ 'title.resource.new'|trans }}</h1>
 
-    {{ form(form) }}
+    {% include 'admin/resource/drug-and-drop.html.twig' %}
 
     <a href="{{ path('admin_resource_index') }}" class="btn btn-link">
         <i class="fa fa-list-alt" aria-hidden="true"></i> {{ 'action.back_to_list'|trans }}
@@ -14,7 +14,6 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% include 'admin/resource/drug-and-drop.html.twig' %}
     {{ parent() }}
 
     {{ (_self) }}

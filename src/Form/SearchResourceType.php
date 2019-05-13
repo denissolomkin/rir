@@ -8,6 +8,7 @@ use App\Form\Type\DateTimePickerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\LanguageType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateIntervalType;
@@ -30,6 +31,14 @@ class SearchResourceType extends AbstractResourceType
                 'required' => false,
                 'multiple' => true,
             ])
+            ->add('languages', LanguageType::class, [
+                'help' => 'help.resource_language',
+                'label' => 'label.resource.language',
+                'choices' => $this->getLanguages(),
+                'required' => false,
+                'choice_loader' => null,
+                'multiple' => true,
+            ])
             ->add('editedAt', DateTimePickerType::class, [
                 'label' => 'label.resource.edited_at',
                 'help' => 'help.resource.edited',
@@ -49,11 +58,12 @@ class SearchResourceType extends AbstractResourceType
                 'label' => 'label.resource.id',
                 'required' => false,
             ])
-            ->add('author', EntityType::class, [
+            ->add('authors', EntityType::class, [
                 'choice_label' => 'fullname',
                 'class' => User::class,
                 'label' => 'label.resource.author',
                 'required' => false,
+                'multiple' => true,
             ])
             ->add('search', SubmitType::class, [
                 'label' => 'action.search',

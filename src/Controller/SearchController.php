@@ -43,7 +43,11 @@ class SearchController extends AbstractController
                 $tokenStorage->getToken()->getUser() instanceof UserInterface
                 ?? $tokenStorage->getToken()->getUser()->getId()
             ) ?? new SearchResource();
-        $form = $this->createForm(SearchResourceType::class, $searchResource, ['action' => $this->generateUrl('api_resource_search')]);
+        $form = $this->createForm(
+            SearchResourceType::class,
+            $searchResource, [
+            'action' => $this->generateUrl('resource_search')
+        ]);
 
         $form->handleRequest($request);
         $result = null;
@@ -61,22 +65,11 @@ class SearchController extends AbstractController
 
             /** @var Collection $result */
             $result = $repository->findBySearch($searchResource);
-
-            if ($request->isXmlHttpRequest()) {
-                return new JsonResponse(array_map(function ($e) {
-                    return (new EntityExporter())->convert($e);
-                },$result));
-            }
-
         }
-
-        $formView = $form->createView();
-        $exporter = new FormExporter($formView);
 
         return $this->render('resource/search.html.twig',
             [
-                'json' => $formPreparator->prepare($exporter->export()),
-                'form' => $formView,
+                'form' => $form->createView(),
                 'list' => $result
             ]);
     }

@@ -30,6 +30,23 @@ class Resource extends AbstractResource
     public const STATUS_DELETED = 9;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     * @Assert\NotBlank
+     */
+    protected $title;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="text")
+     * @Assert\NotBlank(message="resource.blank_annotation")
+     * @Assert\Length(min=10, minMessage="resource.too_short_annotation")
+     */
+    protected $annotation;
+
+    /**
      * @var ResourceComment[]|ArrayCollection
      *
      * @ORM\OneToMany(
@@ -69,6 +86,43 @@ class Resource extends AbstractResource
 
         $this->status = self::STATUS_DRAFT;
         $this->comments = new ArrayCollection();
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     * @return self
+     */
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAnnotation(): ?string
+    {
+        return $this->annotation;
+    }
+
+    /**
+     * @param string $annotation
+     * @return self
+     */
+    public function setAnnotation(string $annotation): self
+    {
+        $this->annotation = $annotation;
+        return $this;
     }
 
     /**

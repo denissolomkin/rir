@@ -20,34 +20,32 @@
         </div>
     </form>
 
-    {{ form(form) }}
+    {% if list %}
 
-    <label>
-<textarea>
-{{ json }}
-</textarea>
-    </label>
+        {% for item in list %}
+            <article class="item">
+                <h2>
+                    <a href="{{ path('resource_item', {id: item.id}) }}">
+                        {{ item.title }}
+                    </a>
+                </h2>
 
-    {% for item in list %}
-        <article class="item">
-            <h2>
-                <a href="{{ path('resource_item', {id: item.id}) }}">
-                    {{ item.title }}
-                </a>
-            </h2>
+                <p class="item-metadata">
+                    <span class="metadata"><i class="fa fa-calendar"></i> {{ item.createdAt|localizeddate('long', 'medium', null, 'UTC') }}</span>
+                    <span class="metadata"><i class="fa fa-user"></i> {{ item.author.fullName }}</span>
+                </p>
 
-            <p class="item-metadata">
-                <span class="metadata"><i class="fa fa-calendar"></i> {{ item.createdAt|localizeddate('long', 'medium', null, 'UTC') }}</span>
-                <span class="metadata"><i class="fa fa-user"></i> {{ item.author.fullName }}</span>
-            </p>
+                <p>{{ item.annotation }}</p>
 
-            <p>{{ item.annotation }}</p>
-
-            {{ include('resource/_item_keywords.html.twig') }}
-        </article>
+                {{ include('resource/_item_keywords.html.twig') }}
+            </article>
+        {% else %}
+            <div class="well">{{ 'resource.no_list_found'|trans }}</div>
+        {% endfor %}
     {% else %}
-        <div class="well">{{ 'resource.no_list_found'|trans }}</div>
-    {% endfor %}
+        {{ form(form) }}
+    {% endif %}
+
 
 
     <div id="results">

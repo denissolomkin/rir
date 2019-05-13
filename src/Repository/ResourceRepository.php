@@ -14,6 +14,7 @@ namespace App\Repository;
 use App\Entity\Resource;
 use App\Entity\ResourceKeyword;
 use App\Entity\SearchResource;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query;
@@ -35,11 +36,13 @@ class ResourceRepository extends ServiceEntityRepository
             ->leftJoin('p.keywords', 't')
             ->where('p.createdAt <= :now')
             ->orderBy('p.createdAt', 'DESC')
-            ->setParameter('now', new \DateTime());
+            ->setParameter('now', new \DateTime())
+        ;
 
         if (null !== $keyword) {
             $qb->andWhere(':keyword MEMBER OF p.keywords')
-                ->setParameter('keyword', $keyword);
+                ->setParameter('keyword', $keyword)
+            ;
         }
 
         return $this->createPaginator($qb->getQuery(), $page);
@@ -59,50 +62,64 @@ class ResourceRepository extends ServiceEntityRepository
      */
     public function findBySearch(SearchResource $searchResource, int $limit = Resource::NUM_ITEMS): array
     {
-        $query = $this->sanitizeSearchQuery($searchResource->getTitle());
-        $searchTerms = $this->extractSearchTerms($query);
 
         $queryBuilder = $this->createQueryBuilder('p');
 
-        if (\count($searchTerms)) {
+        if (!empty($searchResource->getTitle())) {
+            $query = $this->sanitizeSearchQuery($searchResource->getTitle());
+            $searchTerms = $this->extractSearchTerms($query);
 
-            foreach ($searchTerms as $key => $term) {
-                $queryBuilder
-                    ->orWhere('p.title LIKE :t_' . $key)
-                    ->setParameter('t_' . $key, '%' . $term . '%');
+            if (\count($searchTerms)) {
+
+                foreach ($searchTerms as $key => $term) {
+                    $queryBuilder
+                        ->orWhere('p.title LIKE :t_' . $key)
+                        ->setParameter('t_' . $key, '%' . $term . '%')
+                    ;
+                }
             }
         }
 
-        if($author = $searchResource->getAuthor()){
+        if (\count($authors = $searchResource->getAuthors())) {
+
+            $ids = [];
+            /** @var User $author */
+            foreach ($authors as $author){
+                $ids[]=$author->getId();
+            }
             $queryBuilder
-                ->andWhere('p.author = :author')
-                ->setParameter('author', $author);
+                ->andWhere($queryBuilder->expr()->in('p.author', $ids));
         }
 
-        if($resource = $searchResource->getResourceId()){
+        if ($resource = $searchResource->getResourceId()) {
             $queryBuilder
                 ->andWhere('p.id = :resource')
-                ->setParameter('resource', $resource);
+                ->setParameter('resource', $resource)
+            ;
         }
 
-        if($annotation = $searchResource->getAnnotation()){
+        if ($annotation = $searchResource->getAnnotation()) {
             $queryBuilder
                 ->andWhere('p.annotation like %:annotation%')
-                ->setParameter('annotation', $annotation);
+                ->setParameter('annotation', $annotation)
+            ;
         }
 
-        if($extension = $searchResource->getExtension()){
+        if ($extension = $searchResource->getExtension()) {
             $queryBuilder
                 ->andWhere('p.extension = :extension')
-                ->setParameter('extension', $extension);
+                ->setParameter('extension', $extension)
+            ;
         }
 
         return $queryBuilder
             ->orderBy('p.publishedAt', 'DESC')
             ->setMaxResults($limit)
             ->getQuery()
-            ->getResult();
+            ->getResult()
+            ;
     }
+
     /**
      * @return Resource[]
      */
@@ -119,8 +136,8 @@ class ResourceRepository extends ServiceEntityRepository
 
         foreach ($searchTerms as $key => $term) {
             $queryBuilder
-                ->orWhere('p.title LIKE :t_'.$key)
-                ->setParameter('t_'.$key, '%'.$term.'%')
+                ->orWhere('p.title LIKE :t_' . $key)
+                ->setParameter('t_' . $key, '%' . $term . '%')
             ;
         }
 
@@ -128,7 +145,8 @@ class ResourceRepository extends ServiceEntityRepository
             ->orderBy('p.publishedAt', 'DESC')
             ->setMaxResults($limit)
             ->getQuery()
-            ->getResult();
+            ->getResult()
+            ;
     }
 
     /**
