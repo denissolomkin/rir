@@ -67,9 +67,16 @@ label:
   title: Назва
   author: Автор
   author_email: Email автора
+  user:
+    fullname: Повне ім'я
+    email: Електронна пошта
+    username: Логін
+    password: Пароль
+    role: Роль
   username: Логін
   password: Пароль
   role: Роль
+  roles: Роли
   content: Зміст
   summary: Короткий зміст
   published_at: Опубліковано
@@ -97,7 +104,7 @@ label:
     type: Тип ресурсу
     access_level: Атрибут рівня закритості ресурсу
     category: Категорія – каталог/папка, для кого належить документ
-
+    upload: Файл
 
 menu:
   toggle_nav: Переключити навігацію
@@ -115,8 +122,10 @@ menu:
     media_type: Тип ресурсу
     purpose: Призначення
     keyword: Ключові слова
+    media_type_extension: Групи по типам
   logout: Вийти
   login: Ввiйти
+  signup: Зарееструватися
   account: Обліковий запис
   rss: RSS Записів Блогу
   search: Пошук
@@ -152,6 +161,8 @@ help:
   role_admin: адміністратор
   role_author: автор
   role_moderator: модератор
+  resource:
+    annotation: Короткий опис змісту ресурсу
   reload_fixtures: 'Якщо ці користувачі не працюють, перезавантажте фікстури додатку, виконавши в консолі наступну команду:'
   add_user: 'Якщо ви хочете створити нових користувачів, скористайтеся наступною командою:'
   more_information: Для додаткової інформації зверніться до <a href="https://symfony.com/doc">Symfony документації</a>.

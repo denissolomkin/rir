@@ -60,6 +60,12 @@ label:
   author_email: Author email
   username: Username
   fullname: Fullname
+  user:
+    fullname: Fullname
+    email: Email
+    username: Username
+    password: Password
+    role: Role
   email: Email
   password: Password
   current_password: Current password
@@ -82,8 +88,19 @@ menu:
   account: Account
   logout: Logout
   login: Login
+  signup: Signup
   rss: Blog Posts RSS
   search: Search
+  users: Users
+  resource:
+    list: Resources
+    meta: Attributes
+    access_level: Access level
+    document_type: Document type
+    media_type: Media type
+    purpose: Purpose
+    keyword: Keywords
+    media_type_extension: Groups by media types
 resource:
   to_publish_a_comment: to publish a comment
   num_comments: '{count, plural, one {# comment} other {# comments}}'

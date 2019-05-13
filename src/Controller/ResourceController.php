@@ -6,10 +6,13 @@ use App\Entity\Resource;
 use App\Entity\ResourceKeyword;
 use App\Repository\ResourceKeywordRepository;
 use App\Repository\ResourceRepository;
+use App\Utils\FileUploader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -45,7 +48,24 @@ class ResourceController extends AbstractController
         // Every template name also has two extensions that specify the format and
         // engine for that template.
         // See https://symfony.com/doc/current/templating.html#template-suffix
-        return $this->render('resource/index.'.$_format.'.twig', ['list' => $latestResources]);
+        return $this->render('resource/index.' . $_format . '.twig', ['list' => $latestResources]);
+    }
+
+    /**
+     * @Route("/resource/{id}/download", methods={"GET"}, name="resource_download")
+     */
+    public function download(Resource $resource, FileUploader $fileUploader)
+    {
+
+        $file = $resource->getUpload();
+        $filePath = sprintf('%s/%s/%s', $fileUploader->getTargetDirectory(), $file->getExtension(), $file->getUpload());
+        $response = new BinaryFileResponse($filePath);
+
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $file->getFileName()
+        );
+        return $response;
     }
 
     /**

@@ -6,11 +6,29 @@
     <h1>{{ item.title }}</h1>
 
     <p class="item-metadata">
+        <span class="metadata"><i class="fa fa-crosshairs"></i> {{ item.purpose }}</span>
+        <span class="metadata"><i class="fa fa-file-o"></i> {{ item.documentType.name }}</span>
+        <span class="metadata"><i class="fa fa-file-word-o"></i> {{ item.mediaType.name }}</span>
+        <span class="metadata"><i class="fa fa-user-secret"></i> {{ item.accessLevel.name }}</span>
+        <span class="metadata"><i class="fa fa-link"></i> {{ item.theme }}</span>
+        <span class="metadata"><i class="fa fa-language"></i> {{ item.language }}</span>
+    </p>
+
+    <p>{{ item.annotation }}</p>
+
+    {{ include('resource/_item_keywords.html.twig') }}
+
+    <p class="item-metadata">
         <span class="metadata"><i class="fa fa-calendar"></i> {{ item.createdAt|localizeddate('long', 'medium', null, 'UTC') }}</span>
         <span class="metadata"><i class="fa fa-user"></i> {{ item.author.fullName }}</span>
     </p>
 
-    {{ include('resource/_item_keywords.html.twig') }}
+
+    {% if item.upload %}
+        <p>
+        <span class="metadata"><i class="fa fa-download"></i><a href="{{ path('resource_download', {id: item.id}) }}">{{ item.upload.fileName }}</a> </span>
+        </p>
+    {% endif %}
 
     <div id="item-add-comment" class="well">
         {# The 'IS_AUTHENTICATED_FULLY' role ensures that the user has entered

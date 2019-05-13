@@ -11,6 +11,7 @@
             <th scope="col">{{ 'label.username'|trans }}</th>
             <th scope="col">{{ 'label.fullname'|trans }}</th>
             <th scope="col">{{ 'label.role'|trans }}</th>
+            <th scope="col" class="text-center"><i class="fa fa-cogs" aria-hidden="true"></i> {{ 'label.actions'|trans }}</th>
             </th>
         </tr>
         </thead>
@@ -24,6 +25,11 @@
                         {% set roles = roles|merge([constant(role, item)|trans]) %}
                     {% endfor %}
                 <td>{{ roles|join(', ') }} </td>
+                <td>
+                    <a href="{{ path('admin_user_edit', {id: item.id}) }}" class="btn btn-sm btn-primary">
+                        <i class="fa fa-edit" aria-hidden="true"></i> {{ 'action.edit'|trans }}
+                    </a>
+                </td>
             </tr>
         {% else %}
             <tr>

@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block body_id 'login' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('js/login') }}
+{% endblock %}
+
+{% block main %}
+    <div class="row">
+        {{  form(form) }}
+    </div>
+{% endblock %}
+
+{% block sidebar %}
+    {{ parent() }}
+
+    {{ (_self) }}
+{% endblock %}

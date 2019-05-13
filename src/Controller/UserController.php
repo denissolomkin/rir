@@ -41,11 +41,15 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            try {
+                $this->getDoctrine()->getManager()->flush();
+                $this->addFlash('success', 'user.updated_successfully');
 
-            $this->addFlash('success', 'user.updated_successfully');
+                return $this->redirectToRoute('user_edit');
 
-            return $this->redirectToRoute('user_edit');
+            } catch (\Exception $e) {
+                $this->addFlash('danger', $e->getMessage());
+            }
         }
 
         return $this->render('user/edit.html.twig', [

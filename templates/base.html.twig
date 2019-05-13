@@ -64,6 +64,11 @@
                                     {% elseif is_granted('ROLE_USER') %}
                                     {% else %}
                                         <li>
+                                            <a href="{{ path('security_signup') }}">
+                                                <i class="fa fa-user-plus" aria-hidden="true"></i> {{ 'menu.signup'|trans }}
+                                            </a>
+                                        </li>
+                                        <li>
                                             <a href="{{ path('security_login') }}">
                                                 <i class="fa fa-user" aria-hidden="true"></i> {{ 'menu.login'|trans }}
                                             </a>
@@ -81,7 +86,7 @@
                                         <ul class="dropdown-menu user" role="menu" aria-labelledby="user">
                                             <li>
                                                 <a href="{{ path('user_edit') }}">
-                                                    <i class="fa fa-edit" aria-hidden="true"></i> {{ 'menu.account'|trans }}
+                                                    <i class="fa fa-edit" aria-hidden="true"></i> {{ app.user.fullname }}
                                                 </a>
                                             </li>
                                             <li class="divider"></li>

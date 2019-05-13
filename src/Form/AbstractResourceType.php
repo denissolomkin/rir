@@ -37,12 +37,12 @@ abstract class AbstractResourceType extends AbstractType
                 'required' => $required,
             ])
             ->add('annotation', TextareaType::class, [
-                'help' => 'help.resource_annotation',
+                'help' => 'help.resource.annotation',
                 'label' => 'label.resource.annotation',
                 'required' => $required,
             ])
             ->add('source', TextType::class, [
-                'help' => 'help.resource_source',
+                'help' => 'help.resource.source',
                 'label' => 'label.resource.source',
                 'required' => $required,
             ])

@@ -62,6 +62,12 @@ label:
   username: Логин
   fullname: Полное имя
   email: Email
+  user:
+    fullname: Полное имя
+    email: Електронная почта
+    username: Логин
+    password: Пароль
+    role: Роль
   password: Пароль
   current_password: Текущий пароль
   new_password: Новый пароль
@@ -84,8 +90,18 @@ menu:
   account: Аккаунт
   login: Войти
   logout: Выйти
+  signup: Зарегистрироваться
   rss: RSS Записей Блога
   search: Поиск
+  resource:
+    list: Ресурсы
+    meta: Аттрибуты
+    access_level: Уровни доступа
+    document_type: Вид документа
+    media_type: Тип ресурса
+    purpose: Назначение
+    keyword: Ключевые слова
+    media_type_extension: Группы по типам
 resource:
   status:
     draft: черновик
