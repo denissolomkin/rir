@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('js/search') }}
+{% endblock %}
+
+{% block body_id 'resource_search' %}
+
+{% block main %}
+    {#
+    <form action="{{ path('api_resource_quick_search') }}" method="get">
+        <div class="form-group">
+            <input name="q"
+                   class="form-control search-field"
+                   placeholder="{{ 'resource.search_for'|trans }}"
+                   autocomplete="off"
+                   autofocus
+                   data-no-results-message="{{ 'resource.search_no_results'|trans }}"
+            >
+        </div>
+    </form>
+    #}
+
+    {% if list %}
+
+        {% for item in list %}
+            <article class="item">
+                <h2>
+                    <a href="{{ path('resource_item', {id: item.id}) }}">
+                        {{ item.title }}
+                    </a>
+                </h2>
+
+                <p class="item-metadata">
+                    <span class="metadata"><i class="fa fa-crosshairs"></i> {{ item.purpose }}</span>
+                    <span class="metadata"><i class="fa fa-file-o"></i> {{ item.documentType.name }}</span>
+                    <span class="metadata"><i class="fa fa-file-word-o"></i> {{ item.mediaType.name }}</span>
+                    <span class="metadata"><i class="fa fa-user-secret"></i> {{ item.accessLevel.name }}</span>
+                    <span class="metadata"><i class="fa fa-link"></i> {{ item.theme }}</span>
+                    <span class="metadata"><i class="fa fa-language"></i> {{ item.language }}</span>
+                </p>
+
+                <p>{{ item.annotation }}</p>
+
+                <p class="item-metadata">
+                    <span class="metadata"><i class="fa fa-calendar"></i> {{ item.createdAt|localizeddate('long', 'medium', null, 'UTC') }}</span>
+                    <span class="metadata"><i class="fa fa-user"></i> {{ item.author.fullName }}</span>
+                </p>
+
+
+                {% if item.file %}
+                    <p>
+                        <span class="metadata"><i class="fa fa-download"></i><a href="{{ path('resource_download', {id: item.id}) }}">{{ item.file.fileName }}</a> </span>
+                    </p>
+                {% endif %}
+
+
+                {{ include('user/resource/_item_keywords.html.twig') }}
+            </article>
+        {% else %}
+            <div class="well">{{ 'resource.no_list_found'|trans }}</div>
+        {% endfor %}
+    {% else %}
+        {{ form(form) }}
+    {% endif %}
+
+
+
+    <div id="results">
+    </div>
+{% endblock %}
+
+{% block sidebar %}
+    {{ parent() }}
+{% endblock %}

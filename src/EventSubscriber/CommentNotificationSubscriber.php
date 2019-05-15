@@ -13,7 +13,6 @@ namespace App\EventSubscriber;
 
 use App\Entity\Comment;
 use App\Entity\Resource;
-use App\Entity\ResourceComment;
 use App\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
@@ -49,7 +48,7 @@ class CommentNotificationSubscriber implements EventSubscriberInterface
 
     public function onCommentCreated(GenericEvent $event): void
     {
-        /** @var ResourceComment $comment */
+        /** @var Comment $comment */
         $comment = $event->getSubject();
 
         /** @var Resource $resource */

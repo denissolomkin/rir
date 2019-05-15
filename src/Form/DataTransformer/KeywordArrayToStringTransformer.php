@@ -2,15 +2,15 @@
 
 namespace App\Form\DataTransformer;
 
-use App\Entity\ResourceKeyword;
-use App\Repository\ResourceKeywordRepository;
+use App\Entity\MetaKeyword;
+use App\Repository\MetaKeywordRepository;
 use Symfony\Component\Form\DataTransformerInterface;
 
 class KeywordArrayToStringTransformer implements DataTransformerInterface
 {
     private $repository;
 
-    public function __construct(ResourceKeywordRepository $repository)
+    public function __construct(MetaKeywordRepository $repository)
     {
         $this->repository = $repository;
     }
@@ -24,7 +24,7 @@ class KeywordArrayToStringTransformer implements DataTransformerInterface
         // Symfony\Bridge\Doctrine\Form\DataTransformer\CollectionToArrayTransformer::transform()
         // The value returned is a string that concatenates the string representation of those objects
 
-        /* @var ResourceKeyword[] $pieces */
+        /* @var MetaKeyword[] $pieces */
         return implode(',', $pieces);
     }
 
@@ -45,7 +45,7 @@ class KeywordArrayToStringTransformer implements DataTransformerInterface
         ]);
         $newNames = array_diff($names, $pieces);
         foreach ($newNames as $name) {
-            $object = new ResourceKeyword();
+            $object = new MetaKeyword();
             $object->setName($name);
             $pieces[] = $object;
 

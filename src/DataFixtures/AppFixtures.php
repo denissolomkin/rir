@@ -12,13 +12,13 @@
 namespace App\DataFixtures;
 
 use App\Entity\Resource;
-use App\Entity\ResourceAccessLevel;
-use App\Entity\ResourceComment;
-use App\Entity\ResourceDocumentType;
-use App\Entity\ResourceExtension;
-use App\Entity\ResourceKeyword;
-use App\Entity\ResourcePurpose;
-use App\Entity\ResourceMediaType;
+use App\Entity\MetaAccessLevel;
+use App\Entity\Comment;
+use App\Entity\MetaDocumentType;
+use App\Entity\MetaExtension;
+use App\Entity\MetaKeyword;
+use App\Entity\MetaPurpose;
+use App\Entity\MetaMedia;
 use App\Entity\User;
 use App\Utils\Slugger;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -66,7 +66,7 @@ class AppFixtures extends Fixture
     private function loadKeywords(ObjectManager $manager): void
     {
         foreach ($this->getKeywordData() as $index => $name) {
-            $keyword = new ResourceKeyword();
+            $keyword = new MetaKeyword();
             $keyword->setName($name);
 
             $manager->persist($keyword);
@@ -85,7 +85,7 @@ class AppFixtures extends Fixture
         ) {
 
 
-            /** @var ResourceMediaType $randomMedia */
+            /** @var MetaMedia $randomMedia */
             $randomMedia = $this->getRandomMedia();
             $extension = $randomMedia->getExtensions()->next()
                 ? $randomMedia->getExtensions()->current()
@@ -110,7 +110,7 @@ class AppFixtures extends Fixture
             ;
 
             foreach (range(1, 5) as $i) {
-                $comment = new ResourceComment();
+                $comment = new Comment();
                 $comment->setAuthor($this->getReference('john_user'));
                 $comment->setContent($this->getRandomText(random_int(255, 512)));
                 $comment->setPublishedAt(new \DateTime('now + ' . $i . 'seconds'));
@@ -129,7 +129,7 @@ class AppFixtures extends Fixture
     {
         foreach ($this->getAccessLevelData() as $datum) {
 
-            $object = new ResourceAccessLevel();
+            $object = new MetaAccessLevel();
             $object->setName($datum);
             $manager->persist($object);
             $this->addReference('access-' . $datum, $object);
@@ -142,7 +142,7 @@ class AppFixtures extends Fixture
     {
         foreach ($this->getExtensionData() as $type => $extensions) {
 
-            $object = new ResourceMediaType();
+            $object = new MetaMedia();
             $object->setName($type);
             $manager->persist($object);
             $this->addReference('media-' . $type, $object);
@@ -155,12 +155,12 @@ class AppFixtures extends Fixture
 
             foreach ($extensions as $name) {
 
-                $extension = new ResourceExtension();
+                $extension = new MetaExtension();
                 $extension->setName($name);
 
                 $manager->persist($extension);
 
-                /** @var ResourceMediaType $mediaType */
+                /** @var MetaMedia $mediaType */
                 $mediaType = $this->getReference('media-' . $type);
                 $mediaType->addExtension($extension);
             }
@@ -173,7 +173,7 @@ class AppFixtures extends Fixture
     {
         foreach ($this->getDocumentTypeData() as $datum) {
 
-            $object = new ResourceDocumentType();
+            $object = new MetaDocumentType();
             $object->setName($datum);
             $manager->persist($object);
             $this->addReference('document-' . $datum, $object);
@@ -186,7 +186,7 @@ class AppFixtures extends Fixture
     {
         foreach ($this->getPurposeData() as $datum) {
 
-            $object = new ResourcePurpose();
+            $object = new MetaPurpose();
             $object->setName($datum);
             $manager->persist($object);
             $this->addReference('purpose-' . $datum, $object);
@@ -247,6 +247,8 @@ class AppFixtures extends Fixture
         return [
             // $userData = [$fullname, $username, $password, $email, $roles];
             ['Jane Doe', 'jane_admin', 'kitten', 'jane_admin@symfony.com', ['ROLE_ADMIN']],
+            ['Jim Doe', 'jim_author', 'kitten', 'jim_author@symfony.com', ['ROLE_AUTHOR']],
+            ['Jack Doe', 'jack_moderator', 'kitten', 'jack_moderator@symfony.com', ['ROLE_MODERATOR']],
             ['Tom Doe', 'tom_admin', 'kitten', 'tom_admin@symfony.com', ['ROLE_ADMIN']],
             ['John Doe', 'john_user', 'kitten', 'john_user@symfony.com', ['ROLE_USER']],
         ];
@@ -385,7 +387,7 @@ MARKDOWN;
         }, $selectedTags);
     }
 
-    private function getRandomPurpose(): ResourcePurpose
+    private function getRandomPurpose(): MetaPurpose
     {
         $data = $this->getPurposeData();
         shuffle($data);
@@ -393,7 +395,7 @@ MARKDOWN;
         return $this->getReference('purpose-' . current($data));
     }
 
-    private function getRandomDocument(): ResourceDocumentType
+    private function getRandomDocument(): MetaDocumentType
     {
         $data = $this->getDocumentTypeData();
         shuffle($data);
@@ -401,12 +403,12 @@ MARKDOWN;
         return $this->getReference('document-' . current($data));
     }
 
-    private function getRandomMedia(): ResourceMediaType
+    private function getRandomMedia(): MetaMedia
     {
         $data = array_keys($this->getExtensionData());
         shuffle($data);
         do {
-            /** @var ResourceMediaType $media */
+            /** @var MetaMedia $media */
             $media = $this->getReference('media-' . current($data));
             if ($media->getExtensions()->count()) {
                 return $media;
@@ -416,7 +418,7 @@ MARKDOWN;
         throw new \Exception('Available media not found');
     }
 
-    private function getRandomAccessLevel(): ResourceAccessLevel
+    private function getRandomAccessLevel(): MetaAccessLevel
     {
         $data = $this->getAccessLevelData();
         shuffle($data);

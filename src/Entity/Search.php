@@ -8,26 +8,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ResourceRepository")
+ * @ORM\Entity
  * @ORM\Table
  */
-class Resource
+class Search
 {
-    public const NUM_ITEMS = 10;
 
-    public const STATUSES = [
-        Resource::STATUS_DRAFT => 'resource.status.draft',
-        Resource::STATUS_ON_MODERATION => 'resource.status.on_moderation',
-        Resource::STATUS_PUBLISHED => 'resource.status.published',
-        Resource::STATUS_DISABLED => 'resource.status.disabled',
-        Resource::STATUS_DELETED => 'resource.status.deleted',
-    ];
-
-    public const STATUS_DRAFT = 0;
-    public const STATUS_ON_MODERATION = 1;
-    public const STATUS_PUBLISHED = 5;
-    public const STATUS_DISABLED = 8;
-    public const STATUS_DELETED = 9;
 
     // COMMON
 
@@ -167,7 +153,6 @@ class Resource
      * @var string
      *
      * @ORM\Column(type="string")
-     * @Assert\NotBlank
      */
     protected $category;
 
@@ -180,10 +165,15 @@ class Resource
     protected $accessLevel;
 
     /**
+     * @var int
+     * @ORM\Column(type="integer")
+     */
+    private $resourceId;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="string")
-     * @Assert\NotBlank
      */
     protected $title;
 
@@ -191,39 +181,31 @@ class Resource
      * @var string
      *
      * @ORM\Column(type="text")
-     * @Assert\NotBlank(message="resource.blank_annotation")
-     * @Assert\Length(min=10, minMessage="resource.too_short_annotation")
      */
     protected $annotation;
 
     /**
-     * @var Comment[]|ArrayCollection
+     * @var User[]
      *
-     * @ORM\OneToMany(
-     *      targetEntity="Comment",
-     *      mappedBy="resource",
-     *      orphanRemoval=true,
-     *      cascade={"persist"}
-     * )
-     * @ORM\OrderBy({"publishedAt": "DESC"})
+     * @ORM\ManyToMany(targetEntity="User")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $comments;
+    protected $authors;
 
     /**
-     * @var integer
+     * @var string[]
      *
-     * @ORM\Column(type="integer", nullable=false)
-     * @Assert\NotBlank
+     * @ORM\Column(type="simple_array", nullable=false)
      */
-    protected $status;
+    protected $languages;
+
 
     /**
-     * @ORM\ManyToOne(
-     *      targetEntity="File"
-     * )
-     * @ORM\JoinColumn(nullable=true)
+     * @var array
+     *
+     * @ORM\Column(type="simple_array", nullable=false)
      */
-    protected $file;
+    protected $statuses;
 
     /**
      * Resource constructor.
@@ -231,13 +213,12 @@ class Resource
      */
     public function __construct()
     {
+        $this->authors = new ArrayCollection();
+        $this->languages = [];
         $this->createdAt = new \DateTime();
         $this->editedAt = new \DateTime();
 
         $this->keywords = new ArrayCollection();
-
-        $this->status = self::STATUS_DRAFT;
-        $this->comments = new ArrayCollection();
     }
 
     /**
@@ -618,60 +599,69 @@ class Resource
     }
 
     /**
-     * @return File|null
+     * @return int
      */
-    public function getFile(): ?File
+    public function getResourceId(): ?int
     {
-        return $this->file;
+        return $this->resourceId;
     }
 
     /**
-     * @param File $file
-     * @return Resource
+     * @param int $resourceId
+     * @return Search
      */
-    public function setFile(File $file): Resource
+    public function setResourceId(int $resourceId): Search
     {
-        $this->file = $file;
+        $this->resourceId = $resourceId;
         return $this;
     }
 
-    public function getComments(): Collection
+    /**
+     * @return string[]
+     */
+    public function getLanguages(): ?array
     {
-        return $this->comments;
+        return $this->languages;
     }
 
-    public function addComment(Comment $comment): self
+    /**
+     * @param string[] $languages
+     * @return self
+     */
+    public function setLanguages(array $languages): self
     {
-        $comment->setResource($this);
-        if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
-        }
-
-        return $this;
-    }
-
-    public function removeComment(Comment $comment): self
-    {
-        $this->comments->removeElement($comment);
-
+        $this->languages = $languages;
         return $this;
     }
 
     /**
      * @return int
      */
-    public function getStatus(): int
+    public function getStatuses(): ?array
     {
-        return $this->status;
+        return $this->statuses;
     }
 
     /**
-     * @param int $status
+     * @param array $statuses
      * @return self
      */
-    public function setStatus(int $status): self
+    public function setStatuses(array $statuses): self
     {
-        $this->status = $status;
+        $this->statuses = $statuses;
         return $this;
     }
+
+    public function getAuthors(): ?ArrayCollection
+    {
+        return $this->authors;
+    }
+
+    public function setAuthors(ArrayCollection $authors): self
+    {
+        $this->authors = $authors;
+        return $this;
+    }
+
+
 }

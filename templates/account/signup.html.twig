@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body_id 'login' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('js/login') }}
+{% endblock %}
+
+{% block main %}
+    <div class="row">
+        {{  form(form) }}
+        <a style="padding-left: 60px;" href="{{ path('security_login')}}"> {{ 'menu.login'|trans }}</a>
+    </div>
+{% endblock %}
+
+{% block sidebar %}
+    {{ parent() }}
+
+    {{ (_self) }}
+{% endblock %}

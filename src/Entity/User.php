@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @ORM\Table(name="rir_user")
+ * @ORM\Table
  *
  * Defines the properties of the User entity to represent the application users.
  * See https://symfony.com/doc/current/book/doctrine.html#creating-an-entity-class
@@ -61,6 +61,26 @@ class User implements UserInterface, \Serializable,  \JsonSerializable
      * @Assert\Length(min=2, max=50)
      */
     private $username;
+
+    /**
+     * @var UserGroup
+     *
+     * @ORM\ManyToOne(
+     *      targetEntity="UserGroup"
+     * )
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $group;
+
+    /**
+     * @var UserAccess
+     *
+     * @ORM\ManyToOne(
+     *      targetEntity="UserAccess"
+     * )
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $access;
 
     /**
      * @var string
@@ -128,6 +148,43 @@ class User implements UserInterface, \Serializable,  \JsonSerializable
     {
         $this->password = $password;
     }
+
+    /**
+     * @return UserGroup
+     */
+    public function getGroup(): ?UserGroup
+    {
+        return $this->group;
+    }
+
+    /**
+     * @param UserGroup $group
+     * @return User
+     */
+    public function setGroup(UserGroup $group): User
+    {
+        $this->group = $group;
+        return $this;
+    }
+
+    /**
+     * @return UserAccess
+     */
+    public function getAccess(): ?UserAccess
+    {
+        return $this->access;
+    }
+
+    /**
+     * @param UserAccess $access
+     * @return User
+     */
+    public function setAccess(UserAccess $access): User
+    {
+        $this->access = $access;
+        return $this;
+    }
+
 
     /**
      * Returns the roles or permissions granted to the user for security.

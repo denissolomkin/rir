@@ -16,6 +16,7 @@ http_error_500:
   description: Виникла внутрішня помилка сервера.
   suggestion: Спробуйте завантажити цю сторінку знову через декілька хвилин або <a href="{url}">поверніться на головну сторінку</a>.
 title:
+  change_password: Змiнити пароль
   homepage: Ласкаво просимо до <strong>Symfony Demo</strong> додатку
   source_code: Вихідний код, який використовувався для побудови цієї сторінки
   controller_code: Код контролеру
@@ -50,16 +51,22 @@ action:
   create_post: Створити новий запис
   back_to_list: Назад до списку записів
   publish_comment: Опублікувати коментар
-  sign_in: Ввійти
   browse_app: Перейти до публічного розділу
   browse_admin: Перейти до панелі керування
   edit_contents: Редагувати зміст
   change_password: Змiнити пароль
-  edit_user: Редагувати обліковий запис
+  edit_user: Редагувати аккаунт
+  sign_up: Зарееструватися
+  sign_in: Ввійти
 delete_post_modal:
   title: Ви впевнені, що хочете видалити цей запис?
   body: Ця дія не може бути скасована.
+info:
+  change_password: Пiсля змiни пароля Вам буде потрібно заново авторизуватися в системi.
 label:
+  current_password: Поточний пароль
+  new_password: Новий пароль
+  new_password_confirm: Підтвердьте пароль
   delete: Видалити запис
   cancel: Скасувати
   create: Створити запис
@@ -171,6 +178,7 @@ help:
   add_user: 'Якщо ви хочете створити нових користувачів, скористайтеся наступною командою:'
   more_information: Для додаткової інформації зверніться до <a href="https://symfony.com/doc">Symfony документації</a>.
 user:
+  updated_successfully: Облiковий запис успішно оновлений
   roles:
     admin: адміністратор
     author: автор

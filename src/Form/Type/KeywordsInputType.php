@@ -4,7 +4,7 @@
 namespace App\Form\Type;
 
 use App\Form\DataTransformer\KeywordArrayToStringTransformer;
-use App\Repository\ResourceKeywordRepository;
+use App\Repository\MetaKeywordRepository;
 use Symfony\Bridge\Doctrine\Form\DataTransformer\CollectionToArrayTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -16,7 +16,7 @@ class KeywordsInputType extends AbstractType
 {
     private $repository;
 
-    public function __construct(ResourceKeywordRepository $repository)
+    public function __construct(MetaKeywordRepository $repository)
     {
         $this->repository = $repository;
     }
