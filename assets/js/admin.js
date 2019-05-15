@@ -4,41 +4,48 @@ import Bloodhound from "bloodhound-js";
 import 'bootstrap-tagsinput';
 
 $(function() {
-    // Datetime picker initialization.
-    // See http://eonasdan.github.io/bootstrap-datetimepicker/
-    $('[data-toggle="datetimepicker"]').datetimepicker({
-        icons: {
-            time: 'fa fa-clock-o',
-            date: 'fa fa-calendar',
-            up: 'fa fa-chevron-up',
-            down: 'fa fa-chevron-down',
-            previous: 'fa fa-chevron-left',
-            next: 'fa fa-chevron-right',
-            today: 'fa fa-check-circle-o',
-            clear: 'fa fa-trash',
-            close: 'fa fa-remove'
-        }
-    });
 
-    // Bootstrap-tagsinput initialization
-    // http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/examples/
-    var $input = $('input[data-toggle="tagsinput"]');
-    if ($input.length) {
-        var source = new Bloodhound({
-            local: $input.data('tags'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            datumTokenizer: Bloodhound.tokenizers.whitespace
-        });
-        source.initialize();
+    // Listen for the event.
+    document.addEventListener('initForm', formInit, false)
 
-        $input.tagsinput({
-            trimValue: true,
-            focusClass: 'focus',
-            typeaheadjs: {
-                name: 'tags',
-                source: source.ttAdapter()
+     function formInit(){
+
+        // Datetime picker initialization.
+        // See http://eonasdan.github.io/bootstrap-datetimepicker/
+        $('[data-toggle="datetimepicker"]').datetimepicker({
+            icons: {
+                time: 'fa fa-clock-o',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-check-circle-o',
+                clear: 'fa fa-trash',
+                close: 'fa fa-remove'
             }
         });
+
+        // Bootstrap-tagsinput initialization
+        // http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/examples/
+        var $input = $('input[data-toggle="tagsinput"]');
+        if ($input.length) {
+            var source = new Bloodhound({
+                local: $input.data('tags'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                datumTokenizer: Bloodhound.tokenizers.whitespace
+            });
+            source.initialize();
+
+            $input.tagsinput({
+                trimValue: true,
+                focusClass: 'focus',
+                typeaheadjs: {
+                    name: 'tags',
+                    source: source.ttAdapter()
+                }
+            });
+        }
     }
 });
 
