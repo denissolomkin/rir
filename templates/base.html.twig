@@ -46,40 +46,79 @@
                         {% block header_navigation_links %}
 
                             {% if is_granted('ROLE_ADMIN') %}
-                                <li>
-                                    <a href="{{ path('admin_index') }}">
-                                        <i class="fa fa-lock" aria-hidden="true"></i> {{ 'menu.admin'|trans }}
-                                    </a>
-                                </li>
-                            {% endif %}
-                            {% if is_granted('ROLE_MODERATOR') %}
-                                <li>
-                                    <a href="{{ path('admin_index') }}">
-                                        <i class="fa fa-lock" aria-hidden="true"></i> {{ 'menu.admin'|trans }}
-                                    </a>
-                                </li>
-                            {% endif %}
-                            {% if is_granted('ROLE_AUTHOR') %}
 
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" id="meta">
-                                        <i class="fa fa-list-alt" aria-hidden="true"></i></i> {{ 'menu.author'|trans }}
+                                        <i class="fa fa-tags" aria-hidden="true"></i></i> {{ 'menu.resource.meta'|trans }}
                                         <span class="caret"></span>
                                         <span class="sr-only">{{ 'menu.resource.meta'|trans }}</span>
                                     </a>
                                     <ul class="dropdown-menu meta" role="menu" aria-labelledby="meta">
                                         <li>
-                                            <a href="{{ path('author_resource_index') }}">
-                                                <i class="fa fa-list-alt" aria-hidden="true"></i> {{ 'menu.resource.my_list'|trans }}
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ path('author_resource_new') }}">
-                                                <i class="fa fa-list-ul" aria-hidden="true"></i> {{ 'menu.resource.new'|trans }}
+                                            <a href="{{ path('admin_resource_access_level_index') }}">
+                                                <i class="fa fa-user-secret" aria-hidden="true"></i> {{ 'menu.resource.access_level'|trans }}
                                             </a>
                                         </li>
                                     </ul>
                                 </li>
+
+                                <li>
+                                    <a href="{{ path('admin_user_index') }}">
+                                        <i class="fa fa-users" aria-hidden="true"></i> {{ 'menu.users'|trans }}
+                                    </a>
+                                </li>
+
+                            {% endif %}
+                            {% if is_granted('ROLE_MODERATOR') %}
+                                <li>
+                                    <a href="{{ path('moderator_resource_index') }}">
+                                        <i class="fa fa-list-alt" aria-hidden="true"></i> {{ 'menu.resource.list'|trans }}
+                                    </a>
+                                </li>
+
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" id="meta">
+                                        <i class="fa fa-tags" aria-hidden="true"></i></i> {{ 'menu.resource.meta'|trans }}
+                                        <span class="caret"></span>
+                                        <span class="sr-only">{{ 'menu.resource.meta'|trans }}</span>
+                                    </a>
+                                    <ul class="dropdown-menu meta" role="menu" aria-labelledby="meta">
+                                        <li>
+                                            <a href="{{ path('resource_document_type_index') }}">
+                                                <i class="fa fa-file-word-o" aria-hidden="true"></i> {{ 'menu.resource.document_type'|trans }}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('resource_media_type_index') }}">
+                                                <i class="fa fa-file" aria-hidden="true"></i> {{ 'menu.resource.media_type'|trans }}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('admin_resource_media_type_index') }}">
+                                                <i class="fa fa-link" aria-hidden="true"></i> {{ 'menu.resource.media_type_extension'|trans }}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('resource_purpose_index') }}">
+                                                <i class="fa fa-key" aria-hidden="true"></i> {{ 'menu.resource.purpose'|trans }}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('resource_keyword_index') }}">
+                                                <i class="fa fa-tag" aria-hidden="true"></i> {{ 'menu.resource.keyword'|trans }}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                            {% endif %}
+                            {% if is_granted('ROLE_AUTHOR') %}
+                                <li>
+                                    <a href="{{ path('author_resource_index') }}">
+                                        <i class="fa fa-list-alt" aria-hidden="true"></i> {{ 'menu.resource.list'|trans }}
+                                    </a>
+                                </li>
+
                             {% endif %}
                         {% endblock %}
 

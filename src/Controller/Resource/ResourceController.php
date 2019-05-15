@@ -63,20 +63,16 @@ class ResourceController extends AbstractController
     }
 
     /**
-     * @Route("{id}/download", methods={"GET"}, name="resource_download", requirements={"id"="\d+"})
+     * @Route("{id}/file/{fileName}", methods={"GET"}, name="resource_download", requirements={"id"="\d+"})
      */
     public function download(Resource $resource, FileUploader $fileUploader)
     {
 
         $file = $resource->getFile();
         $filePath = sprintf('%s/%s/%s', $fileUploader->getTargetDirectory(), $file->getExtension(), $file->getUpload());
-        $response = new BinaryFileResponse($filePath);
 
-        $response->setContentDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $file->getFileName()
-        );
-        return $response;
+        return $this->file($filePath, $file->getFileName(), ResponseHeaderBag::DISPOSITION_INLINE);
+
     }
 
 

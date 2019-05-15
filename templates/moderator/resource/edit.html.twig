@@ -1,19 +1,20 @@
 {% extends 'admin/layout.html.twig' %}
 
-{% block body_id 'admin_resource_new' %}
+{% block body_id 'moderator_resource_edit' %}
 
 {% block main %}
-    <h1>{{ 'title.resource.new'|trans }}</h1>
+    <h1>{{ 'title.resource.edit'|trans({'%id%': item.id}) }}</h1>
 
-    {% include 'admin/resource/drug-and-drop.html.twig' %}
+    {{ form(form) }}
 
-    <a href="{{ path('admin_resource_index') }}" class="btn btn-link">
+    <a href="{{ path('admin_resource_access_level_index') }}" class="btn btn-link">
         <i class="fa fa-list-alt" aria-hidden="true"></i> {{ 'action.back_to_list'|trans }}
     </a>
 
 {% endblock %}
 
 {% block sidebar %}
+
     {{ parent() }}
 
     {{ (_self) }}

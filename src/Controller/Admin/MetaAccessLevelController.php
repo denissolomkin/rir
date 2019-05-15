@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Moderator;
+namespace App\Controller\Admin;
 
 use App\Entity\MetaAccessLevel;
 use App\Form\MetaAccessLevelForm;
@@ -13,8 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/moderator/meta/access-level")
- * @IsGranted("ROLE_MODERATOR")
+ * @Route("/admin/meta/access-level")
  */
 class MetaAccessLevelController extends AbstractController
 {

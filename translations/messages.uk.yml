@@ -58,6 +58,8 @@ action:
   edit_user: Редагувати аккаунт
   sign_up: Зарееструватися
   sign_in: Ввійти
+  resource:
+    create: Додати ресурс
 delete_post_modal:
   title: Ви впевнені, що хочете видалити цей запис?
   body: Ця дія не може бути скасована.

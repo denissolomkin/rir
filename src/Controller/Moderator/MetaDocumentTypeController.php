@@ -12,7 +12,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/moderator/meta/document-type")
- * @IsGranted("ROLE_MODERATOR")
  */
 class MetaDocumentTypeController extends AbstractController
 {
@@ -25,7 +24,7 @@ class MetaDocumentTypeController extends AbstractController
             ->getRepository(MetaDocumentType::class)
             ->findAll();
 
-        return $this->render('moderator/attribute/document_type/index.html.twig', [
+        return $this->render('moderator/meta/document_type/index.html.twig', [
             'resource_document_types' => $resourceDocumentTypes,
         ]);
     }
@@ -47,7 +46,7 @@ class MetaDocumentTypeController extends AbstractController
             return $this->redirectToRoute('resource_document_type_index');
         }
 
-        return $this->render('moderator/attribute/document_type/new.html.twig', [
+        return $this->render('moderator/meta/document_type/new.html.twig', [
             'resource_document_type' => $documentType,
             'form' => $form->createView(),
         ]);
@@ -58,7 +57,7 @@ class MetaDocumentTypeController extends AbstractController
      */
     public function show(MetaDocumentType $documentType): Response
     {
-        return $this->render('moderator/attribute/document_type/show.html.twig', [
+        return $this->render('moderator/meta/document_type/show.html.twig', [
             'resource_document_type' => $documentType,
         ]);
     }
@@ -79,7 +78,7 @@ class MetaDocumentTypeController extends AbstractController
             ]);
         }
 
-        return $this->render('moderator/attribute/document_type/edit.html.twig', [
+        return $this->render('moderator/meta/document_type/edit.html.twig', [
             'resource_document_type' => $documentType,
             'form' => $form->createView(),
         ]);

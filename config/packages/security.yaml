@@ -50,7 +50,8 @@ security:
     access_control:
         # this is a catch-all for the admin area
         # additional security lives in the controllers
-        - { path: '^/(%app_locales%)/resource', roles: ROLE_USER }
+        - { path: '^/(%app_locales%)/resource', roles: [ROLE_USER, ROLE_AUTHOR, ROLE_MODERATOR] }
+        - { path: '^/(%app_locales%)/author', roles: ROLE_AUTHOR }
         - { path: '^/(%app_locales%)/user', roles: ROLE_USER }
         - { path: '^/(%app_locales%)/moderator', roles: ROLE_MODERATOR }
         - { path: '^/(%app_locales%)/admin', roles: ROLE_ADMIN }

@@ -78,10 +78,34 @@ class ResourceController extends AbstractController
         FileUploader $fileUploader,
         EntityManagerInterface $entityManager): Response
     {
+        $object = new Resource();
+
+        $form = $this->prepareForm($object, $request, $fileUploader, $entityManager);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            return $this->redirectToRoute('author_resource_index');
+        }
 
         return $this->render('author/resource/new.html.twig', [
+            'form' => $form->createView(),
         ]);
 
+    }
+
+
+    /**
+     * @Route("/{id}", methods={"GET"}, name="author_resource_item", requirements={"id"="\d+"})
+     */
+    public function item(Resource $resource): Response
+    {
+        // Symfony's 'dump()' function is an improved version of PHP's 'var_dump()' but
+        // it's not available in the 'prod' environment to prevent leaking sensitive information.
+        // It can be used both in PHP files and Twig templates, but it requires to
+        // have enabled the DebugBundle. Uncomment the following line to see it in action:
+        //
+        // dump($post, $this->getUser(), new \DateTime());
+
+        return $this->render('resource/item.html.twig', ['item' => $resource]);
     }
 
     private function prepareForm(
@@ -178,7 +202,7 @@ class ResourceController extends AbstractController
     /**
      * Displays a form to edit an existing Resource entity.
      *
-     * @Route("/{id<\d+>}/edit",methods={"GET", "POST"}, name="admin_resource_edit")
+     * @Route("/{id<\d+>}/edit",methods={"GET", "POST"}, name="author_resource_edit")
      */
     public function edit(Request $request, Resource $object): Response
     {
@@ -193,10 +217,10 @@ class ResourceController extends AbstractController
 
             $this->addFlash('success', 'resource.updated_successfully');
 
-            return $this->redirectToRoute('admin_resource_edit', ['id' => $object->getId()]);
+            return $this->redirectToRoute('author_resource_edit', ['id' => $object->getId()]);
         }
 
-        return $this->render('admin/resource/edit.html.twig', [
+        return $this->render('author/resource/edit.html.twig', [
             'form' => $form->createView(),
             'item' => $object,
         ]);
@@ -205,7 +229,7 @@ class ResourceController extends AbstractController
     /**
      * publish an existing Resource entity.
      *
-     * @Route("/{id<\d+>}/publish",methods={"GET", "POST"}, name="admin_resource_publish")
+     * @Route("/{id<\d+>}/publish",methods={"GET", "POST"}, name="author_resource_publish")
      */
     public function publish(Request $request, Resource $object): Response
     {
@@ -223,39 +247,14 @@ class ResourceController extends AbstractController
             $this->addFlash('success', 'resource.published_successfully');
         }
 
-        return $this->redirectToRoute('admin_resource_index');
-
-    }
-
-    /**
-     * approve an existing Resource entity.
-     *
-     * @Route("/{id<\d+>}/approve",methods={"GET", "POST"}, name="admin_resource_approve")
-     */
-    public function approve(Request $request, Resource $object): Response
-    {
-
-        if ($object->getStatus() === Resource::STATUS_ON_MODERATION) {
-
-            $object
-                ->setStatus(Resource::STATUS_PUBLISHED)
-                ->setApprovedAt(new \DateTime());
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($object);
-            $em->flush();
-
-            $this->addFlash('success', 'resource.approved_successfully');
-        }
-
-        return $this->redirectToRoute('admin_resource_index');
+        return $this->redirectToRoute('author_resource_index');
 
     }
 
     /**
      * Deletes a Resource entity.
      *
-     * @Route("/{id}/delete", methods={"POST"}, name="admin_resource_delete")
+     * @Route("/{id}/delete", methods={"POST"}, name="author_resource_delete")
      */
     public function delete(Request $request, Resource $object): Response
     {
@@ -269,6 +268,6 @@ class ResourceController extends AbstractController
 
         $this->addFlash('success', 'resource.deleted_successfully');
 
-        return $this->redirectToRoute('admin_resource_index');
+        return $this->redirectToRoute('author_resource_index');
     }
 }

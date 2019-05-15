@@ -54,6 +54,7 @@ class RedirectUserListener
                 'security_signup',
                 'api_resource_form',
                 'api_resource_search',
+                'resource_download',
             ]
         );
     }

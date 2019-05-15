@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block body_id 'admin_resource_index' %}
+{% block body_id 'author_resource_index' %}
 
 {% block main %}
     <h1>{{ 'title.resource.list'|trans }}</h1>
@@ -51,7 +51,7 @@
                         </form>
 
 
-                        <a href="{{ path('resource_item', {id: item.id}) }}" class="btn btn-sm btn-primary">
+                        <a href="{{ path('author_resource_item', {id: item.id}) }}" class="btn btn-sm btn-primary">
                             <i class="fa fa-eye" aria-hidden="true"></i> {{ 'action.show'|trans }}
                         </a>
 
@@ -74,7 +74,7 @@
 {% block sidebar %}
     <div class="section actions">
         <a href="{{ path('author_resource_new') }}" class="btn btn-lg btn-block btn-success">
-            <i class="fa fa-plus" aria-hidden="true"></i> {{ 'action.create'|trans }}
+            <i class="fa fa-plus" aria-hidden="true"></i> {{ 'action.resource.create'|trans }}
         </a>
     </div>
 

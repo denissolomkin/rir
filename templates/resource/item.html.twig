@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block body_id 'blog_item_show' %}
+{% block body_id 'resource_item_show' %}
 
 {% block main %}
     <h1>{{ item.title }}</h1>
@@ -16,7 +16,7 @@
 
     <p>{{ item.annotation }}</p>
 
-    {{ include('user/resource/_item_keywords.html.twig') }}
+    {{ include('resource/_item_keywords.html.twig') }}
 
     <p class="item-metadata">
         <span class="metadata"><i class="fa fa-calendar"></i> {{ item.createdAt|localizeddate('long', 'medium', null, 'UTC') }}</span>
@@ -24,9 +24,9 @@
     </p>
 
 
-    {% if item.upload %}
+    {% if item.file %}
         <p>
-        <span class="metadata"><i class="fa fa-download"></i><a href="{{ path('resource_download', {id: item.id}) }}">{{ item.upload.fileName }}</a> </span>
+        <span class="metadata"><i class="fa fa-download"></i><a href="{{ path('resource_download', {id: item.id, fileName: item.file.fileName}) }}">{{ item.file.fileName }}</a> </span>
         </p>
     {% endif %}
 
@@ -38,7 +38,7 @@
         See https://symfony.com/doc/current/security/remember_me.html#forcing-the-user-to-re-authenticate-before-accessing-certain-resources
         #}
         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-            {{ render(controller('App\\Controller\\CommentController::commentForm', {'id': item.id})) }}
+            {{ render(controller('App\\Controller\\Resource\\CommentController::commentForm', {'id': item.id})) }}
         {% else %}
             <p>
                 <a class="btn btn-success" href="{{ path('security_login', {'redirect_to': app.request.pathInfo}) }}">
@@ -89,5 +89,5 @@
     {{ parent() }}
 
     {{ (_self) }}
-    {{ include('resource/_rss.html.twig') }}
+    {{ include('_rss.html.twig') }}
 {% endblock %}

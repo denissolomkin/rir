@@ -1,6 +1,6 @@
-{% extends 'admin/layout.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block body_id 'admin_resource_index' %}
+{% block body_id 'moderator_resource_index' %}
 
 {% block main %}
     <h1>{{ 'title.resource.list'|trans }}</h1>
@@ -17,7 +17,7 @@
         {% for item in list %}
             <tr>
                 <td>{{ item.title }} [{{ constant('STATUSES', item)[item.status]|trans }}]</td>
-                <td>{%  if item.upload %} {{ item.upload.fileName  }}{% endif %}</td>
+                <td>{%  if item.file %} {{ item.file.fileName  }}{% endif %}</td>
                 <td class="text-right">
                     <div class="item-actions">
 
@@ -43,7 +43,7 @@
                         </div>
 
 
-                        <form action="{{ url('admin_resource_delete', {id: item.id}) }}" method="post" data-confirmation="true" id="delete-form">
+                        <form action="{{ url('moderator_resource_delete', {id: item.id}) }}" method="post" data-confirmation="true" id="delete-form">
                             <input type="hidden" name="token" value="{{ csrf_token('delete') }}" />
                             <button type="submit" class="btn btn-sm btn-block btn-danger">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
@@ -56,12 +56,12 @@
                             <i class="fa fa-eye" aria-hidden="true"></i> {{ 'action.show'|trans }}
                         </a>
 
-                        <a href="{{ path('admin_resource_edit', {id: item.id}) }}" class="btn btn-sm btn-primary">
+                        <a href="{{ path('moderator_resource_edit', {id: item.id}) }}" class="btn btn-sm btn-primary">
                             <i class="fa fa-edit" aria-hidden="true"></i> {{ 'action.edit'|trans }}
                         </a>
 
                         {% if constant('STATUS_DRAFT', item) == item.status %}
-                            <a href="{{ path('admin_resource_publish', {id: item.id}) }}" class="btn btn-sm btn-primary">
+                            <a href="{{ path('moderator_resource_approve', {id: item.id}) }}" class="btn btn-sm btn-primary">
                                 <i class="fa fa-save" aria-hidden="true"></i> {{ 'action.publish'|trans }}
                             </a>
                         {% endif %}
@@ -78,11 +78,6 @@
 {% endblock %}
 
 {% block sidebar %}
-    <div class="section actions">
-        <a href="{{ path('admin_resource_new') }}" class="btn btn-lg btn-block btn-success">
-            <i class="fa fa-plus" aria-hidden="true"></i> {{ 'action.create'|trans }}
-        </a>
-    </div>
 
     {{ parent() }}
 

@@ -30,70 +30,15 @@ class ResourceController extends AbstractController
      *     structure as the rest of the controllers of this class.
      *
      * @Route("/", methods={"GET"}, name="admin_index")
-     * @Route("/", methods={"GET"}, name="admin_resource_index")
+     * @Route("/", methods={"GET"}, name="moderator_resource_index")
      */
     public function index(EntityManagerInterface $entityManager): Response
     {
         $list = $entityManager->getRepository(Resource::class)->findAll();
 
-        return $this->render('admin/resource/list.html.twig', ['list' => $list]);
+        return $this->render('moderator/resource/list.html.twig', ['list' => $list]);
     }
 
-    /**
-     * @Route("/drug-and-drop", methods={"GET", "POST"}, name="admin_resource_drug_and_drop")
-     */
-    public function drugAndDrop(): Response
-    {
-        return $this->render('admin/resource/drug-and-drop.html.twig');
-    }
-
-    /**
-     * @Route("/upload", name="admin_resource_upload")
-     */
-    public function upload(
-        Request $request,
-        FileUploader $fileUploader,
-        EntityManagerInterface $entityManager): Response
-    {
-
-        $object = new Resource();
-
-        $form = $this->prepareForm($object, $request, $fileUploader, $entityManager);
-
-        return $this->render('admin/resource/form.html.twig', [
-            'form' => $form->createView(),
-        ]);
-
-    }
-
-    /**
-     * Creates a new Resource entity.
-     *
-     * @Route("/new", methods={"GET", "POST"}, name="admin_resource_new")
-     *
-     * NOTE: the Method annotation is optional, but it's a recommended practice
-     * to constraint the HTTP methods each controller responds to (by default
-     * it responds to all methods).
-     */
-    public function new(
-        Request $request,
-        FileUploader $fileUploader,
-        EntityManagerInterface $entityManager): Response
-    {
-        $object = new Resource();
-
-        $form = $this->prepareForm($object, $request, $fileUploader, $entityManager);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            return $this->redirectToRoute('admin_resource_index');
-        }
-
-        return $this->render('admin/resource/new.html.twig', [
-            'item' => $object,
-            'form' => $form->createView(),
-        ]);
-
-    }
 
     private function prepareForm(
         Resource $object,
@@ -189,7 +134,7 @@ class ResourceController extends AbstractController
     /**
      * Displays a form to edit an existing Resource entity.
      *
-     * @Route("/{id<\d+>}/edit",methods={"GET", "POST"}, name="admin_resource_edit")
+     * @Route("/{id<\d+>}/edit",methods={"GET", "POST"}, name="moderator_resource_edit")
      */
     public function edit(Request $request, Resource $object): Response
     {
@@ -204,44 +149,20 @@ class ResourceController extends AbstractController
 
             $this->addFlash('success', 'resource.updated_successfully');
 
-            return $this->redirectToRoute('admin_resource_edit', ['id' => $object->getId()]);
+            return $this->redirectToRoute('moderator_resource_edit', ['id' => $object->getId()]);
         }
 
-        return $this->render('admin/resource/edit.html.twig', [
+        return $this->render('moderator/resource/edit.html.twig', [
             'form' => $form->createView(),
             'item' => $object,
         ]);
     }
 
-    /**
-     * publish an existing Resource entity.
-     *
-     * @Route("/{id<\d+>}/publish",methods={"GET", "POST"}, name="admin_resource_publish")
-     */
-    public function publish(Request $request, Resource $object): Response
-    {
-
-        if ($object->getStatus() === Resource::STATUS_DRAFT) {
-
-            $object
-                ->setStatus(Resource::STATUS_ON_MODERATION)
-                ->setPublishedAt(new \DateTime());
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($object);
-            $em->flush();
-
-            $this->addFlash('success', 'resource.published_successfully');
-        }
-
-        return $this->redirectToRoute('admin_resource_index');
-
-    }
 
     /**
      * approve an existing Resource entity.
      *
-     * @Route("/{id<\d+>}/approve",methods={"GET", "POST"}, name="admin_resource_approve")
+     * @Route("/{id<\d+>}/approve",methods={"GET", "POST"}, name="moderator_resource_approve")
      */
     public function approve(Request $request, Resource $object): Response
     {
@@ -259,19 +180,19 @@ class ResourceController extends AbstractController
             $this->addFlash('success', 'resource.approved_successfully');
         }
 
-        return $this->redirectToRoute('admin_resource_index');
+        return $this->redirectToRoute('moderator_resource_index');
 
     }
 
     /**
      * Deletes a Resource entity.
      *
-     * @Route("/{id}/delete", methods={"POST"}, name="admin_resource_delete")
+     * @Route("/{id}/delete", methods={"POST"}, name="moderator_resource_delete")
      */
     public function delete(Request $request, Resource $object): Response
     {
         if (!$this->isCsrfTokenValid('delete', $request->request->get('token'))) {
-            return $this->redirectToRoute('admin_resource_index');
+            return $this->redirectToRoute('moderator_resource_index');
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -280,6 +201,6 @@ class ResourceController extends AbstractController
 
         $this->addFlash('success', 'resource.deleted_successfully');
 
-        return $this->redirectToRoute('admin_resource_index');
+        return $this->redirectToRoute('moderator_resource_index');
     }
 }
