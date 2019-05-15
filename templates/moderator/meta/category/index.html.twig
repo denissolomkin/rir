@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MetaCategory index{% endblock %}
+
+{% block body %}
+    <h1>MetaCategory index</h1>
+{{ tree|raw }}
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+    <script>
+
+        $(function () {
+
+            $('#jstree_demo_div').jstree({ 'core' : {
+                'data' : {{ json_categories|raw  }}
+            } });
+
+        });
+
+
+    </script>
+    <div id="jstree_demo_div"></div>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Lft</th>
+                <th>Lvl</th>
+                <th>Rgt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for meta_category in meta_categories %}
+            <tr>
+                <td>{{ meta_category.id }}</td>
+                <td>{{ meta_category.name }}</td>
+                <td>{{ meta_category.left }}</td>
+                <td>{{ meta_category.level }}</td>
+                <td>{{ meta_category.right }}</td>
+                <td>
+                    <a href="{{ path('meta_category_show', {'id': meta_category.id}) }}">show</a>
+                    <a href="{{ path('meta_category_edit', {'id': meta_category.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('meta_category_new') }}">Create new</a>
+{% endblock %}

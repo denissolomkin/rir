@@ -11,6 +11,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\MetaCategory;
 use App\Entity\Resource;
 use App\Entity\MetaAccessLevel;
 use App\Entity\Comment;
@@ -44,6 +45,7 @@ class AppFixtures extends Fixture
         $this->loadDocumentTypes($manager);
         $this->loadPurposes($manager);
         $this->loadResources($manager);
+        $this->loadCategories($manager);
     }
 
     private function loadUsers(ObjectManager $manager): void
@@ -76,6 +78,31 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 
+    private function loadCategories(ObjectManager $manager): void
+    {
+
+        $food = new MetaCategory();
+        $food->setName('Food');
+
+        $fruits = new MetaCategory();
+        $fruits->setName('Fruits');
+        $fruits->setParent($food);
+
+        $vegetables = new MetaCategory();
+        $vegetables->setName('Vegetables');
+        $vegetables->setParent($food);
+
+        $carrots = new MetaCategory();
+        $carrots->setName('Carrots');
+        $carrots->setParent($vegetables);
+
+        $manager->persist($food);
+        $manager->persist($fruits);
+        $manager->persist($vegetables);
+        $manager->persist($carrots);
+        $manager->flush();
+    }
+    
     private function loadResources(ObjectManager $manager): void
     {
         foreach ($this->getResourceData() as [$title,
