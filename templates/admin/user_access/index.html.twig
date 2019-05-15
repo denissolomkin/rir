@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}UserAccess index{% endblock %}
+
+{% block body %}
+    <h1>UserAccess index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user_access in user_accesses %}
+            <tr>
+                <td>{{ user_access.id }}</td>
+                <td>{{ user_access.name }}</td>
+                <td>
+                    <a href="{{ path('user_access_show', {'id': user_access.id}) }}">show</a>
+                    <a href="{{ path('user_access_edit', {'id': user_access.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('user_access_new') }}">Create new</a>
+{% endblock %}

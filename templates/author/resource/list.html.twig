@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block body_id 'admin_resource_index' %}
+
+{% block main %}
+    <h1>{{ 'title.resource.list'|trans }}</h1>
+
+    <table class="table table-striped table-middle-aligned">
+        <thead>
+            <tr>
+                <th scope="col">{{ 'label.title'|trans }}</th>
+                <th scope="col"><i class="fa fa-file" aria-hidden="true"></i> {{ 'label.resource.upload'|trans }}</th>
+                <th scope="col" class="text-center"><i class="fa fa-cogs" aria-hidden="true"></i> {{ 'label.actions'|trans }}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in list %}
+            <tr>
+                <td>{{ item.title }} [{{ constant('STATUSES', item)[item.status]|trans }}]</td>
+                <td>{%  if item.file %} {{ item.file.fileName  }}{% endif %}</td>
+                <td class="text-right">
+                    <div class="item-actions">
+
+
+                        {# Bootstrap modal, see http://getbootstrap.com/javascript/#modals #}
+                        <div class="modal fade" id="confirmationModal" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <h4>{{ 'delete_resource_modal.title'|trans }}</h4>
+                                        <p>{{ 'delete_resource_modal.body'|trans }}</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" id="btnNo" data-dismiss="modal">
+                                            <i class="fa fa-ban" aria-hidden="true"></i> {{ 'label.cancel'|trans }}
+                                        </button>
+                                        <button type="button" class="btn btn-danger" id="btnYes" data-dismiss="modal">
+                                            <i class="fa fa-trash" aria-hidden="true"></i> {{ 'label.delete'|trans }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form action="{{ url('admin_resource_delete', {id: item.id}) }}" method="post" data-confirmation="true" id="delete-form">
+                            <input type="hidden" name="token" value="{{ csrf_token('delete') }}" />
+                            <button type="submit" class="btn btn-sm btn-block btn-danger">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                {{ 'action.delete'|trans }}
+                            </button>
+                        </form>
+
+
+                        <a href="{{ path('resource_item', {id: item.id}) }}" class="btn btn-sm btn-primary">
+                            <i class="fa fa-eye" aria-hidden="true"></i> {{ 'action.show'|trans }}
+                        </a>
+
+                        <a href="{{ path('admin_resource_edit', {id: item.id}) }}" class="btn btn-sm btn-primary">
+                            <i class="fa fa-edit" aria-hidden="true"></i> {{ 'action.edit'|trans }}
+                        </a>
+
+                    </div>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4" align="center">{{ 'item.no_resources_found'|trans }}</td>
+           </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block sidebar %}
+    <div class="section actions">
+        <a href="{{ path('author_resource_new') }}" class="btn btn-lg btn-block btn-success">
+            <i class="fa fa-plus" aria-hidden="true"></i> {{ 'action.create'|trans }}
+        </a>
+    </div>
+
+    {{ parent() }}
+
+    {{ (_self) }}
+{% endblock %}

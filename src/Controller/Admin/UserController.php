@@ -4,7 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\User;
 use App\Form\Type\RolesType;
-use App\Form\UserType;
+use App\Form\UserForm;
 use App\Repository\UserRepository;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -44,7 +44,7 @@ class UserController extends AbstractController
     public function new(Request $request): Response
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user)
+        $form = $this->createForm(UserForm::class, $user)
             ->add('username', TextType::class, [
                 'label' => 'label.user.username',
             ])
@@ -103,7 +103,7 @@ class UserController extends AbstractController
     {
 
 
-        $form = $this->createForm(UserType::class, $user)
+        $form = $this->createForm(UserForm::class, $user)
             ->add('username', TextType::class, [
                 'label' => 'label.user.username',
             ])

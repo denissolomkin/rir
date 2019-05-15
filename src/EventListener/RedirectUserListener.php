@@ -47,7 +47,7 @@ class RedirectUserListener
 
     private function isAuthenticatedUserOnAnonymousPage($currentRoute)
     {
-        return in_array(
+        return strpos($currentRoute, 'wdt') !== false || in_array(
             $currentRoute,
             [
                 'security_login',

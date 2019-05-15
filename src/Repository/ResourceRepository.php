@@ -12,8 +12,8 @@
 namespace App\Repository;
 
 use App\Entity\Resource;
-use App\Entity\ResourceKeyword;
-use App\Entity\SearchResource;
+use App\Entity\MetaKeyword;
+use App\Entity\Search;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -28,7 +28,7 @@ class ResourceRepository extends ServiceEntityRepository
         parent::__construct($registry, Resource::class);
     }
 
-    public function findLatest(int $page = 1, ResourceKeyword $keyword = null): Pagerfanta
+    public function findLatest(int $page = 1, MetaKeyword $keyword = null): Pagerfanta
     {
         $qb = $this->createQueryBuilder('p')
             ->addSelect('a', 't')
@@ -60,13 +60,13 @@ class ResourceRepository extends ServiceEntityRepository
     /**
      * @return Resource[]
      */
-    public function findBySearch(SearchResource $searchResource, int $limit = Resource::NUM_ITEMS): array
+    public function findBySearch(Search $searchResource, int $limit = Resource::NUM_ITEMS): array
     {
 
         $queryBuilder = $this->createQueryBuilder('p');
 
-        if (!empty($searchResource->getTitle())) {
-            $query = $this->sanitizeSearchQuery($searchResource->getTitle());
+        if ($title = $searchResource->getTitle()) {
+            $query = $this->sanitizeSearchQuery($title);
             $searchTerms = $this->extractSearchTerms($query);
 
             if (\count($searchTerms)) {
@@ -84,8 +84,8 @@ class ResourceRepository extends ServiceEntityRepository
 
             $ids = [];
             /** @var User $author */
-            foreach ($authors as $author){
-                $ids[]=$author->getId();
+            foreach ($authors as $author) {
+                $ids[] = $author->getId();
             }
             $queryBuilder
                 ->andWhere($queryBuilder->expr()->in('p.author', $ids));
@@ -99,9 +99,38 @@ class ResourceRepository extends ServiceEntityRepository
         }
 
         if ($annotation = $searchResource->getAnnotation()) {
+            $query = $this->sanitizeSearchQuery($title);
+            $searchTerms = $this->extractSearchTerms($query);
+
+            if (\count($searchTerms)) {
+
+                foreach ($searchTerms as $key => $term) {
+                    $queryBuilder
+                        ->orWhere('p.annotation LIKE :t_' . $key)
+                        ->setParameter('t_' . $key, '%' . $term . '%')
+                    ;
+                }
+            }
+        }
+
+        if ($purpose = $searchResource->getPurpose()) {
             $queryBuilder
-                ->andWhere('p.annotation like %:annotation%')
-                ->setParameter('annotation', $annotation)
+                ->andWhere('p.purpose = :purpose')
+                ->setParameter('purpose', $purpose)
+            ;
+        }
+
+        if ($source = $searchResource->getSource()) {
+            $queryBuilder
+                ->andWhere('p.source like %:source%')
+                ->setParameter('source', $source)
+            ;
+        }
+
+        if ($theme = $searchResource->getTheme()) {
+            $queryBuilder
+                ->andWhere('p.theme like %:theme%')
+                ->setParameter('theme', $theme)
             ;
         }
 
@@ -109,6 +138,20 @@ class ResourceRepository extends ServiceEntityRepository
             $queryBuilder
                 ->andWhere('p.extension = :extension')
                 ->setParameter('extension', $extension)
+            ;
+        }
+
+        if ($mediaType = $searchResource->getMediaType()) {
+            $queryBuilder
+                ->andWhere('p.mediaType = :mediaType')
+                ->setParameter('mediaType', $mediaType)
+            ;
+        }
+
+        if ($documentType = $searchResource->getDocumentType()) {
+            $queryBuilder
+                ->andWhere('p.documentType = :documentType')
+                ->setParameter('documentType', $documentType)
             ;
         }
 

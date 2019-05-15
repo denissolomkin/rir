@@ -60,10 +60,25 @@
                                 </li>
                             {% endif %}
                             {% if is_granted('ROLE_AUTHOR') %}
-                                <li>
-                                    <a href="{{ path('admin_resource_index') }}">
-                                        <i class="fa fa-lock" aria-hidden="true"></i> {{ 'menu.admin'|trans }}
+
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" id="meta">
+                                        <i class="fa fa-list-alt" aria-hidden="true"></i></i> {{ 'menu.author'|trans }}
+                                        <span class="caret"></span>
+                                        <span class="sr-only">{{ 'menu.resource.meta'|trans }}</span>
                                     </a>
+                                    <ul class="dropdown-menu meta" role="menu" aria-labelledby="meta">
+                                        <li>
+                                            <a href="{{ path('author_resource_index') }}">
+                                                <i class="fa fa-list-alt" aria-hidden="true"></i> {{ 'menu.resource.my_list'|trans }}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('author_resource_new') }}">
+                                                <i class="fa fa-list-ul" aria-hidden="true"></i> {{ 'menu.resource.new'|trans }}
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </li>
                             {% endif %}
                         {% endblock %}

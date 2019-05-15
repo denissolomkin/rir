@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}UserAccess{% endblock %}
+
+{% block body %}
+    <h1>UserAccess</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ user_access.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ user_access.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('user_access_index') }}">back to list</a>
+
+    <a href="{{ path('user_access_edit', {'id': user_access.id}) }}">edit</a>
+
+    {{ include('user_access/_delete_form.html.twig') }}
+{% endblock %}
