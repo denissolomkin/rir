@@ -44,8 +44,8 @@ class AppFixtures extends Fixture
         $this->loadExtensions($manager);
         $this->loadDocumentTypes($manager);
         $this->loadPurposes($manager);
-        $this->loadResources($manager);
         $this->loadCategories($manager);
+        $this->loadResources($manager);
     }
 
     private function loadUsers(ObjectManager $manager): void
@@ -75,31 +75,6 @@ class AppFixtures extends Fixture
             $this->addReference('keyword-' . $name, $keyword);
         }
 
-        $manager->flush();
-    }
-
-    private function loadCategories(ObjectManager $manager): void
-    {
-
-        $food = new MetaCategory();
-        $food->setName('Food');
-
-        $fruits = new MetaCategory();
-        $fruits->setName('Fruits');
-        $fruits->setParent($food);
-
-        $vegetables = new MetaCategory();
-        $vegetables->setName('Vegetables');
-        $vegetables->setParent($food);
-
-        $carrots = new MetaCategory();
-        $carrots->setName('Carrots');
-        $carrots->setParent($vegetables);
-
-        $manager->persist($food);
-        $manager->persist($fruits);
-        $manager->persist($vegetables);
-        $manager->persist($carrots);
         $manager->flush();
     }
     
@@ -133,7 +108,7 @@ class AppFixtures extends Fixture
                 ->setSize(rand(1, 50))
                 ->setTheme('theme')
                 ->setLanguage('en')
-                ->setCategory('category')
+                ->setCategory($this->getRandomCategory())
             ;
 
             foreach (range(1, 5) as $i) {
@@ -235,6 +210,42 @@ class AppFixtures extends Fixture
             //4. Документы по личному составу –
             'приказы по личному составу', 'заявления', 'личные карточки', 'автобиографии', 'резюме',
         ];
+    }
+
+    private function loadCategories(ObjectManager $manager): void
+    {
+
+        $drink = new MetaCategory();
+        $drink->setName('Drink');
+
+        $food = new MetaCategory();
+        $food->setName('Food');
+
+        $fruits = new MetaCategory();
+        $fruits->setName('Fruits');
+        $fruits->setParent($food);
+
+        $vegetables = new MetaCategory();
+        $vegetables->setName('Vegetables');
+        $vegetables->setParent($food);
+
+        $carrots = new MetaCategory();
+        $carrots->setName('Carrots');
+        $carrots->setParent($vegetables);
+
+
+        $this->addReference('category-1', $drink);
+        $this->addReference('category-2', $food);
+        $this->addReference('category-3', $fruits);
+        $this->addReference('category-4', $vegetables);
+        $this->addReference('category-5', $carrots);
+
+        $manager->persist($drink);
+        $manager->persist($food);
+        $manager->persist($fruits);
+        $manager->persist($vegetables);
+        $manager->persist($carrots);
+        $manager->flush();
     }
 
     private function getPurposeData(): array
@@ -420,6 +431,14 @@ MARKDOWN;
         shuffle($data);
 
         return $this->getReference('purpose-' . current($data));
+    }
+
+    private function getRandomCategory(): MetaCategory
+    {
+        $data = [1,2,3,4,5];
+        shuffle($data);
+
+        return $this->getReference('category-' . current($data));
     }
 
     private function getRandomDocument(): MetaDocumentType

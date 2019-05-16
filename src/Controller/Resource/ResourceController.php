@@ -93,7 +93,7 @@ class ResourceController extends AbstractController
         //
         // dump($post, $this->getUser(), new \DateTime());
 
-        return $this->render('user/resource/item.html.twig', ['item' => $resource]);
+        return $this->render('resource/item.html.twig', ['item' => $resource]);
     }
 
 

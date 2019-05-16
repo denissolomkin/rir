@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\MetaCategory;
 use App\Entity\Resource;
 use App\Entity\File;
 use App\Form\Traits\ResourceLanguages;
@@ -70,9 +71,11 @@ class ResourceForm extends AbstractType
                 'label' => 'label.resource.size',
                 'required' => true,
             ])
-            ->add('category', TextType::class, [
+            ->add('category', EntityType::class, [
+                'class' => MetaCategory::class,
                 'help' => 'help.resource_category',
                 'label' => 'label.resource.category',
+                'choice_label' => 'name',
                 'required' => true,
             ])
             ->add('keywords', KeywordsInputType::class, [

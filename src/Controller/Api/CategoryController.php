@@ -41,5 +41,20 @@ class CategoryController extends AbstractController
 
     }
 
+    /**
+     * @Route("/tree", methods={"GET"}, name="api_resource_tree")
+     */
+    public function tree(MetaCategoryRepository $nestedTreeRepository): Response
+    {
+
+        $tree = $nestedTreeRepository->childrenHierarchy(null,false,array());
+        return new JsonResponse(
+            json_encode($tree, JSON_UNESCAPED_UNICODE ^ JSON_PRETTY_PRINT),
+            200,
+            [],
+            true
+        );
+
+    }
 
 }

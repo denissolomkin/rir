@@ -164,10 +164,10 @@ class Resource
     // SEARCH
 
     /**
-     * @var string
+     * @var MetaCategory
      *
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank
+     * @ORM\ManyToOne(targetEntity="MetaCategory")
+     * @ORM\JoinColumn(nullable=false)
      */
     protected $category;
 
@@ -510,18 +510,18 @@ class Resource
     }
 
     /**
-     * @return string
+     * @return MetaCategory
      */
-    public function getCategory(): ?string
+    public function getCategory(): ?MetaCategory
     {
         return $this->category;
     }
 
     /**
-     * @param string $category
+     * @param MetaCategory $category
      * @return self
      */
-    public function setCategory(string $category): self
+    public function setCategory(MetaCategory $category): self
     {
         $this->category = $category;
         return $this;

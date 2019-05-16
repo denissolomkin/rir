@@ -53,6 +53,7 @@ class RedirectUserListener
                 'security_login',
                 'security_signup',
                 'api_resource_form',
+                'api_resource_tree',
                 'api_resource_search',
                 'resource_download',
             ]

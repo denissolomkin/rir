@@ -47,20 +47,24 @@ class SearchFormPreparator
 
             $child = reset($child);
             $type = $this->detectType($child);
+            $choices = $this->getChoices($child, $type);
 
             $json[$field] = array_filter([
                 'name' => $child['full_name'],
                 'type' => $type,
+                'help' => isset($child['help']) ? $this->translator->trans($child['help']) : '',
                 'label' => $child['label'] ? $this->translator->trans($child['label']) : '',
                 'multiple' => $child['multiple'] ?? false,
                 'expanded' => $child['expanded'] ?? false,
-                'choices' => $this->getChoices($child, $type)
+                'choices' => is_array($choices)?$choices:null,
+                'value' => !is_array($choices)?$choices:null,
+
             ]);
 
         }
 
         return json_encode(
-            $json,
+            array_values($json),
             JSON_UNESCAPED_UNICODE ^ JSON_PRETTY_PRINT
         );
     }
@@ -108,7 +112,7 @@ class SearchFormPreparator
                 break;
 
             case self::TYPE_HIDDEN:
-                $choices[] = $child['data'];
+                $choices = $child['data'];
                 break;
 
             default:

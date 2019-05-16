@@ -150,9 +150,10 @@ class Search
     // SEARCH
 
     /**
-     * @var string
+     * @var MetaCategory
      *
-     * @ORM\Column(type="string")
+     * @ORM\ManyToOne(targetEntity="MetaCategory")
+     * @ORM\JoinColumn(nullable=false)
      */
     protected $category;
 
