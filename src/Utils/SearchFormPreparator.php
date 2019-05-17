@@ -101,13 +101,13 @@ class SearchFormPreparator
 
             case self::TYPE_CHOICE:
                 foreach ($child['choices'] as $choice) {
-                    $choices[$choice['data']['id'] ?? $choice['value']] = $choice['label'];
+                    $choices[] = ['id'=>$choice['data']['id'] ?? $choice['value'], 'title'=> $choice['label']];
                 }
                 break;
 
             case self::TYPE_ENTITY:
                 foreach ($child[$child['name']] as $choice) {
-                    $choices[$choice['id']] = $choice['name'];
+                    $choices[] = ['id'=>$choice['id'], 'title'=> $choice['name']];
                 }
                 break;
 
