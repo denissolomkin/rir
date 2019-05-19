@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class MetaKeywordController extends AbstractController
 {
     /**
-     * @Route("/", name="resource_keyword_index", methods={"GET"})
+     * @Route("/", name="moderator_meta_keyword_index", methods={"GET"})
      */
     public function index(): Response
     {
@@ -25,13 +25,13 @@ class MetaKeywordController extends AbstractController
             ->getRepository(MetaKeyword::class)
             ->findAll();
 
-        return $this->render('resource_keyword/index.html.twig', [
+        return $this->render('moderator/meta/keyword/index.html.twig', [
             'resource_keywords' => $resourceKeywords,
         ]);
     }
 
     /**
-     * @Route("/new", name="resource_keyword_new", methods={"GET","POST"})
+     * @Route("/new", name="moderator_meta_keyword_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -44,27 +44,27 @@ class MetaKeywordController extends AbstractController
             $entityManager->persist($resourceKeyword);
             $entityManager->flush();
 
-            return $this->redirectToRoute('resource_keyword_index');
+            return $this->redirectToRoute('moderator_meta_keyword_index');
         }
 
-        return $this->render('resource_keyword/new.html.twig', [
+        return $this->render('moderator/meta/keyword/new.html.twig', [
             'resource_keyword' => $resourceKeyword,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="resource_keyword_show", methods={"GET"})
+     * @Route("/{id}", name="moderator_meta_keyword_show", methods={"GET"})
      */
     public function show(MetaKeyword $resourceKeyword): Response
     {
-        return $this->render('resource_keyword/show.html.twig', [
+        return $this->render('moderator/meta/keyword/show.html.twig', [
             'resource_keyword' => $resourceKeyword,
         ]);
     }
 
     /**
-     * @Route("/{id}/edit", name="resource_keyword_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="moderator_meta_keyword_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, MetaKeyword $resourceKeyword): Response
     {
@@ -74,19 +74,19 @@ class MetaKeywordController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('resource_keyword_index', [
+            return $this->redirectToRoute('moderator_meta_keyword_index', [
                 'id' => $resourceKeyword->getId(),
             ]);
         }
 
-        return $this->render('resource_keyword/edit.html.twig', [
+        return $this->render('moderator/meta/keyword/edit.html.twig', [
             'resource_keyword' => $resourceKeyword,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="resource_keyword_delete", methods={"DELETE"})
+     * @Route("/{id}", name="moderator_meta_keyword_delete", methods={"DELETE"})
      */
     public function delete(Request $request, MetaKeyword $resourceKeyword): Response
     {
@@ -96,6 +96,6 @@ class MetaKeywordController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('resource_keyword_index');
+        return $this->redirectToRoute('moderator_meta_keyword_index');
     }
 }

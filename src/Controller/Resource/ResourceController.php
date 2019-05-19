@@ -22,7 +22,6 @@ use App\Repository\SearchResourceRepository;
 use App\Utils\SearchFormPreparator;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 
 /**
@@ -59,7 +58,7 @@ class ResourceController extends AbstractController
         // Every template name also has two extensions that specify the format and
         // engine for that template.
         // See https://symfony.com/doc/current/templating.html#template-suffix
-        return $this->render('user/resource/index.' . $_format . '.twig', ['list' => $latestResources]);
+        return $this->render('resource/index.' . $_format . '.twig', ['list' => $latestResources]);
     }
 
     /**
@@ -108,15 +107,14 @@ class ResourceController extends AbstractController
         TokenStorageInterface $tokenStorage
     ): Response
     {
-
         /** @var User $user */
-        $searchResource = $searchResourceRepository->find(
-                $tokenStorage->getToken()->getUser() instanceof UserInterface
-                ?? $tokenStorage->getToken()->getUser()->getId()
-            ) ?? new Search();
+        $user = $tokenStorage->getToken()->getUser();
+
+        $search = $searchResourceRepository->findOneBy(['user'=>$user->getId()]) ?? new Search();
+
         $form = $this->createForm(
             SearchByUserForm::class,
-            $searchResource, [
+            $search, [
             'action' => $this->generateUrl('resource_search')
         ]);
 
@@ -128,14 +126,15 @@ class ResourceController extends AbstractController
         // isValid() method already checks whether the form is submitted.
         // However, we explicitly add it to improve code readability.
         // See https://symfony.com/doc/current/best_practices/forms.html#handling-form-submits
-        if ($form->isSubmitted() /*&& $form->isValid()*/) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
-            //$em = $this->getDoctrine()->getManager();
-            //$em->persist($searchResource);
-            //$em->flush();
+            $search->setUser($user);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($search);
+            $em->flush();
 
             /** @var Collection $result */
-            $result = $repository->findBySearch($searchResource);
+            $result = $repository->findBySearch($search);
         }
 
         return $this->render('user/resource/search.html.twig',

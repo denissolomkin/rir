@@ -1,6 +1,6 @@
-{% extends 'admin/layout.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block body_id 'admin_resource_media_type_index' %}
+{% block body_id 'moderator_meta_media_type_index' %}
 
 {% block main %}
     <h1>{{ 'title.resource.media_type.list'|trans }}</h1>
@@ -52,7 +52,7 @@
                     }
                     save[list[ul].getAttribute('data-id')] = ext;
                 }
-                $.post('{{ path('admin_resource_media_type_save') }}', {types: save});
+                $.post('{{ path('moderator_meta_media_type_save') }}', {types: save});
             });
         });
     </script>
@@ -91,7 +91,7 @@
             <i class="fa fa-save" aria-hidden="true"></i> Зберегти
         </a>
     {% else %}
-        {{ 'item.no_resource_media_types_found'|trans }}
+        {{ 'item.no_moderator_meta_media_types_found'|trans }}
     {% endif %}
 {% endblock %}
 

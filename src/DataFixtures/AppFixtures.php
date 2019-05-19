@@ -29,6 +29,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class AppFixtures extends Fixture
 {
     private $passwordEncoder;
+    private $mapCategories = [];
 
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
     {
@@ -77,7 +78,7 @@ class AppFixtures extends Fixture
 
         $manager->flush();
     }
-    
+
     private function loadResources(ObjectManager $manager): void
     {
         foreach ($this->getResourceData() as [$title,
@@ -212,39 +213,92 @@ class AppFixtures extends Fixture
         ];
     }
 
+    private function getCategoryData(): array
+    {
+
+        return [
+            'Організація навчання' => [
+                'Стандарти' => [
+                    'Державні',
+                    'Університетські'
+                ],
+                'Освітні програми' => [
+                    'Державні',
+                    'Університетські',
+                    'Закордонні',
+                ],
+                'Навчальні плани', 'Розклади занять',
+            ],
+
+            'Методичне забезпечення' => [
+                'Документи деканату',
+                'Документи кафедри',
+                'Документи зі спеціальностей',
+                'Документи зі спеціалізацій',
+            ],
+
+            'Освітній процес' => [
+                'Навчальні заняття',
+                'Самостійні роботи',
+                'Практики',
+            ],
+
+            'Якість освіти' => [
+                'Стандарти',
+                'Методичне забезпечення',
+                'Контроль',
+                'Рейтинги',
+                'Атестація',
+            ],
+
+            'Переривання навчання' => [
+                'Відрахування',
+                'Переривання',
+                'Повторне навчання',
+                'Переведення',
+                'Поновлення',
+            ],
+
+            'Інклюзивне навчання',
+            'Кураторство',
+            'Міжнародна освіта'
+        ];
+    }
+
+    protected function _createCategory($key, $value, ObjectManager $manager, string $ref, MetaCategory $parent = null)
+    {
+
+        if (isset($key)) {
+
+            $category = new MetaCategory();
+            $category->setName(is_string($key) ? $key : $value);
+
+            $ref .= '-' . str_replace(' ', '_', mb_strtolower(trim($category->getName())));
+
+            if ($parent) {
+                $category->setParent($parent);
+            }
+
+            $this->addReference($ref, $category);
+            $this->mapCategories[] = $ref;
+            $manager->persist($category);
+
+        } else {
+            $category = null;
+        }
+
+        if (is_array($value)) {
+            foreach ($value as $k => $v) {
+                $this->_createCategory($k, $v, $manager, $ref, $category);
+            }
+        }
+    }
+
     private function loadCategories(ObjectManager $manager): void
     {
 
-        $drink = new MetaCategory();
-        $drink->setName('Drink');
+        $this->_createCategory(null, $this->getCategoryData(), $manager, 'category');
 
-        $food = new MetaCategory();
-        $food->setName('Food');
-
-        $fruits = new MetaCategory();
-        $fruits->setName('Fruits');
-        $fruits->setParent($food);
-
-        $vegetables = new MetaCategory();
-        $vegetables->setName('Vegetables');
-        $vegetables->setParent($food);
-
-        $carrots = new MetaCategory();
-        $carrots->setName('Carrots');
-        $carrots->setParent($vegetables);
-
-
-        $this->addReference('category-1', $drink);
-        $this->addReference('category-2', $food);
-        $this->addReference('category-3', $fruits);
-        $this->addReference('category-4', $vegetables);
-        $this->addReference('category-5', $carrots);
-
-        $manager->persist($drink);
-        $manager->persist($food);
-        $manager->persist($fruits);
-        $manager->persist($vegetables);
-        $manager->persist($carrots);
         $manager->flush();
     }
 
@@ -435,10 +489,9 @@ MARKDOWN;
 
     private function getRandomCategory(): MetaCategory
     {
-        $data = [1,2,3,4,5];
-        shuffle($data);
+        shuffle($this->mapCategories);
 
-        return $this->getReference('category-' . current($data));
+        return $this->getReference(current($this->mapCategories));
     }
 
     private function getRandomDocument(): MetaDocumentType

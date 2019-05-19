@@ -1,26 +1,28 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}ResourceMediaType index{% endblock %}
+{% block title %}{{ 'title.meta.media_type'|trans }}{% endblock %}
 
 {% block body %}
-    <h1>ResourceMediaType index</h1>
+    <h1>{{ 'title.meta.media_type'|trans }}</h1>
+    {{ 'help.resource.media_type'|trans }}
+    <hr/>
 
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Name</th>
-                <th>actions</th>
+                <th>{{'label.name'|trans}}</th>
+                <th>{{'label.actions'|trans}}</th>
             </tr>
         </thead>
         <tbody>
-        {% for resource_media_type in resource_media_types %}
+        {% for moderator_meta_media_type in moderator_meta_media_types %}
             <tr>
-                <td>{{ resource_media_type.id }}</td>
-                <td>{{ resource_media_type.name }}</td>
+                <td>{{ moderator_meta_media_type.id }}</td>
+                <td>{{ moderator_meta_media_type.name }}</td>
                 <td>
-                    <a href="{{ path('resource_media_type_show', {'id': resource_media_type.id}) }}">show</a>
-                    <a href="{{ path('resource_media_type_edit', {'id': resource_media_type.id}) }}">edit</a>
+                    <a href="{{ path('moderator_meta_media_type_show', {'id': moderator_meta_media_type.id}) }}">{{'action.show'|trans}}</a>
+                    <a href="{{ path('moderator_meta_media_type_edit', {'id': moderator_meta_media_type.id}) }}">{{'action.edit'|trans}}</a>
                 </td>
             </tr>
         {% else %}
@@ -31,5 +33,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('resource_media_type_new') }}">Create new</a>
+    <a href="{{ path('moderator_meta_media_type_new') }}">{{'action.create'|trans}}</a>
 {% endblock %}

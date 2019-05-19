@@ -12,15 +12,15 @@
                 <td>{{ resource_document_type.id }}</td>
             </tr>
             <tr>
-                <th>Name</th>
+                <th>{{'label.name'|trans}}</th>
                 <td>{{ resource_document_type.name }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('resource_document_type_index') }}">back to list</a>
+    <a href="{{ path('moderator_meta_document_type_index') }}">back to list</a>
 
-    <a href="{{ path('resource_document_type_edit', {'id': resource_document_type.id}) }}">edit</a>
+    <a href="{{ path('moderator_meta_document_type_edit', {'id': resource_document_type.id}) }}">{{'action.edit'|trans}}</a>
 
     {{ include('moderator/meta/document_type/_delete_form.html.twig') }}
 {% endblock %}

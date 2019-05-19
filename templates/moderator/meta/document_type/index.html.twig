@@ -1,16 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}ResourceDocumentType index{% endblock %}
+{% block title %}{{ 'title.meta.document_type'|trans }}{% endblock %}
 
 {% block body %}
-    <h1>ResourceDocumentType index</h1>
+    <h1>{{ 'title.meta.document_type'|trans }}</h1>
+    {{ 'help.resource.document_type'|trans }}
+    <hr/>
 
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Name</th>
-                <th>actions</th>
+                <th>{{'label.name'|trans}}</th>
+                <th>{{'label.actions'|trans}}</th>
             </tr>
         </thead>
         <tbody>
@@ -19,8 +21,8 @@
                 <td>{{ resource_document_type.id }}</td>
                 <td>{{ resource_document_type.name }}</td>
                 <td>
-                    <a href="{{ path('resource_document_type_show', {'id': resource_document_type.id}) }}">show</a>
-                    <a href="{{ path('resource_document_type_edit', {'id': resource_document_type.id}) }}">edit</a>
+                    <a href="{{ path('moderator_meta_document_type_show', {'id': resource_document_type.id}) }}">{{'action.show'|trans}}</a>
+                    <a href="{{ path('moderator_meta_document_type_edit', {'id': resource_document_type.id}) }}">{{'action.edit'|trans}}</a>
                 </td>
             </tr>
         {% else %}
@@ -31,5 +33,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('resource_document_type_new') }}">Create new</a>
+    <a href="{{ path('moderator_meta_document_type_new') }}">{{'action.create'|trans}}</a>
 {% endblock %}

@@ -1,43 +1,25 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}MetaCategory index{% endblock %}
+{% block title %}{{ 'title.meta.category'|trans }}{% endblock %}
 
 {% block body %}
+    <h1>{{ 'title.meta.category'|trans }}</h1>
+    {{ 'help.resource.category'|trans }}
+    <hr/>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
-    <script>
-
-        $(function () {
-
-            $('#jstree_demo_div').jstree({ 'core' : {
-                'data' : {{ json_categories|raw  }}
-            },
-                "plugins" : [
-                    "contextmenu", "dnd", "search",
-                    "state", "types", "wholerow"
-                ]
-            });
-
-        });
-
-
-    </script>
-    <div id="jstree_demo_div"></div>
+    {{ include("moderator/meta/category/tree.html.twig") }}
 {#
-    <h1>MetaCategory index</h1>
     {{ tree|raw }}
 
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Name</th>
+                <th>{{'label.name'|trans}}</th>
                 <th>Lft</th>
                 <th>Lvl</th>
                 <th>Rgt</th>
-                <th>actions</th>
+                <th>{{'label.actions'|trans}}</th>
             </tr>
         </thead>
         <tbody>
@@ -49,8 +31,8 @@
                 <td>{{ meta_category.level }}</td>
                 <td>{{ meta_category.right }}</td>
                 <td>
-                    <a href="{{ path('meta_category_show', {'id': meta_category.id}) }}">show</a>
-                    <a href="{{ path('meta_category_edit', {'id': meta_category.id}) }}">edit</a>
+                    <a href="{{ path('moderator_meta_category_show', {'id': meta_category.id}) }}">{{'action.show'|trans}}</a>
+                    <a href="{{ path('moderator_meta_category_edit', {'id': meta_category.id}) }}">{{'action.edit'|trans}}</a>
                 </td>
             </tr>
         {% else %}
@@ -60,6 +42,6 @@
         {% endfor %}
         </tbody>
     </table>
-    <a href="{{ path('meta_category_new') }}">Create new</a>
+    <a href="{{ path('moderator_meta_category_new') }}">{{'action.create'|trans}}</a>
 #}
 {% endblock %}

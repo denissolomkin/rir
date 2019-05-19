@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -66,7 +67,7 @@ class UserGroup implements \Serializable, \JsonSerializable
     /**
      * @return string
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -84,7 +85,7 @@ class UserGroup implements \Serializable, \JsonSerializable
     /**
      * @return MetaDocumentType[]|ArrayCollection
      */
-    public function getDocumentTypes(): ArrayCollection
+    public function getDocumentTypes(): ?Collection
     {
         return $this->documentTypes;
     }

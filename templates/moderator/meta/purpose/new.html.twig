@@ -3,9 +3,9 @@
 {% block title %}New ResourcePurpose{% endblock %}
 
 {% block body %}
-    <h1>Create new ResourcePurpose</h1>
+    <h1>{{'action.create'|trans}} ResourcePurpose</h1>
 
-    {{ include('resource_purpose/_form.html.twig') }}
+    {{ include('moderator/meta/purpose/_form.html.twig') }}
 
-    <a href="{{ path('resource_purpose_index') }}">back to list</a>
+    <a href="{{ path('moderator_meta_purpose_index') }}">back to list</a>
 {% endblock %}

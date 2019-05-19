@@ -24,19 +24,19 @@ class MetaAccessLevelController extends AbstractController
      *   * 'admin_post_index' is the route with a name that follows the same
      *     structure as the rest of the controllers of this class.
      *
-     * @Route("/", methods={"GET"}, name="admin_resource_access_level_index")
+     * @Route("/", methods={"GET"}, name="admin_meta_access_level_index")
      */
     public function index(EntityManagerInterface $entityManager): Response
     {
         $list = $entityManager->getRepository(MetaAccessLevel::class)->findAll();
 
-        return $this->render('moderator/attribute/access_level/list.html.twig', ['list' => $list]);
+        return $this->render('admin/meta/access_level/list.html.twig', ['list' => $list]);
     }
 
     /**
      * Creates a new ResourceAccessLevel entity.
      *
-     * @Route("/new", methods={"GET", "POST"}, name="admin_resource_access_level_new")
+     * @Route("/new", methods={"GET", "POST"}, name="admin_meta_access_level_new")
      *
      * NOTE: the Method annotation is optional, but it's a recommended practice
      * to constraint the HTTP methods each controller responds to (by default
@@ -64,13 +64,13 @@ class MetaAccessLevelController extends AbstractController
             $this->addFlash('success', 'resource.access_level.created_successfully');
 
             if ($form->get('saveAndCreateNew')->isClicked()) {
-                return $this->redirectToRoute('admin_resource_access_level_new');
+                return $this->redirectToRoute('admin_meta_access_level_new');
             }
 
-            return $this->redirectToRoute('admin_resource_access_level_index');
+            return $this->redirectToRoute('admin_meta_access_level_index');
         }
 
-        return $this->render('admin/resource/access_level/new.html.twig', [
+        return $this->render('admin/meta/access_level/new.html.twig', [
             'item' => $object,
             'form' => $form->createView(),
         ]);
@@ -79,7 +79,7 @@ class MetaAccessLevelController extends AbstractController
     /**
      * Displays a form to edit an existing ResourceAccessLevel entity.
      *
-     * @Route("/{id<\d+>}/edit",methods={"GET", "POST"}, name="admin_resource_access_level_edit")
+     * @Route("/{id<\d+>}/edit",methods={"GET", "POST"}, name="admin_meta_access_level_edit")
      */
     public function edit(Request $request, MetaAccessLevel $object): Response
     {
@@ -91,10 +91,10 @@ class MetaAccessLevelController extends AbstractController
 
             $this->addFlash('success', 'resource.access_level.updated_successfully');
 
-            return $this->redirectToRoute('admin_resource_access_level_edit', ['id' => $object->getId()]);
+            return $this->redirectToRoute('admin_meta_access_level_edit', ['id' => $object->getId()]);
         }
 
-        return $this->render('admin/resource/access_level/edit.html.twig', [
+        return $this->render('admin/meta/access_level/edit.html.twig', [
             'form' => $form->createView(),
             'post' => $object,
         ]);
@@ -103,12 +103,12 @@ class MetaAccessLevelController extends AbstractController
     /**
      * Deletes a ResourceAccessLevel entity.
      *
-     * @Route("/{id}/delete", methods={"POST"}, name="admin_resource_access_level_delete")
+     * @Route("/{id}/delete", methods={"POST"}, name="admin_meta_access_level_delete")
      */
     public function delete(Request $request, MetaAccessLevel $object): Response
     {
         if (!$this->isCsrfTokenValid('delete', $request->request->get('token'))) {
-            return $this->redirectToRoute('admin_resource_access_level_index');
+            return $this->redirectToRoute('admin_meta_access_level_index');
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -117,6 +117,6 @@ class MetaAccessLevelController extends AbstractController
 
         $this->addFlash('success', 'resource.access_level.deleted_successfully');
 
-        return $this->redirectToRoute('admin_resource_access_level_index');
+        return $this->redirectToRoute('admin_meta_access_level_index');
     }
 }

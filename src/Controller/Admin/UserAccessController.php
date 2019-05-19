@@ -11,13 +11,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/admin/user/access")
+ * @Route("/admin/acl/user-access")
  * @IsGranted("ROLE_ADMIN")
  */
 class UserAccessController extends AbstractController
 {
     /**
-     * @Route("/", name="admin_user_access_index", methods={"GET"})
+     * @Route("/", name="admin_acl_user_access_index", methods={"GET"})
      */
     public function index(): Response
     {
@@ -25,13 +25,13 @@ class UserAccessController extends AbstractController
             ->getRepository(UserAccess::class)
             ->findAll();
 
-        return $this->render('admin/user_access/index.html.twig', [
+        return $this->render('admin/acl/user_access/index.html.twig', [
             'user_accesses' => $userAccesses,
         ]);
     }
 
     /**
-     * @Route("/new", name="admin_user_access_new", methods={"GET","POST"})
+     * @Route("/new", name="admin_acl_user_access_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -44,27 +44,27 @@ class UserAccessController extends AbstractController
             $entityManager->persist($userAccess);
             $entityManager->flush();
 
-            return $this->redirectToRoute('user_access_index');
+            return $this->redirectToRoute('admin_acl_user_access_index');
         }
 
-        return $this->render('admin/user_access/new.html.twig', [
+        return $this->render('admin/acl/user_access/new.html.twig', [
             'user_access' => $userAccess,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="admin_user_access_show", methods={"GET"})
+     * @Route("/{id}", name="admin_acl_user_access_show", methods={"GET"})
      */
     public function show(UserAccess $userAccess): Response
     {
-        return $this->render('admin/user_access/show.html.twig', [
+        return $this->render('admin/acl/user_access/show.html.twig', [
             'user_access' => $userAccess,
         ]);
     }
 
     /**
-     * @Route("/{id}/edit", name="admin_user_access_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="admin_acl_user_access_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, UserAccess $userAccess): Response
     {
@@ -74,19 +74,19 @@ class UserAccessController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('admin_user_access_index', [
+            return $this->redirectToRoute('admin_acl_user_access_index', [
                 'id' => $userAccess->getId(),
             ]);
         }
 
-        return $this->render('admin/user_access/edit.html.twig', [
+        return $this->render('admin/acl/user_access/edit.html.twig', [
             'user_access' => $userAccess,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="admin_user_access_delete", methods={"DELETE"})
+     * @Route("/{id}", name="admin_acl_user_access_delete", methods={"DELETE"})
      */
     public function delete(Request $request, UserAccess $userAccess): Response
     {
@@ -96,6 +96,6 @@ class UserAccessController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('admin_user_access_index');
+        return $this->redirectToRoute('admin_acl_user_access_index');
     }
 }

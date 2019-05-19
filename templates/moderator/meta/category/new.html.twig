@@ -3,9 +3,9 @@
 {% block title %}New MetaCategory{% endblock %}
 
 {% block body %}
-    <h1>Create new MetaCategory</h1>
+    <h1>{{'action.create'|trans}} MetaCategory</h1>
 
     {{ include('meta_category/_form.html.twig') }}
 
-    <a href="{{ path('meta_category_index') }}">back to list</a>
+    <a href="{{ path('moderator_meta_category_index') }}">back to list</a>
 {% endblock %}

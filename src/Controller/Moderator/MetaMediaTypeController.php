@@ -20,21 +20,21 @@ class MetaMediaTypeController extends AbstractController
 {
 
     /**
-     * @Route("/", methods={"GET"}, name="admin_resource_media_type_index")
+     * @Route("/relation", methods={"GET"}, name="moderator_meta_media_type_relation")
      */
     public function relation(EntityManagerInterface $entityManager): Response
     {
         $mediaTypes = $entityManager->getRepository(MetaMedia::class)->findAll();
         $extensions = $entityManager->getRepository(MetaExtension::class)->findAll();
 
-        return $this->render('admin/resource/media_type/list.html.twig', [
+        return $this->render('moderator/meta/media_extensions/list.html.twig', [
             'mediaTypes' => $mediaTypes,
             'extensions' => $extensions,
         ]);
     }
 
     /**
-     * @Route("/save", methods={"POST"}, name="admin_resource_media_type_save")
+     * @Route("/save", methods={"POST"}, name="moderator_meta_media_type_save")
      */
     public function save(EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -57,7 +57,7 @@ class MetaMediaTypeController extends AbstractController
     }
 
     /**
-     * @Route("/", name="resource_media_type_index", methods={"GET"})
+     * @Route("/", name="moderator_meta_media_type_index", methods={"GET"})
      */
     public function index(): Response
     {
@@ -65,13 +65,13 @@ class MetaMediaTypeController extends AbstractController
             ->getRepository(MetaMedia::class)
             ->findAll();
 
-        return $this->render('admin/attribute/resource_media_type/index.html.twig', [
-            'resource_media_types' => $resourceMediaTypes,
+        return $this->render('moderator/meta/media_type/index.html.twig', [
+            'moderator_meta_media_types' => $resourceMediaTypes,
         ]);
     }
 
     /**
-     * @Route("/new", name="resource_media_type_new", methods={"GET","POST"})
+     * @Route("/new", name="moderator_meta_media_type_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -84,27 +84,27 @@ class MetaMediaTypeController extends AbstractController
             $entityManager->persist($resourceMediaType);
             $entityManager->flush();
 
-            return $this->redirectToRoute('resource_media_type_index');
+            return $this->redirectToRoute('moderator_meta_media_type_index');
         }
 
-        return $this->render('admin/attribute/resource_media_type/new.html.twig', [
-            'resource_media_type' => $resourceMediaType,
+        return $this->render('moderator/meta/media_type/new.html.twig', [
+            'moderator_meta_media_type' => $resourceMediaType,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="resource_media_type_show", methods={"GET"})
+     * @Route("/{id}", name="moderator_meta_media_type_show", methods={"GET"})
      */
     public function show(MetaMedia $resourceMediaType): Response
     {
-        return $this->render('admin/attribute/resource_media_type/show.html.twig', [
-            'resource_media_type' => $resourceMediaType,
+        return $this->render('moderator/meta/media_type/show.html.twig', [
+            'moderator_meta_media_type' => $resourceMediaType,
         ]);
     }
 
     /**
-     * @Route("/{id}/edit", name="resource_media_type_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="moderator_meta_media_type_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, MetaMedia $resourceMediaType): Response
     {
@@ -114,19 +114,19 @@ class MetaMediaTypeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('resource_media_type_index', [
+            return $this->redirectToRoute('moderator_meta_media_type_index', [
                 'id' => $resourceMediaType->getId(),
             ]);
         }
 
-        return $this->render('admin/attribute/resource_media_type/edit.html.twig', [
-            'resource_media_type' => $resourceMediaType,
+        return $this->render('moderator/meta/media_type/edit.html.twig', [
+            'moderator_meta_media_type' => $resourceMediaType,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="resource_media_type_delete", methods={"DELETE"})
+     * @Route("/{id}", name="moderator_meta_media_type_delete", methods={"DELETE"})
      */
     public function delete(Request $request, MetaMedia $resourceMediaType): Response
     {
@@ -136,6 +136,6 @@ class MetaMediaTypeController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('resource_media_type_index');
+        return $this->redirectToRoute('moderator_meta_media_type_index');
     }
 }

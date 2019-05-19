@@ -1,9 +1,13 @@
-{% extends 'admin/layout.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block body_id 'admin_user_new' %}
 
 {% block main %}
-    <h1>{{ 'title.user_new'|trans }}</h1>
+
+    <h1>{{ (app.request.attributes.get('_route') == 'admin_user_edit'
+        ? 'title.user.edit'
+        : 'title.user.new'
+        ) | trans }}</h1>
 
     {{ form(form) }}
 

@@ -49,7 +49,7 @@ class SecurityController extends AbstractController
     /**
      * Creates a new ResourceAccessLevel entity.
      *
-     * @Route("/new", methods={"GET", "POST"}, name="admin_resource_access_level_new")
+     * @Route("/new", methods={"GET", "POST"}, name="admin_meta_access_level_new")
      *
      * NOTE: the Method annotation is optional, but it's a recommended practice
      * to constraint the HTTP methods each controller responds to (by default
@@ -114,7 +114,7 @@ class SecurityController extends AbstractController
                 return $this->redirectToRoute('resource_search');
             }
 
-            return $this->redirectToRoute('admin_resource_access_level_index');
+            return $this->redirectToRoute('admin_meta_access_level_index');
         }
 
         return $this->render('account/signup.html.twig', [

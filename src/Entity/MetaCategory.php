@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table
  * @ORM\Entity(repositoryClass="App\Repository\MetaCategoryRepository")
  */
-class MetaCategory
+class MetaCategory implements \JsonSerializable
 {
     /**
      * @ORM\Column(name="id", type="integer")
@@ -85,6 +85,7 @@ class MetaCategory
     public function setParent(MetaCategory $parent = null)
     {
         $this->parent = $parent;
+        return $this;
     }
 
     public function getParent() : ?MetaCategory

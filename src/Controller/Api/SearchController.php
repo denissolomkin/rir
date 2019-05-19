@@ -38,12 +38,12 @@ class SearchController extends AbstractController
     {
 
         /** @var User $user */
-        $searchResource = $searchResourceRepository->find(
+        $search = $searchResourceRepository->find(
                 $tokenStorage->getToken()->getUser() instanceof UserInterface
                 ?? $tokenStorage->getToken()->getUser()->getId()
             ) ?? new Search();
 
-        $form = $this->createForm(SearchByUserForm::class, $searchResource);
+        $form = $this->createForm(SearchByUserForm::class, $search);
 
         $form->handleRequest($request);
 
@@ -65,8 +65,8 @@ class SearchController extends AbstractController
     ): Response
     {
 
-        $searchResource = new Search();
-        $form = $this->createForm(SearchByUserForm::class, $searchResource);
+        $search = new Search();
+        $form = $this->createForm(SearchByUserForm::class, $search);
 
         $form->handleRequest($request);
 
@@ -74,16 +74,20 @@ class SearchController extends AbstractController
         // isValid() method already checks whether the form is submitted.
         // However, we explicitly add it to improve code readability.
         // See https://symfony.com/doc/current/best_practices/forms.html#handling-form-submits
-        if ($form->isSubmitted() /*&& $form->isValid()*/) {
+        if ($form->isSubmitted()) {
 
-            //$em = $this->getDoctrine()->getManager();
-            //$em->persist($searchResource);
-            //$em->flush();
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($search);
+                $em->flush();
 
-            $results = array_map(function ($e) {
-                return (new EntityExporter())->convert($e);
-            }, $repository->findBySearch($searchResource));
+                $results = array_map(function ($e) {
+                    return (new EntityExporter())->convert($e);
+                }, $repository->findBySearch($search));
 
+            } else {
+                return new JsonResponse(['errors' => $form->getErrors()], 400);
+            }
 
         } else {
             return new JsonResponse(['error' => 'Please, first submit form'], 400);

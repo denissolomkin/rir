@@ -1,4 +1,4 @@
-{% extends 'admin/layout.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block body_id 'moderator_resource_edit' %}
 
@@ -7,7 +7,7 @@
 
     {{ form(form) }}
 
-    <a href="{{ path('admin_resource_access_level_index') }}" class="btn btn-link">
+    <a href="{{ path('admin_meta_access_level_index') }}" class="btn btn-link">
         <i class="fa fa-list-alt" aria-hidden="true"></i> {{ 'action.back_to_list'|trans }}
     </a>
 

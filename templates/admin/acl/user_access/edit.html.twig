@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit UserAccess{% endblock %}
+
+{% block body %}
+    <h1>Edit UserAccess</h1>
+
+    {{ include('admin/acl/user_access/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('admin_acl_user_access_index') }}">back to list</a>
+
+    {{ include('admin/acl/user_access/_delete_form.html.twig') }}
+{% endblock %}

@@ -9,8 +9,8 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Name</th>
-                <th>actions</th>
+                <th>{{'label.name'|trans}}</th>
+                <th>{{'label.actions'|trans}}</th>
             </tr>
         </thead>
         <tbody>
@@ -19,8 +19,8 @@
                 <td>{{ resource_purpose.id }}</td>
                 <td>{{ resource_purpose.name }}</td>
                 <td>
-                    <a href="{{ path('resource_purpose_show', {'id': resource_purpose.id}) }}">show</a>
-                    <a href="{{ path('resource_purpose_edit', {'id': resource_purpose.id}) }}">edit</a>
+                    <a href="{{ path('moderator_meta_purpose_show', {'id': resource_purpose.id}) }}">{{'action.show'|trans}}</a>
+                    <a href="{{ path('moderator_meta_purpose_edit', {'id': resource_purpose.id}) }}">{{'action.edit'|trans}}</a>
                 </td>
             </tr>
         {% else %}
@@ -31,5 +31,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('resource_purpose_new') }}">Create new</a>
+    <a href="{{ path('moderator_meta_purpose_new') }}">{{'action.create'|trans}}</a>
 {% endblock %}

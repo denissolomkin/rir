@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New UserGroup{% endblock %}
+
+{% block body %}
+    <h1>{{'action.create'|trans}} UserGroup</h1>
+
+    {{ include('admin/acl/user_group/_form.html.twig') }}
+
+    <a href="{{ path('admin_acl_user_group_index') }}">back to list</a>
+{% endblock %}

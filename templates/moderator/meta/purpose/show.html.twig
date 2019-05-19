@@ -12,15 +12,15 @@
                 <td>{{ resource_purpose.id }}</td>
             </tr>
             <tr>
-                <th>Name</th>
+                <th>{{'label.name'|trans}}</th>
                 <td>{{ resource_purpose.name }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('resource_purpose_index') }}">back to list</a>
+    <a href="{{ path('moderator_meta_purpose_index') }}">back to list</a>
 
-    <a href="{{ path('resource_purpose_edit', {'id': resource_purpose.id}) }}">edit</a>
+    <a href="{{ path('moderator_meta_purpose_edit', {'id': resource_purpose.id}) }}">{{'action.edit'|trans}}</a>
 
-    {{ include('resource_purpose/_delete_form.html.twig') }}
+    {{ include('moderator/meta/purpose/_delete_form.html.twig') }}
 {% endblock %}

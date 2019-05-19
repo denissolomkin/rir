@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class MetaDocumentTypeController extends AbstractController
 {
     /**
-     * @Route("/", name="resource_document_type_index", methods={"GET"})
+     * @Route("/", name="moderator_meta_document_type_index", methods={"GET"})
      */
     public function index(): Response
     {
@@ -30,7 +30,7 @@ class MetaDocumentTypeController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="resource_document_type_new", methods={"GET","POST"})
+     * @Route("/new", name="moderator_meta_document_type_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -43,7 +43,7 @@ class MetaDocumentTypeController extends AbstractController
             $entityManager->persist($documentType);
             $entityManager->flush();
 
-            return $this->redirectToRoute('resource_document_type_index');
+            return $this->redirectToRoute('moderator_meta_document_type_index');
         }
 
         return $this->render('moderator/meta/document_type/new.html.twig', [
@@ -53,7 +53,7 @@ class MetaDocumentTypeController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="resource_document_type_show", methods={"GET"})
+     * @Route("/{id}", name="moderator_meta_document_type_show", methods={"GET"})
      */
     public function show(MetaDocumentType $documentType): Response
     {
@@ -63,7 +63,7 @@ class MetaDocumentTypeController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="resource_document_type_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="moderator_meta_document_type_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, MetaDocumentType $documentType): Response
     {
@@ -73,7 +73,7 @@ class MetaDocumentTypeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('resource_document_type_index', [
+            return $this->redirectToRoute('moderator_meta_document_type_index', [
                 'id' => $documentType->getId(),
             ]);
         }
@@ -85,7 +85,7 @@ class MetaDocumentTypeController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="resource_document_type_delete", methods={"DELETE"})
+     * @Route("/{id}", name="moderator_meta_document_type_delete", methods={"DELETE"})
      */
     public function delete(Request $request, MetaDocumentType $resourceDocumentType): Response
     {
@@ -95,6 +95,6 @@ class MetaDocumentTypeController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('resource_document_type_index');
+        return $this->redirectToRoute('moderator_meta_document_type_index');
     }
 }

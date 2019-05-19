@@ -5,9 +5,9 @@
 {% block body %}
     <h1>Edit ResourcePurpose</h1>
 
-    {{ include('resource_purpose/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('moderator/meta/purpose/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('resource_purpose_index') }}">back to list</a>
+    <a href="{{ path('moderator_meta_purpose_index') }}">back to list</a>
 
-    {{ include('resource_purpose/_delete_form.html.twig') }}
+    {{ include('moderator/meta/purpose/_delete_form.html.twig') }}
 {% endblock %}

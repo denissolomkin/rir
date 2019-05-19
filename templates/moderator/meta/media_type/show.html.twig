@@ -9,18 +9,18 @@
         <tbody>
             <tr>
                 <th>Id</th>
-                <td>{{ resource_media_type.id }}</td>
+                <td>{{ moderator_meta_media_type.id }}</td>
             </tr>
             <tr>
-                <th>Name</th>
-                <td>{{ resource_media_type.name }}</td>
+                <th>{{'label.name'|trans}}</th>
+                <td>{{ moderator_meta_media_type.name }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('resource_media_type_index') }}">back to list</a>
+    <a href="{{ path('moderator_meta_media_type_index') }}">back to list</a>
 
-    <a href="{{ path('resource_media_type_edit', {'id': resource_media_type.id}) }}">edit</a>
+    <a href="{{ path('moderator_meta_media_type_edit', {'id': moderator_meta_media_type.id}) }}">{{'action.edit'|trans}}</a>
 
-    {{ include('moderator/meta/resource_media_type/_delete_form.html.twig') }}
+    {{ include('moderator/meta/moderator_meta_media_type/_delete_form.html.twig') }}
 {% endblock %}

@@ -61,7 +61,7 @@ class UserAccess implements \Serializable, \JsonSerializable
     /**
      * @return string
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }

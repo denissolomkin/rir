@@ -26,6 +26,34 @@ class Search
      */
     protected $id;
 
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    protected $user;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $source;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $theme;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $title;
 
     /**
      * @var MetaKeyword[]|ArrayCollection
@@ -37,44 +65,21 @@ class Search
     protected $keywords;
 
     /**
-     * @var User
+     * @var MetaPurpose[]|ArrayCollection
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToMany(targetEntity="MetaPurpose")
+     * @ORM\JoinColumn(nullable=true)
      */
-    protected $author;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank
-     */
-    protected $source;
-
-    /**
-     * @var MetaPurpose
-     *
-     * @ORM\ManyToOne(targetEntity="MetaPurpose")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    protected $purpose;
+    protected $purposes;
 
     /**
      * @var MetaDocumentType
      *
-     * @ORM\ManyToOne(targetEntity="MetaDocumentType")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToMany(targetEntity="MetaDocumentType")
+     * @ORM\JoinColumn(nullable=true)
      */
-    protected $documentType;
+    protected $documentTypes;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank
-     */
-    protected $theme;
 
     // TECH
 
@@ -82,70 +87,18 @@ class Search
     /**
      * @var MetaExtension
      *
-     * @ORM\ManyToOne(targetEntity="MetaExtension")
+     * @ORM\ManyToMany(targetEntity="MetaExtension")
      * @ORM\JoinColumn(nullable=true)
-     * @Assert\NotBlank
      */
-    protected $extension;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(type="integer")
-     * @Assert\NotBlank
-     */
-    protected $size;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime")
-     */
-    protected $createdAt;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime")
-     */
-    protected $editedAt;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    protected $publishedAt;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    protected $approvedAt;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    protected $expiredAt;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank
-     */
-    protected $language;
+    protected $extensions;
 
     /**
      * @var MetaMedia
      *
-     * @ORM\ManyToOne(targetEntity="MetaMedia")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToMany(targetEntity="MetaMedia")
+     * @ORM\JoinColumn(nullable=true)
      */
-    protected $mediaType;
+    protected $mediaTypes;
 
     // SEARCH
 
@@ -153,60 +106,26 @@ class Search
      * @var MetaCategory
      *
      * @ORM\ManyToOne(targetEntity="MetaCategory")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     protected $category;
 
-    /**
-     * @var MetaAccessLevel
-     *
-     * @ORM\ManyToOne(targetEntity="MetaAccessLevel")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    protected $accessLevel;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer")
-     */
-    private $resourceId;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string")
-     */
-    protected $title;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text")
-     */
-    protected $annotation;
-
-    /**
-     * @var User[]
+     * @var User[]|Collection
      *
      * @ORM\ManyToMany(targetEntity="User")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     protected $authors;
 
     /**
      * @var string[]
      *
-     * @ORM\Column(type="simple_array", nullable=false)
+     * @ORM\Column(type="simple_array", nullable=true)
      */
     protected $languages;
 
-
-    /**
-     * @var array
-     *
-     * @ORM\Column(type="simple_array", nullable=false)
-     */
-    protected $statuses;
 
     /**
      * Resource constructor.
@@ -216,10 +135,12 @@ class Search
     {
         $this->authors = new ArrayCollection();
         $this->languages = [];
-        $this->createdAt = new \DateTime();
-        $this->editedAt = new \DateTime();
 
         $this->keywords = new ArrayCollection();
+        $this->documentTypes = new ArrayCollection();
+        $this->mediaTypes = new ArrayCollection();
+        $this->extensions = new ArrayCollection();
+        $this->purposes = new ArrayCollection();
     }
 
     /**
@@ -276,18 +197,18 @@ class Search
     /**
      * @return User
      */
-    public function getAuthor(): ?User
+    public function getUser(): ?User
     {
-        return $this->author;
+        return $this->user;
     }
 
     /**
-     * @param User $author
+     * @param User $user
      * @return self
      */
-    public function setAuthor(User $author): self
+    public function setUser(User $user): self
     {
-        $this->author = $author;
+        $this->user = $user;
         return $this;
     }
 
@@ -311,38 +232,38 @@ class Search
 
 
     /**
-     * @return MetaPurpose
+     * @return MetaPurpose[]|ArrayCollection
      */
-    public function getPurpose(): ?MetaPurpose
+    public function getPurposes(): ?Collection
     {
-        return $this->purpose;
+        return $this->purposes;
     }
 
     /**
-     * @param MetaPurpose $purpose
+     * @param MetaPurpose[]|ArrayCollection $purposes
      * @return self
      */
-    public function setPurpose(MetaPurpose $purpose): self
+    public function setPurposes(ArrayCollection $purposes): self
     {
-        $this->purpose = $purpose;
+        $this->purposes = $purposes;
         return $this;
     }
 
     /**
-     * @return MetaDocumentType
+     * @return MetaDocumentType[]
      */
-    public function getDocumentType(): ?MetaDocumentType
+    public function getDocumentTypes(): ?Collection
     {
-        return $this->documentType;
+        return $this->documentTypes;
     }
 
     /**
-     * @param MetaDocumentType $documentType
+     * @param MetaDocumentType[] $documentTypes
      * @return self
      */
-    public function setDocumentType(MetaDocumentType $documentType): self
+    public function setDocumentTypes(ArrayCollection $documentTypes): self
     {
-        $this->documentType = $documentType;
+        $this->documentTypes = $documentTypes;
         return $this;
     }
 
@@ -365,203 +286,60 @@ class Search
     }
 
     /**
-     * @return string
+     * @return MetaExtension[]
      */
-    public function getExtension(): ?MetaExtension
+    public function getExtensions(): ?Collection
     {
-        return $this->extension;
+        return $this->extensions;
     }
 
     /**
-     * @param MetaExtension $extension
+     * @param MetaExtension[] $extensions
      * @return self
      */
-    public function setExtension(MetaExtension $extension): self
+    public function setExtensions(ArrayCollection $extensions): self
     {
-        $this->extension = $extension;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSize(): ?int
-    {
-        return $this->size;
-    }
-
-    /**
-     * @param int $size
-     * @return self
-     */
-    public function setSize(int $size): self
-    {
-        $this->size = $size;
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedAt(): \DateTime
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * @param \DateTime $createdAt
-     * @return self
-     */
-    public function setCreatedAt(\DateTime $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getEditedAt(): \DateTime
-    {
-        return $this->editedAt;
-    }
-
-    /**
-     * @param \DateTime $editedAt
-     * @return self
-     */
-    public function setEditedAt(\DateTime $editedAt): self
-    {
-        $this->editedAt = $editedAt;
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getPublishedAt(): ?\DateTime
-    {
-        return $this->publishedAt;
-    }
-
-    /**
-     * @param \DateTime $publishedAt
-     * @return self
-     */
-    public function setPublishedAt(\DateTime $publishedAt): ?self
-    {
-        $this->publishedAt = $publishedAt;
+        $this->extensions = $extensions;
         return $this;
     }
 
 
     /**
-     * @return string
+     * @return MetaMedia[]
      */
-    public function getLanguage(): ?string
+    public function getMediaTypes(): ?Collection
     {
-        return $this->language;
+        return $this->mediaTypes;
     }
 
     /**
-     * @param string $language
+     * @param MetaMedia[] $mediaTypes
      * @return self
      */
-    public function setLanguage(string $language): self
+    public function setMediaType(ArrayCollection $mediaTypes): self
     {
-        $this->language = $language;
+        $this->mediaTypes = $mediaTypes;
         return $this;
     }
 
     /**
-     * @return MetaMedia
+     * @return MetaCategory
      */
-    public function getMediaType(): ?MetaMedia
-    {
-        return $this->mediaType;
-    }
-
-    /**
-     * @param MetaMedia $mediaType
-     * @return self
-     */
-    public function setMediaType(MetaMedia $mediaType): self
-    {
-        $this->mediaType = $mediaType;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCategory(): ?string
+    public function getCategory(): ?MetaCategory
     {
         return $this->category;
     }
 
     /**
-     * @param string $category
+     * @param MetaCategory $category
      * @return self
      */
-    public function setCategory(string $category): self
+    public function setCategory(?MetaCategory $category): self
     {
         $this->category = $category;
         return $this;
     }
 
-    /**
-     * @return MetaAccessLevel
-     */
-    public function getAccessLevel(): ?MetaAccessLevel
-    {
-        return $this->accessLevel;
-    }
-
-    /**
-     * @param MetaAccessLevel $accessLevel
-     * @return self
-     */
-    public function setAccessLevel(MetaAccessLevel $accessLevel): self
-    {
-        $this->accessLevel = $accessLevel;
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getApprovedAt(): ?\DateTime
-    {
-        return $this->approvedAt;
-    }
-
-    /**
-     * @param \DateTime $approvedAt
-     * @return self
-     */
-    public function setApprovedAt(\DateTime $approvedAt): self
-    {
-        $this->approvedAt = $approvedAt;
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getExpiredAt(): ?\DateTime
-    {
-        return $this->expiredAt;
-    }
-
-    /**
-     * @param \DateTime $expiredAt
-     * @return self
-     */
-    public function setExpiredAt(\DateTime $expiredAt = null): self
-    {
-        $this->expiredAt = $expiredAt;
-        return $this;
-    }
 
     /**
      * @return string
@@ -581,41 +359,6 @@ class Search
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAnnotation(): ?string
-    {
-        return $this->annotation;
-    }
-
-    /**
-     * @param string $annotation
-     * @return self
-     */
-    public function setAnnotation(string $annotation): self
-    {
-        $this->annotation = $annotation;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getResourceId(): ?int
-    {
-        return $this->resourceId;
-    }
-
-    /**
-     * @param int $resourceId
-     * @return Search
-     */
-    public function setResourceId(int $resourceId): Search
-    {
-        $this->resourceId = $resourceId;
-        return $this;
-    }
 
     /**
      * @return string[]
@@ -635,29 +378,19 @@ class Search
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getStatuses(): ?array
-    {
-        return $this->statuses;
-    }
 
     /**
-     * @param array $statuses
-     * @return self
+     * @return ArrayCollection|null
      */
-    public function setStatuses(array $statuses): self
-    {
-        $this->statuses = $statuses;
-        return $this;
-    }
-
-    public function getAuthors(): ?ArrayCollection
+    public function getAuthors(): ?Collection
     {
         return $this->authors;
     }
 
+    /**
+     * @param ArrayCollection $authors
+     * @return Search
+     */
     public function setAuthors(ArrayCollection $authors): self
     {
         $this->authors = $authors;

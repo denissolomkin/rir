@@ -16,6 +16,7 @@ use App\Entity\MetaKeyword;
 use App\Entity\Search;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -60,10 +61,17 @@ class ResourceRepository extends ServiceEntityRepository
     /**
      * @return Resource[]
      */
-    public function findBySearch(Search $searchResource, int $limit = Resource::NUM_ITEMS): array
+    public function findBySearch(Search $searchResource, int $page = 1, int $limit = Resource::NUM_ITEMS): Pagerfanta
     {
 
         $queryBuilder = $this->createQueryBuilder('p');
+
+        /* ищет любое вхождение в названии ресурса хотя бы по одному слову,
+        например запрос по строке "on two row" вернет ресурсы с именами:
+        - "hot ONtario news"
+        - "simple TWO things"
+        - "abuout thROWing errors"
+        */
 
         if ($title = $searchResource->getTitle()) {
             $query = $this->sanitizeSearchQuery($title);
@@ -72,52 +80,21 @@ class ResourceRepository extends ServiceEntityRepository
             if (\count($searchTerms)) {
 
                 foreach ($searchTerms as $key => $term) {
+                    $expr[] = $queryBuilder->expr()->like('p.title', ':t_' . $key);
+
+                    $queryBuilder
+                        ->setParameter('t_' . $key, '%' . $term . '%')/*
                     $queryBuilder
                         ->orWhere('p.title LIKE :t_' . $key)
                         ->setParameter('t_' . $key, '%' . $term . '%')
+                    */
                     ;
                 }
+
+                $queryBuilder->andWhere(
+                    $queryBuilder->expr()->orX(...$expr)
+                );
             }
-        }
-
-        if (\count($authors = $searchResource->getAuthors())) {
-
-            $ids = [];
-            /** @var User $author */
-            foreach ($authors as $author) {
-                $ids[] = $author->getId();
-            }
-            $queryBuilder
-                ->andWhere($queryBuilder->expr()->in('p.author', $ids));
-        }
-
-        if ($resource = $searchResource->getResourceId()) {
-            $queryBuilder
-                ->andWhere('p.id = :resource')
-                ->setParameter('resource', $resource)
-            ;
-        }
-
-        if ($annotation = $searchResource->getAnnotation()) {
-            $query = $this->sanitizeSearchQuery($title);
-            $searchTerms = $this->extractSearchTerms($query);
-
-            if (\count($searchTerms)) {
-
-                foreach ($searchTerms as $key => $term) {
-                    $queryBuilder
-                        ->orWhere('p.annotation LIKE :t_' . $key)
-                        ->setParameter('t_' . $key, '%' . $term . '%')
-                    ;
-                }
-            }
-        }
-
-        if ($purpose = $searchResource->getPurpose()) {
-            $queryBuilder
-                ->andWhere('p.purpose = :purpose')
-                ->setParameter('purpose', $purpose)
-            ;
         }
 
         if ($source = $searchResource->getSource()) {
@@ -134,33 +111,81 @@ class ResourceRepository extends ServiceEntityRepository
             ;
         }
 
-        if ($extension = $searchResource->getExtension()) {
-            $queryBuilder
-                ->andWhere('p.extension = :extension')
-                ->setParameter('extension', $extension)
-            ;
+
+        if (\count($collection = $searchResource->getKeywords())) {
+
+            $ids = [];
+            /** @var User $item */
+            foreach ($collection as $item) {
+                $ids[] = $item->getId();
+            }
+            $queryBuilder->join('p.keywords', 'k');
+            $queryBuilder->andWhere($queryBuilder->expr()->in('k.id', $ids));
+
         }
 
-        if ($mediaType = $searchResource->getMediaType()) {
+        if (\count($collection = $searchResource->getAuthors())) {
+
+            $ids = [];
+            /** @var User $item */
+            foreach ($collection as $item) {
+                $ids[] = $item->getId();
+            }
             $queryBuilder
-                ->andWhere('p.mediaType = :mediaType')
-                ->setParameter('mediaType', $mediaType)
-            ;
+                ->andWhere($queryBuilder->expr()->in('p.author', $ids));
         }
 
-        if ($documentType = $searchResource->getDocumentType()) {
+        if (\count($collection = $searchResource->getPurposes())) {
+
+            $ids = [];
+            foreach ($collection as $item) {
+                $ids[] = $item->getId();
+            }
             $queryBuilder
-                ->andWhere('p.documentType = :documentType')
-                ->setParameter('documentType', $documentType)
-            ;
+                ->andWhere($queryBuilder->expr()->in('p.purpose', $ids));
         }
 
-        return $queryBuilder
+        if (\count($collection = $searchResource->getExtensions())) {
+
+            $ids = [];
+            foreach ($collection as $item) {
+                $ids[] = $item->getId();
+            }
+            $queryBuilder
+                ->andWhere($queryBuilder->expr()->in('p.extension', $ids));
+        }
+
+        if (\count($collection = $searchResource->getMediaTypes())) {
+
+            $ids = [];
+            foreach ($collection as $item) {
+                $ids[] = $item->getId();
+            }
+            $queryBuilder
+                ->andWhere($queryBuilder->expr()->in('p.mediaType', $ids));
+        }
+
+        if (\count($collection = $searchResource->getDocumentTypes())) {
+
+            $ids = [];
+            foreach ($collection as $item) {
+                $ids[] = $item->getId();
+            }
+            $queryBuilder
+                ->andWhere($queryBuilder->expr()->in('p.documentType', $ids));
+        }
+
+        $query = $queryBuilder
             ->orderBy('p.publishedAt', 'DESC')
             ->setMaxResults($limit)
             ->getQuery()
-            ->getResult()
-            ;
+        ;
+
+        echo '<pre>';
+        var_dump($query->getSQL());
+        echo '</pre>';
+
+        return $this->createPaginator($query, $page);
     }
 
     /**

@@ -21,48 +21,40 @@
         </div>
     </form>
     #}
+    <script>// Show an element
+        var show = function (elem) {
+            elem.style.display = 'block';
+        };
 
-    {% if list %}
+        // Hide an element
+        var hide = function (elem) {
+            elem.style.display = 'none';
+        };
 
-        {% for item in list %}
-            <article class="item">
-                <h2>
-                    <a href="{{ path('resource_item', {id: item.id}) }}">
-                        {{ item.title }}
-                    </a>
-                </h2>
+        // Toggle element visibility
+        var toggle = function (elem) {
 
-                <p class="item-metadata">
-                    <span class="metadata"><i class="fa fa-crosshairs"></i> {{ item.purpose }}</span>
-                    <span class="metadata"><i class="fa fa-file-o"></i> {{ item.documentType.name }}</span>
-                    <span class="metadata"><i class="fa fa-file-word-o"></i> {{ item.mediaType.name }}</span>
-                    <span class="metadata"><i class="fa fa-user-secret"></i> {{ item.accessLevel.name }}</span>
-                    <span class="metadata"><i class="fa fa-link"></i> {{ item.theme }}</span>
-                    <span class="metadata"><i class="fa fa-language"></i> {{ item.language }}</span>
-                </p>
+            // If the element is visible, hide it
+            if (window.getComputedStyle(elem).display === 'block') {
+                hide(elem);
+                return;
+            }
 
-                <p>{{ item.annotation }}</p>
+            // Otherwise, show it
+            show(elem);
 
-                <p class="item-metadata">
-                    <span class="metadata"><i class="fa fa-calendar"></i> {{ item.createdAt|localizeddate('long', 'medium', null, 'UTC') }}</span>
-                    <span class="metadata"><i class="fa fa-user"></i> {{ item.author.fullName }}</span>
-                </p>
+        };
+    </script>
 
+    <button onclick="toggle(document.getElementsByTagName('form')[0])">hide/show</button>
 
-                {% if item.file %}
-                    <p>
-                        <span class="metadata"><i class="fa fa-download"></i><a href="{{ path('resource_download', {id: item.id}) }}">{{ item.file.fileName }}</a> </span>
-                    </p>
-                {% endif %}
+    {{ form(form) }}
 
-
-                {{ include('user/resource/_item_keywords.html.twig') }}
-            </article>
-        {% else %}
-            <div class="well">{{ 'resource.no_list_found'|trans }}</div>
-        {% endfor %}
-    {% else %}
-        {{ form(form) }}
+    {% if list is not null %}
+        {% if list is not empty %}
+            <script> toggle(document.getElementsByTagName('form')[0]);</script>
+        {% endif %}
+        {{ include('resource/_list.html.twig') }}
     {% endif %}
 
 

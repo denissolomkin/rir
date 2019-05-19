@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New UserAccess{% endblock %}
+
+{% block body %}
+    <h1>{{'action.create'|trans}} UserAccess</h1>
+
+    {{ include('admin/acl/user_access/_form.html.twig') }}
+
+    <a href="{{ path('admin_acl_user_access_index') }}">back to list</a>
+{% endblock %}

@@ -3,9 +3,9 @@
 {% block title %}New ResourceDocumentType{% endblock %}
 
 {% block body %}
-    <h1>Create new ResourceDocumentType</h1>
+    <h1>{{'action.create'|trans}} ResourceDocumentType</h1>
 
     {{ include('moderator/meta/document_type/_form.html.twig') }}
 
-    <a href="{{ path('resource_document_type_index') }}">back to list</a>
+    <a href="{{ path('moderator_meta_document_type_index') }}">back to list</a>
 {% endblock %}

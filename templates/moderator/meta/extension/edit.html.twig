@@ -5,9 +5,9 @@
 {% block body %}
     <h1>Edit ResourceExtension</h1>
 
-    {{ include('resource_extension/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('moderator/meta/extension/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('resource_extension_index') }}">back to list</a>
+    <a href="{{ path('moderator_meta_extension_index') }}">back to list</a>
 
-    {{ include('resource_extension/_delete_form.html.twig') }}
+    {{ include('moderator/meta/extension/_delete_form.html.twig') }}
 {% endblock %}

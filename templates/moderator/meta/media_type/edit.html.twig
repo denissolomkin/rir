@@ -5,9 +5,9 @@
 {% block body %}
     <h1>Edit ResourceMediaType</h1>
 
-    {{ include('moderator/meta/resource_media_type/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('moderator/meta/moderator_meta_media_type/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('resource_media_type_index') }}">back to list</a>
+    <a href="{{ path('moderator_meta_media_type_index') }}">back to list</a>
 
-    {{ include('moderator/meta/resource_media_type/_delete_form.html.twig') }}
+    {{ include('moderator/meta/moderator_meta_media_type/_delete_form.html.twig') }}
 {% endblock %}

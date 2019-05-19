@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table
  */
-class MetaAccessLevel
+class MetaAccessLevel implements \JsonSerializable
 {
     /**
      * @var int
@@ -43,5 +43,22 @@ class MetaAccessLevel
         return $this->name;
     }
 
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize(): string
+    {
+        // This entity implements JsonSerializable (http://php.net/manual/en/class.jsonserializable.php)
+        // so this method is used to customize its JSON representation when json_encode()
+        // is called, for example in tags|json_encode (app/Resources/views/form/fields.html.twig)
+
+        return $this->name;
+    }
+
+    public function __toString(): string
+    {
+        return $this->name;
+    }
 
 }

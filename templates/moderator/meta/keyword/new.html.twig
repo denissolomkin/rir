@@ -3,9 +3,9 @@
 {% block title %}New ResourceKeyword{% endblock %}
 
 {% block body %}
-    <h1>Create new ResourceKeyword</h1>
+    <h1>{{'action.create'|trans}} ResourceKeyword</h1>
 
-    {{ include('resource_keyword/_form.html.twig') }}
+    {{ include('moderator/meta/keyword/_form.html.twig') }}
 
-    <a href="{{ path('resource_keyword_index') }}">back to list</a>
+    <a href="{{ path('moderator_meta_keyword_index') }}">back to list</a>
 {% endblock %}

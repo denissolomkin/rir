@@ -1,16 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}ResourceExtension index{% endblock %}
+{% block title %}{{ 'title.meta.extension'|trans }}{% endblock %}
 
 {% block body %}
-    <h1>ResourceExtension index</h1>
+    <h1>{{ 'title.meta.extension'|trans }}</h1>
+    {{ 'help.resource.extension'|trans }}
+    <hr/>
 
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Name</th>
-                <th>actions</th>
+                <th>{{'label.name'|trans}}</th>
+                <th>{{'label.actions'|trans}}</th>
             </tr>
         </thead>
         <tbody>
@@ -19,8 +21,8 @@
                 <td>{{ resource_extension.id }}</td>
                 <td>{{ resource_extension.name }}</td>
                 <td>
-                    <a href="{{ path('resource_extension_show', {'id': resource_extension.id}) }}">show</a>
-                    <a href="{{ path('resource_extension_edit', {'id': resource_extension.id}) }}">edit</a>
+                    <a href="{{ path('moderator_meta_extension_show', {'id': resource_extension.id}) }}">{{'action.show'|trans}}</a>
+                    <a href="{{ path('moderator_meta_extension_edit', {'id': resource_extension.id}) }}">{{'action.edit'|trans}}</a>
                 </td>
             </tr>
         {% else %}
@@ -31,5 +33,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('resource_extension_new') }}">Create new</a>
+    <a href="{{ path('moderator_meta_extension_new') }}">{{'action.create'|trans}}</a>
 {% endblock %}

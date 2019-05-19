@@ -3,9 +3,9 @@
 {% block title %}New ResourceExtension{% endblock %}
 
 {% block body %}
-    <h1>Create new ResourceExtension</h1>
+    <h1>{{'action.create'|trans}} ResourceExtension</h1>
 
-    {{ include('resource_extension/_form.html.twig') }}
+    {{ include('moderator/meta/extension/_form.html.twig') }}
 
-    <a href="{{ path('resource_extension_index') }}">back to list</a>
+    <a href="{{ path('moderator_meta_extension_index') }}">back to list</a>
 {% endblock %}

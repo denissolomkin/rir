@@ -24,9 +24,18 @@ title:
   login: Авторизація
   add_comment: Додати коментар
   comment_error: Виникла помилка під час публікації вашого коментаря
+  meta:
+    category: Категорія
+    access_level: Рiвнi доступу
+    document_type: Вид документу
+    media_type: Тип ресурсу
+    purpose: Призначення
+    keyword: Ключові
+    extension: Формат файлу
   user:
     list: Список користувачів
     edit: Редагування облікового запису
+    new: Створення облікового запису
   resource:
     new: Створення ресурсу
     list: Список ресурсів
@@ -82,17 +91,14 @@ label:
     username: Логін
     password: Пароль
     role: Роль
-  username: Логін
-  password: Пароль
-  role: Роль
-  roles: Роли
+    access: Доступ
+    group: Група
   content: Зміст
   summary: Короткий зміст
   published_at: Опубліковано
   tags: Теги
+  name: Назва
   actions: Дії
-  fullname: Повне ім'я
-  email: Електронна пошта
   resource:
     title: Назва ресурсу
     annotation: Анотація
@@ -101,7 +107,7 @@ label:
     author: Автор ресурсу
     source: Джерело інформації
     purpose: Призначення ресурсу
-    document_type: Вид документу (згідно класифікатора документів)
+    document_type: Вид документу
     theme: Тема ресурсу
     extension: Формат файлу
     size: Розмір ресурсу
@@ -123,10 +129,15 @@ menu:
   back_to_blog: Назад до блогу
   homepage: Головна сторінка
   admin: Панель керування
-  users: Користувачi
+  user:
+    list: Користувачi
+    security: Права доступу
+    access: Рiвень доступу
+    group: Група користувачiв
   resource:
     list: Ресурси
     meta: Атрибути
+    category: Категорія
     access_level: Рiвнi доступу
     document_type: Вид документу
     media_type: Тип ресурсу
@@ -176,6 +187,8 @@ help:
     source: Назва організації, що створила документ
     theme: Проблема, якій присвячений ресурс
     category: Каталог/папка, для кого належить документ
+    document_type: Згідно класифікатора документів
+    extension: Розширення імені файлу
   reload_fixtures: 'Якщо ці користувачі не працюють, перезавантажте фікстури додатку, виконавши в консолі наступну команду:'
   add_user: 'Якщо ви хочете створити нових користувачів, скористайтеся наступною командою:'
   more_information: Для додаткової інформації зверніться до <a href="https://symfony.com/doc">Symfony документації</a>.

@@ -1,6 +1,6 @@
-{% extends 'admin/layout.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block body_id 'admin_resource_access_level_index' %}
+{% block body_id 'admin_meta_access_level_index' %}
 
 {% block main %}
     <h1>{{ 'title.resource.access_level.list'|trans }}</h1>
@@ -41,7 +41,7 @@
                         </div>
 
 
-                        <form action="{{ url('admin_resource_access_level_delete', {id: item.id}) }}" method="post" data-confirmation="true" id="delete-form">
+                        <form action="{{ url('admin_meta_access_level_delete', {id: item.id}) }}" method="post" data-confirmation="true" id="delete-form">
                             <input type="hidden" name="token" value="{{ csrf_token('delete') }}" />
                             <button type="submit" class="btn btn-sm btn-block btn-danger">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
@@ -51,7 +51,7 @@
 
 
 
-                        <a href="{{ path('admin_resource_access_level_edit', {id: item.id}) }}" class="btn btn-sm btn-primary">
+                        <a href="{{ path('admin_meta_access_level_edit', {id: item.id}) }}" class="btn btn-sm btn-primary">
                             <i class="fa fa-edit" aria-hidden="true"></i> {{ 'action.edit'|trans }}
                         </a>
                     </div>
@@ -68,7 +68,7 @@
 
 {% block sidebar %}
     <div class="section actions">
-        <a href="{{ path('admin_resource_access_level_new') }}" class="btn btn-lg btn-block btn-success">
+        <a href="{{ path('admin_meta_access_level_new') }}" class="btn btn-lg btn-block btn-success">
             <i class="fa fa-plus" aria-hidden="true"></i> {{ 'action.create'|trans }}
         </a>
     </div>
