@@ -4,8 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Entity\MetaAccessLevel;
 use App\Form\MetaAccessLevelForm;
+use App\Repository\MetaAccessLevelRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,11 +26,49 @@ class MetaAccessLevelController extends AbstractController
      *
      * @Route("/", methods={"GET"}, name="admin_meta_access_level_index")
      */
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(
+        EntityManagerInterface $entityManager,
+        MetaAccessLevelRepository $nestedTreeRepository
+    ): Response
     {
-        $list = $entityManager->getRepository(MetaAccessLevel::class)->findAll();
+        var_dump($nestedTreeRepository->verify());
 
-        return $this->render('admin/meta/access_level/list.html.twig', ['list' => $list]);
+       // $nestedTreeRepository->recover();
+       // $entityManager->flush();
+
+        $options = array(
+            'decorate' => true,
+            'rootOpen' => '<ul>',
+            'rootClose' => '</ul>',
+            'childOpen' => '<li>',
+            'childClose' => '</li>',
+            'nodeDecorator' => function ($node) {
+                return '<a href="/page/' . $node['id'] . '">' . $node['name'] . '</a>';
+            }
+        );
+
+        $htmlTree = $nestedTreeRepository->childrenHierarchy(
+            null, /* starting from root nodes */
+            false, /* true: load all children, false: only direct */
+            $options
+        );
+
+        $list = $nestedTreeRepository->findAll();
+        $data = [];
+        /** @var MetaAccessLevel $node */
+        foreach ($list as $node) {
+            $data[] = [
+                'id' => $node->getId(),
+                'parent' => $node->getParent() ? $node->getParent()->getId() : '#',
+                'text' => $node->getName()
+            ];
+        }
+
+        return $this->render('admin/meta/access_level/list.html.twig', [
+            'tree' => $htmlTree,
+            'tree_data' => json_encode($data, JSON_UNESCAPED_UNICODE ^ JSON_PRETTY_PRINT),
+        ]);
+
     }
 
     /**

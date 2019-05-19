@@ -54,11 +54,8 @@ action:
   edit: Редагувати
   publish: Опубліковати
   delete: Видалити
-  edit_post: Редагувати запис
   save: Зберегти зміни
-  delete_post: Видалити запис
-  create_post: Створити новий запис
-  back_to_list: Назад до списку записів
+  back_to_list: Назад до списку
   publish_comment: Опублікувати коментар
   browse_app: Перейти до публічного розділу
   browse_admin: Перейти до панелі керування
@@ -69,6 +66,7 @@ action:
   sign_in: Ввійти
   resource:
     create: Додати ресурс
+    edit: Редагувати ресурс
 delete_post_modal:
   title: Ви впевнені, що хочете видалити цей запис?
   body: Ця дія не може бути скасована.
@@ -143,6 +141,7 @@ menu:
     media_type: Тип ресурсу
     purpose: Призначення
     keyword: Ключові слова
+    extension: Формат файлу
     media_type_extension: Групи по типам
   logout: Вийти
   login: Ввiйти

@@ -3,13 +3,14 @@
 {% block title %}UserAccess index{% endblock %}
 
 {% block body %}
-    <h1>UserAccess index</h1>
+    <h1>{{'title.resource.access_level.list'|trans}}</h1>
 
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>{{'label.name'|trans}}</th>
+                <th>{{'label.resource.access_level'|trans}}</th>
                 <th>{{'label.actions'|trans}}</th>
             </tr>
         </thead>
@@ -18,6 +19,7 @@
             <tr>
                 <td>{{ user_access.id }}</td>
                 <td>{{ user_access.name }}</td>
+                <td>{{ user_access.accessLevel.name }}</td>
                 <td>
                     <a href="{{ path('admin_acl_user_access_show', {'id': user_access.id}) }}">{{'action.show'|trans}}</a>
                     <a href="{{ path('admin_acl_user_access_edit', {'id': user_access.id}) }}">{{'action.edit'|trans}}</a>

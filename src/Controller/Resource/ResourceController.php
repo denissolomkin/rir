@@ -103,7 +103,6 @@ class ResourceController extends AbstractController
         Request $request,
         ResourceRepository $repository,
         SearchResourceRepository $searchResourceRepository,
-        SearchFormPreparator $formPreparator,
         TokenStorageInterface $tokenStorage
     ): Response
     {

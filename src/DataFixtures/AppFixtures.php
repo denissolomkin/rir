@@ -29,7 +29,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class AppFixtures extends Fixture
 {
     private $passwordEncoder;
-    private $mapCategories = [];
+    private $references = [];
 
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
     {
@@ -122,20 +122,6 @@ class AppFixtures extends Fixture
             }
 
             $manager->persist($resource);
-        }
-
-        $manager->flush();
-    }
-
-
-    private function loadAccessLevels(ObjectManager $manager): void
-    {
-        foreach ($this->getAccessLevelData() as $datum) {
-
-            $object = new MetaAccessLevel();
-            $object->setName($datum);
-            $manager->persist($object);
-            $this->addReference('access-' . $datum, $object);
         }
 
         $manager->flush();
@@ -265,39 +251,48 @@ class AppFixtures extends Fixture
         ];
     }
 
-    protected function _createCategory($key, $value, ObjectManager $manager, string $ref, MetaCategory $parent = null)
+    protected function _createNode($key, $value, ObjectManager $manager, string $ref, string $className, $parent = null)
     {
 
         if (isset($key)) {
 
-            $category = new MetaCategory();
-            $category->setName(is_string($key) ? $key : $value);
+            /** @var MetaCategory|MetaAccessLevel $node */
+            $node = new $className();
+            $node->setName(is_string($key) ? $key : $value);
 
-            $ref .= '-' . str_replace(' ', '_', mb_strtolower(trim($category->getName())));
+            $ref .= '-' . str_replace(' ', '_', mb_strtolower(trim($node->getName())));
 
             if ($parent) {
-                $category->setParent($parent);
+                $node->setParent($parent);
             }
 
-            $this->addReference($ref, $category);
-            $this->mapCategories[] = $ref;
-            $manager->persist($category);
+            $this->addReference($ref, $node);
+            $this->references[$className][] = $ref;
+            $manager->persist($node);
 
         } else {
-            $category = null;
+            $node = null;
         }
 
         if (is_array($value)) {
             foreach ($value as $k => $v) {
-                $this->_createCategory($k, $v, $manager, $ref, $category);
+                $this->_createNode($k, $v, $manager, $ref, $className, $node);
             }
         }
+    }
+
+
+    private function loadAccessLevels(ObjectManager $manager): void
+    {
+        $this->_createNode(null, $this->getAccessLevelData(), $manager, 'access', MetaAccessLevel::class);
+
+        $manager->flush();
     }
 
     private function loadCategories(ObjectManager $manager): void
     {
 
-        $this->_createCategory(null, $this->getCategoryData(), $manager, 'category');
+        $this->_createNode(null, $this->getCategoryData(), $manager, 'category', MetaCategory::class);
 
         $manager->flush();
     }
@@ -315,10 +310,13 @@ class AppFixtures extends Fixture
     private function getAccessLevelData(): array
     {
         return [
-            'відкритий',
-            'дсв',
-            'секретний',
-            'совсекретний',
+            'совсекретний' => [
+                'секретний' => [
+                    'дсв' => [
+                        'відкритий',
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -489,9 +487,10 @@ MARKDOWN;
 
     private function getRandomCategory(): MetaCategory
     {
-        shuffle($this->mapCategories);
+        $list = $this->references[MetaCategory::class];
+        shuffle($list);
 
-        return $this->getReference(current($this->mapCategories));
+        return $this->getReference(current($list));
     }
 
     private function getRandomDocument(): MetaDocumentType
@@ -519,10 +518,11 @@ MARKDOWN;
 
     private function getRandomAccessLevel(): MetaAccessLevel
     {
-        $data = $this->getAccessLevelData();
-        shuffle($data);
 
-        return $this->getReference('access-' . current($data));
+        $list = $this->references[MetaAccessLevel::class];
+        shuffle($list);
+
+        return $this->getReference(current($list));
     }
 
 }

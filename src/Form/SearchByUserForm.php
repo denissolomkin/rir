@@ -6,8 +6,11 @@ use App\Entity\MetaCategory;
 use App\Entity\MetaKeyword;
 use App\Entity\Search;
 use App\Form\Traits\ResourceLanguages;
+use App\Repository\MetaCategoryRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\LanguageType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -24,6 +27,13 @@ use App\Form\Type\KeywordsInputType;
 class SearchByUserForm extends AbstractType
 {
     use ResourceLanguages;
+
+    private $isApi;
+
+    public function __construct($isApi = false)
+    {
+        $this->isApi = $isApi;
+    }
 
     /**
      * {@inheritdoc}
@@ -75,13 +85,27 @@ class SearchByUserForm extends AbstractType
                 'required' => false,
                 'multiple' => true,
             ])
-            ->add('category', EntityType::class, [
-                'class' => MetaCategory::class,
-                'help' => 'help.resource.category',
-                'label' => 'label.resource.category',
-                'choice_label' => 'name',
-                'required' => false,
-            ])
+        ;
+
+        if ($this->isApi) {
+            $builder
+                ->add('category', HiddenType::class, [
+                    'help' => 'help.resource.category',
+                    'label' => 'label.resource.category',
+                    'required' => false,
+                ]);
+        } else {
+            $builder
+                ->add('category', EntityType::class, [
+                    'class' => MetaCategory::class,
+                    'help' => 'help.resource.category',
+                    'label' => 'label.resource.category',
+                    'choice_label' => 'name',
+                    'required' => false,
+                ]);
+        }
+
+        $builder
             ->add('keywords', EntityType::class, [
                 'class' => MetaKeyword::class,
                 'label' => 'label.resource.keywords',

@@ -7,22 +7,23 @@
 
     <table class="table">
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>{{'label.name'|trans}}</th>
-                <th>Types</th>
-                <th>{{'label.actions'|trans}}</th>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <th>{{ 'label.name'|trans }}</th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
         </thead>
         <tbody>
         {% for user_group in user_groups %}
             <tr>
                 <td>{{ user_group.id }}</td>
-                <td>{{ user_group.name }}</td>
-                <td>{{ user_group.documentTypes|join(', ') }}</td>
+                <td>{{ user_group.name }}<br>
+                    {% for item in user_group.documentTypes %}
+                        <span class="badge badge-info">{{ item }}</span>
+                    {% endfor %}</td>
                 <td>
-                    <a href="{{ path('admin_acl_user_group_show', {'id': user_group.id}) }}">{{'action.show'|trans}}</a>
-                    <a href="{{ path('admin_acl_user_group_edit', {'id': user_group.id}) }}">{{'action.edit'|trans}}</a>
+                    <a href="{{ path('admin_acl_user_group_show', {'id': user_group.id}) }}">{{ 'action.show'|trans }}</a>
+                    <a href="{{ path('admin_acl_user_group_edit', {'id': user_group.id}) }}">{{ 'action.edit'|trans }}</a>
                 </td>
             </tr>
         {% else %}
@@ -33,5 +34,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('admin_acl_user_group_new') }}">{{'action.create'|trans}}</a>
+    <a href="{{ path('admin_acl_user_group_new') }}">{{ 'action.create'|trans }}</a>
 {% endblock %}

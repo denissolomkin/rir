@@ -60,6 +60,7 @@ class MetaCategoryController extends AbstractController
 
         return $this->render('moderator/meta/category/index.html.twig', [
             'tree' => $htmlTree,
+            'tree_url' => $this->generateUrl('api_resource_category'),
             'json_categories' => json_encode($categoriesArray),
             'meta_categories' => $nestedTreeRepository->findAll(),
         ]);
