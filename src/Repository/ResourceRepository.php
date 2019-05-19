@@ -49,10 +49,10 @@ class ResourceRepository extends ServiceEntityRepository
         return $this->createPaginator($qb->getQuery(), $page);
     }
 
-    private function createPaginator(Query $query, int $page): Pagerfanta
+    private function createPaginator(Query $query, int $page, int $limit = Resource::NUM_ITEMS): Pagerfanta
     {
         $paginator = new Pagerfanta(new DoctrineORMAdapter($query));
-        $paginator->setMaxPerPage(Resource::NUM_ITEMS);
+        $paginator->setMaxPerPage($limit);
         $paginator->setCurrentPage($page);
 
         return $paginator;
@@ -180,10 +180,6 @@ class ResourceRepository extends ServiceEntityRepository
             ->setMaxResults($limit)
             ->getQuery()
         ;
-
-        echo '<pre>';
-        var_dump($query->getSQL());
-        echo '</pre>';
 
         return $this->createPaginator($query, $page);
     }

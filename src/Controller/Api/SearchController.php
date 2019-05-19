@@ -12,7 +12,6 @@ use App\Utils\EntityExporter;
 use App\Utils\FormExporter;
 use App\Utils\SearchFormPreparator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -77,16 +76,23 @@ class SearchController extends AbstractController
         if ($form->isSubmitted()) {
 
             if ($form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($search);
-                $em->flush();
+                //$em = $this->getDoctrine()->getManager();
+                //$em->persist($search);
+                //$em->flush();
 
-                $results = array_map(function ($e) {
-                    return (new EntityExporter())->convert($e);
-                }, $repository->findBySearch($search));
+                $results = array_map(
+                    function ($e) {
+                        return (new EntityExporter())->convert($e);
+                    },
+                    $repository->findBySearch($search, 1, 1000)->getIterator()->getArrayCopy()
+                );
 
             } else {
-                return new JsonResponse(['errors' => $form->getErrors()], 400);
+                $errors = [];
+                foreach ($form->getErrors(true) as $error) {
+                    $errors[] = $error->getMessage();
+                }
+                return new JsonResponse(['errors' => $errors], 400);
             }
 
         } else {

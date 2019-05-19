@@ -10,6 +10,7 @@
         <tr>
             <th>Id</th>
             <th>{{ 'label.name'|trans }}</th>
+            <th>Types</th>
             <th>{{ 'label.actions'|trans }}</th>
         </tr>
         </thead>
@@ -17,10 +18,12 @@
         {% for user_group in user_groups %}
             <tr>
                 <td>{{ user_group.id }}</td>
-                <td>{{ user_group.name }}<br>
+                <td>{{ user_group.name }}</td>
+                <td>
                     {% for item in user_group.documentTypes %}
-                        <span class="badge badge-info">{{ item }}</span>
-                    {% endfor %}</td>
+                        <span class="badge badge-default">{{ item }}</span>
+                    {% endfor %}
+                <td>
                 <td>
                     <a href="{{ path('admin_acl_user_group_show', {'id': user_group.id}) }}">{{ 'action.show'|trans }}</a>
                     <a href="{{ path('admin_acl_user_group_edit', {'id': user_group.id}) }}">{{ 'action.edit'|trans }}</a>
