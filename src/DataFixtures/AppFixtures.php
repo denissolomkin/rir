@@ -309,7 +309,12 @@ class AppFixtures extends Fixture
             foreach ($extensions as $extension) {
 
                 $fileName = 'test.' . $extension;
-                $filePath = dirname($this->fileUploader->getTargetDirectory()) . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR . $fileName;
+                $filePath = implode(DIRECTORY_SEPARATOR, [
+                    dirname(dirname(dirname($this->fileUploader->getTargetDirectory()))),
+                    'data',
+                    'fixtures',
+                    $fileName
+                ]);
 
                 $file = new File();
                 $file->setExtension($extension)
