@@ -202,6 +202,13 @@ class ResourceRepository extends ServiceEntityRepository
                 )
             );
 
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->eq(
+                    'c.root',
+                    $category->getRoot()->getId()
+                )
+            );
+
         }
 
         $query = $queryBuilder
