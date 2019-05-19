@@ -22,19 +22,22 @@ use App\Entity\MetaKeyword;
 use App\Entity\MetaPurpose;
 use App\Entity\MetaMedia;
 use App\Entity\User;
+use App\Form\Traits\ResourceLanguages;
 use App\Utils\FileUploader;
 use App\Utils\Slugger;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture
 {
+    use ResourceLanguages;
+
     private $passwordEncoder;
     private $fileUploader;
     private $references = [];
+    private $languages = [];
 
     public function __construct(
         UserPasswordEncoderInterface $passwordEncoder,
@@ -43,6 +46,7 @@ class AppFixtures extends Fixture
     {
         $this->fileUploader = $fileUploader;
         $this->passwordEncoder = $passwordEncoder;
+        $this->languages = array_keys($this->getLanguages());
     }
 
     public function load(ObjectManager $manager): void
@@ -55,8 +59,8 @@ class AppFixtures extends Fixture
         $this->loadDocumentTypes($manager);
         $this->loadPurposes($manager);
         $this->loadCategories($manager);
-        $this->loadResources($manager);
         $this->loadFiles($manager);
+        $this->loadResources($manager);
     }
 
     private function loadUsers(ObjectManager $manager): void
@@ -104,6 +108,7 @@ class AppFixtures extends Fixture
                 ? $randomMedia->getExtensions()->current()
                 : $randomMedia->getExtensions()->first();
 
+
             $resource = new Resource();
             $resource->setTitle($title)
                 ->setAnnotation($summary)
@@ -116,18 +121,25 @@ class AppFixtures extends Fixture
                 ->setMediaType($randomMedia)
                 ->setExtension($extension)
                 ->setSource('source')
-                ->setSize(rand(1, 50))
                 ->setTheme('theme')
-                ->setLanguage('en')
+                ->setLanguage($this->getRandomLanguage())
                 ->setCategory($this->getRandomCategory())
             ;
+
+            if ($this->hasReference('file-' . $extension)) {
+                /** @var File $file */
+                $file = $this->getReference('file-' . $extension);
+                $resource
+                    ->setFile($file)
+                    ->setSize($file->getSize())
+                ;
+            }
 
             foreach (range(1, 5) as $i) {
                 $comment = new Comment();
                 $comment->setAuthor($this->getReference('john_user'));
                 $comment->setContent($this->getRandomText(random_int(255, 512)));
                 $comment->setPublishedAt(new \DateTime('now + ' . $i . 'seconds'));
-
                 $resource->addComment($comment);
             }
 
@@ -297,9 +309,11 @@ class AppFixtures extends Fixture
             foreach ($extensions as $extension) {
 
                 $fileName = 'test.' . $extension;
+                $filePath = dirname($this->fileUploader->getTargetDirectory()) . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR . $fileName;
+
                 $file = new File();
                 $file->setExtension($extension)
-                    ->setSize(rand())
+                    ->setSize(filesize($filePath))
                     ->setFileName($fileName)
                     ->setUpload($fileName)
                 ;
@@ -308,7 +322,7 @@ class AppFixtures extends Fixture
 
                     $filesystem = new Filesystem();
                     $filesystem->copy(
-                        dirname($this->fileUploader->getTargetDirectory()) . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR . $fileName,
+                        $filePath,
                         $this->fileUploader->getTargetExtensionDirectory($extension) . DIRECTORY_SEPARATOR . $fileName
                     );
                 }
@@ -534,6 +548,13 @@ MARKDOWN;
         shuffle($list);
 
         return $this->getReference(current($list));
+    }
+
+    private function getRandomLanguage(): string
+    {
+        shuffle($this->languages);
+
+        return current($this->languages);
     }
 
     private function getRandomDocument(): MetaDocumentType

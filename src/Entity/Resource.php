@@ -105,8 +105,7 @@ class Resource
     /**
      * @var integer
      *
-     * @ORM\Column(type="integer")
-     * @Assert\NotBlank
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $size;
 
