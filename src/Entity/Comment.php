@@ -138,13 +138,17 @@ class Comment implements \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function jsonSerialize(): string
+    public function jsonSerialize(): array
     {
         // This entity implements JsonSerializable (http://php.net/manual/en/class.jsonserializable.php)
         // so this method is used to customize its JSON representation when json_encode()
         // is called, for example in tags|json_encode (app/Resources/views/form/fields.html.twig)
 
-        return $this->content;
+        return [
+            'author' => $this->author,
+            'content' => $this->content,
+            'publishedAt' => $this->publishedAt
+        ];
     }
 
     public function __toString(): string

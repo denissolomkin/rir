@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api;
 
+use App\Entity\Resource;
 use App\Entity\Search;
 use App\Entity\User;
 use App\Form\SearchByUserForm;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -89,12 +91,28 @@ class SearchController extends AbstractController
                 //$em = $this->getDoctrine()->getManager();
                 //$em->persist($search);
                 //$em->flush();
-
+                $router = $this->get('router');
                 $results = array_map(
-                    function ($e) {
-                        return (new EntityExporter())->convert($e);
+                    function ($e) use ($router) {
+
+                        /** @var Resource $e */
+                        $data = (new EntityExporter())->convert($e);
+
+                        if ($e->getFile()) {
+                            $data['download'] = $router->generate(
+                                'resource_download', [
+                                'id' => $e->getId(),
+                                'fileName' => $e->getFile()->getFileName()
+                            ],
+                                Router::ABSOLUTE_URL);
+                        }
+
+                        return $data;
                     },
-                    $repository->findBySearch($search, 1, 1000)->getIterator()->getArrayCopy()
+                    $repository
+                        ->findBySearch($search, 1, 1000)
+                        ->getIterator()
+                        ->getArrayCopy()
                 );
 
             } else {

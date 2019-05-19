@@ -27,7 +27,8 @@
             {% if item.file %}
                 <p>
                     <span class="metadata"><i class="fa fa-download"></i><a
-                                href="{{ path('resource_download', {id: item.id}) }}">{{ item.file.fileName }}</a> </span>
+                                target="_blank"
+                                href="{{ path('resource_download', {id: item.id, fileName: item.file.fileName}) }}">{{ item.file.fileName }}</a> </span>
                 </p>
             {% endif %}
             {{ include('resource/_item_keywords.html.twig') }}

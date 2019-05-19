@@ -60,20 +60,6 @@ class ResourceController extends AbstractController
     }
 
     /**
-     * @Route("{id}/file/{fileName}", methods={"GET"}, name="resource_download", requirements={"id"="\d+"})
-     */
-    public function download(Resource $resource, FileUploader $fileUploader)
-    {
-
-        $file = $resource->getFile();
-        $filePath = sprintf('%s/%s/%s', $fileUploader->getTargetDirectory(), $file->getExtension(), $file->getUpload());
-
-        return $this->file($filePath, $file->getFileName(), ResponseHeaderBag::DISPOSITION_INLINE);
-
-    }
-
-
-    /**
      * @Route("{id}", methods={"GET"}, name="resource_item", requirements={"id"="\d+"})
      *
      * NOTE: The $post controller argument is automatically injected by Symfony

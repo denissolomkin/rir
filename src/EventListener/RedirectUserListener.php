@@ -50,6 +50,7 @@ class RedirectUserListener
         return strpos($currentRoute, 'wdt') !== false || in_array(
             $currentRoute,
             [
+                'resource_download',
                 'security_login',
                 'security_signup',
                 'api_resource_form',
