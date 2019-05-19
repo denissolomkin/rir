@@ -22,6 +22,8 @@ use App\Entity\MetaKeyword;
 use App\Entity\MetaPurpose;
 use App\Entity\MetaMedia;
 use App\Entity\User;
+use App\Entity\UserAccess;
+use App\Entity\UserGroup;
 use App\Form\Traits\ResourceLanguages;
 use App\Utils\FileUploader;
 use App\Utils\Slugger;
@@ -51,16 +53,52 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $this->loadUsers($manager);
-        $this->loadKeywords($manager);
         $this->loadAccessLevels($manager);
+        $this->loadDocumentTypes($manager);
+
+        $this->loadUserGroups($manager);
+        $this->loadUserAccesses($manager);
+        $this->loadUsers($manager);
+
+        $this->loadKeywords($manager);
         $this->loadMediaTypes($manager);
         $this->loadExtensions($manager);
-        $this->loadDocumentTypes($manager);
         $this->loadPurposes($manager);
         $this->loadCategories($manager);
         $this->loadFiles($manager);
         $this->loadResources($manager);
+    }
+
+    private function loadUserGroups(ObjectManager $manager): void
+    {
+        foreach ($this->getUserGroups() as $name) {
+            $userGroup = new UserGroup();
+            $userGroup->setName($name)
+                ->setDocumentTypes([$this->getRandomDocument()])
+            ;
+            $manager->persist($userGroup);
+            $ref = 'group-' . $this->_slug($name);
+            $this->references[UserGroup::class][] = $ref;
+            $this->addReference($ref, $userGroup);
+        }
+
+        $manager->flush();
+    }
+
+    private function loadUserAccesses(ObjectManager $manager): void
+    {
+        foreach ($this->getUserAccesses() as $name) {
+            $userAccess = new UserAccess();
+            $userAccess->setName($name)
+                ->setAccessLevel($this->getRandomAccessLevel())
+            ;
+            $manager->persist($userAccess);
+            $ref = 'access-' . $this->_slug($name);
+            $this->references[UserAccess::class][] = $ref;
+            $this->addReference($ref, $userAccess);
+        }
+
+        $manager->flush();
     }
 
     private function loadUsers(ObjectManager $manager): void
@@ -72,6 +110,8 @@ class AppFixtures extends Fixture
             $user->setPassword($this->passwordEncoder->encodePassword($user, $password));
             $user->setEmail($email);
             $user->setRoles($roles);
+            $user->setGroup($this->getRandomUserGroup());
+            $user->setAccess($this->getRandomFromClassName(UserAccess::class));
 
             $manager->persist($user);
             $this->addReference($username, $user);
@@ -214,7 +254,7 @@ class AppFixtures extends Fixture
             'должностные инструкции', 'правила внутреннего трудового распорядка',
             //2. розпорядчу
             'наказ', 'рішення', 'вказівка', 'розпорядження',
-            //3. довідково-інформаційну 
+            //3. довідково-інформаційну
             'акт', 'протокол', 'огляд', 'лист', 'доповідна записка', 'пояснювальна записка', 'довідка', 'звiт', 'характеристика',
             //4. Документы по личному составу –
             'приказы по личному составу', 'заявления', 'личные карточки', 'автобиографии', 'резюме',
@@ -282,7 +322,7 @@ class AppFixtures extends Fixture
             $node = new $className();
             $node->setName(is_string($key) ? $key : $value);
 
-            $ref .= '-' . str_replace(' ', '_', mb_strtolower(trim($node->getName())));
+            $ref .= '-' . $this->_slug($node->getName());
 
             if ($parent) {
                 $node->setParent($parent);
@@ -391,6 +431,22 @@ class AppFixtures extends Fixture
             'відео' => ['avi', 'flv'],
             'аудіо' => ['mp3', 'ogg'],
             'сайт' => [],
+        ];
+    }
+
+    private function getUserAccesses(): array
+    {
+        return [
+            'Рiвень А',
+            'Рiвень B',
+            'Рiвень C'
+        ];
+    }
+
+    private function getUserGroups(): array
+    {
+        return [
+            'Науковi працівники', 'Викладачi', 'Студенти'
         ];
     }
 
@@ -547,6 +603,14 @@ MARKDOWN;
         return $this->getReference('purpose-' . current($data));
     }
 
+    private function getRandomUserGroup(): UserGroup
+    {
+        $list = $this->references[UserGroup::class];
+        shuffle($list);
+
+        return $this->getReference(current($list));
+    }
+
     private function getRandomCategory(): MetaCategory
     {
         $list = $this->references[MetaCategory::class];
@@ -585,6 +649,15 @@ MARKDOWN;
         throw new \Exception('Available media not found');
     }
 
+    private function getRandomFromClassName(string $className)
+    {
+
+        $list = $this->references[$className];
+        shuffle($list);
+
+        return $this->getReference(current($list));
+    }
+
     private function getRandomAccessLevel(): MetaAccessLevel
     {
 
@@ -594,4 +667,9 @@ MARKDOWN;
         return $this->getReference(current($list));
     }
 
+    protected function _slug(string $name)
+    {
+
+        return str_replace(' ', '_', mb_strtolower(trim($name)));
+    }
 }
