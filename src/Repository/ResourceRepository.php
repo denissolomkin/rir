@@ -210,9 +210,11 @@ class ResourceRepository extends ServiceEntityRepository
             ->getQuery()
         ;
 
-        var_dump(
-            $query->getSQL()
-        );
+        if($searchResource->getUser()) {
+            var_dump(
+                $query->getSQL()
+            );
+        }
         return $this->createPaginator($query, $page, $limit);
     }
 
