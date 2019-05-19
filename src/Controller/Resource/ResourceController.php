@@ -8,7 +8,6 @@ use App\Repository\MetaKeywordRepository;
 use App\Repository\ResourceRepository;
 use App\Utils\FileUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -19,7 +18,6 @@ use App\Entity\Search;
 use App\Entity\User;
 use App\Form\SearchByUserForm;
 use App\Repository\SearchResourceRepository;
-use App\Utils\SearchFormPreparator;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -109,13 +107,17 @@ class ResourceController extends AbstractController
         /** @var User $user */
         $user = $tokenStorage->getToken()->getUser();
 
-        $search = $searchResourceRepository->findOneBy(['user'=>$user->getId()]) ?? new Search();
+        $search = $searchResourceRepository->findOneBy(['user' => $user->getId()]) ?? new Search();;
+        $search->setUser($user);
 
-        $form = $this->createForm(
+        $form = $this->get('form.factory')->createNamedBuilder(
+            'search',
             SearchByUserForm::class,
             $search, [
             'action' => $this->generateUrl('resource_search')
-        ]);
+        ])
+            ->getForm()
+        ;
 
         $form->handleRequest($request);
         $result = null;
@@ -127,7 +129,6 @@ class ResourceController extends AbstractController
         // See https://symfony.com/doc/current/best_practices/forms.html#handling-form-submits
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $search->setUser($user);
             $em = $this->getDoctrine()->getManager();
             $em->persist($search);
             $em->flush();

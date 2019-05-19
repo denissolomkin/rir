@@ -44,11 +44,20 @@
             show(elem);
 
         };
+
+        var api = function (elem) {
+            fetch('{{ path('api_resource_search') }}', {
+                method: 'post',
+                body: new FormData(elem)
+            });
+
+        };
     </script>
 
     <button class="btn btn-default" onclick="toggle(document.getElementsByTagName('form')[0])">Toggle form</button>
+    <button class="btn btn-default" onclick="api(document.getElementsByTagName('form')[0])">Api test</button>
     <br>
-<br>
+    <br>
     {% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
     {{ form(form) }}
 

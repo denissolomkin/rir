@@ -61,10 +61,19 @@ class ResourceRepository extends ServiceEntityRepository
     /**
      * @return Resource[]
      */
-    public function findBySearch(Search $searchResource, int $page = 1, int $limit = Resource::NUM_ITEMS): Pagerfanta
+    public function findBySearch(
+        Search $searchResource,
+        int $page = 1,
+        int $limit = Resource::NUM_ITEMS
+    ): Pagerfanta
     {
 
         $queryBuilder = $this->createQueryBuilder('p');
+
+        /* включается политика прав доступа */
+        if($searchResource->getUser()){
+
+        }
 
         /* ищет любое вхождение в названии ресурса хотя бы по одному слову,
         например запрос по строке "on two row" вернет ресурсы с именами:
@@ -175,13 +184,32 @@ class ResourceRepository extends ServiceEntityRepository
                 ->andWhere($queryBuilder->expr()->in('p.documentType', $ids));
         }
 
+        if ($category = $searchResource->getCategory()) {
+
+            $ids = [];
+            /** @var User $item */
+            foreach ($collection as $item) {
+                $ids[] = $item->getId();
+            }
+            $queryBuilder->join('p.category', 'c');
+            $queryBuilder->andWhere($queryBuilder->expr()->in('k.id', $ids));
+
+
+            $ids = [];
+            foreach ($collection as $item) {
+                $ids[] = $item->getId();
+            }
+            $queryBuilder
+                ->andWhere($queryBuilder->expr()->in('p.documentType', $ids));
+        }
+
         $query = $queryBuilder
             ->orderBy('p.publishedAt', 'DESC')
             ->setMaxResults($limit)
             ->getQuery()
         ;
 
-        return $this->createPaginator($query, $page);
+        return $this->createPaginator($query, $page, $limit);
     }
 
     /**

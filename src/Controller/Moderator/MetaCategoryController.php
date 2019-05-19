@@ -67,29 +67,6 @@ class MetaCategoryController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="moderator_meta_category_new", methods={"GET","POST"})
-     */
-    public function new(Request $request): Response
-    {
-        $metaCategory = new MetaCategory();
-        $form = $this->createForm(MetaCategoryType::class, $metaCategory);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($metaCategory);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('moderator_meta_category_index');
-        }
-
-        return $this->render('moderator/meta/category/new.html.twig', [
-            'meta_category' => $metaCategory,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
      * @Route("/{operation}", name="moderator_meta_category_operation", methods={"POST"}, requirements={"operation"="\D\w+"})
      */
     public function operation(
@@ -97,17 +74,17 @@ class MetaCategoryController extends AbstractController
         Request $request,
         MetaCategoryRepository $nestedTreeRepository,
         EntityManagerInterface $entityManager
-    ): Response
+    ): JsonResponse
     {
 
         $node = $request->request->all();
 
         if (is_numeric($node['id'])) {
-            /** @var MetaCategory $category */
-            $category = $nestedTreeRepository->find((int)$node['id']);
+            /** @var MetaCategory $node */
+            $node = $nestedTreeRepository->find((int)$node['id']);
         } else {
-            $category = new MetaCategory();
-            $category->setName($node['text']);
+            $node = new MetaCategory();
+            $node->setName($node['text']);
         }
 
         if (is_numeric($node['parent'])) {
@@ -117,30 +94,30 @@ class MetaCategoryController extends AbstractController
             $parent = null;
         }
 
-        $entityManager->persist($category);
+        $entityManager->persist($node);
 
         switch ($operation) {
 
             case "rename_node":
-                $category->setName($node['text']);
+                $node->setName($node['text']);
                 break;
 
             case "move_node":
-                $category->setParent($parent);
-                $nestedTreeRepository->persistAsLastChild($category);
+                $node->setParent($parent);
+                $nestedTreeRepository->persistAsLastChild($node);
                 break;
 
             case "create_node":
                 if ($parent) {
-                    $nestedTreeRepository->persistAsLastChildOf($category, $parent);
+                    $nestedTreeRepository->persistAsLastChildOf($node, $parent);
                 } else {
-                    $nestedTreeRepository->persistAsFirstChild($category);
+                    $nestedTreeRepository->persistAsFirstChild($node);
                 }
                 break;
 
             case "delete_node":
-                $entityManager->remove($category);
-                $nestedTreeRepository->reorder($category, 'name');
+                $entityManager->remove($node);
+                $nestedTreeRepository->reorder($node, 'name');
                 $nestedTreeRepository->recover();
                 break;
 
@@ -148,52 +125,7 @@ class MetaCategoryController extends AbstractController
 
         $entityManager->flush();
 
-        return new JsonResponse(['id' => $category->getId()]);
+        return new JsonResponse(['id' => $node->getId()]);
     }
 
-    /**
-     * @Route("/{id}", name="moderator_meta_category_show", methods={"GET"}, requirements={"id"="\d+"})
-     */
-    public function show(MetaCategory $metaCategory): Response
-    {
-        return $this->render('moderator/meta/category/show.html.twig', [
-            'meta_category' => $metaCategory,
-        ]);
-    }
-
-    /**
-     * @Route("/{id}/edit", name="moderator_meta_category_edit", methods={"GET","POST"}, requirements={"id"="\d+"})
-     */
-    public function edit(Request $request, MetaCategory $metaCategory): Response
-    {
-        $form = $this->createForm(MetaCategoryType::class, $metaCategory);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('moderator_meta_category_index', [
-                'id' => $metaCategory->getId(),
-            ]);
-        }
-
-        return $this->render('moderator/meta/category/edit.html.twig', [
-            'meta_category' => $metaCategory,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="moderator_meta_category_delete", methods={"DELETE"}, requirements={"id"="\d+"})
-     */
-    public function delete(Request $request, MetaCategory $metaCategory): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $metaCategory->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($metaCategory);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('moderator_meta_category_index');
-    }
 }

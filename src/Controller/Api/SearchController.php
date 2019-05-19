@@ -5,7 +5,6 @@ namespace App\Controller\Api;
 use App\Entity\Search;
 use App\Entity\User;
 use App\Form\SearchApiByUserForm;
-use App\Form\SearchByUserForm;
 use App\Repository\ResourceRepository;
 use App\Repository\SearchResourceRepository;
 use App\Utils\EntityExporter;
@@ -42,7 +41,12 @@ class SearchController extends AbstractController
                 ?? $tokenStorage->getToken()->getUser()->getId()
             ) ?? new Search();
 
-        $form = $this->createForm(SearchApiByUserForm::class, $search);
+        $form = $this->get('form.factory')->createNamedBuilder(
+            'search',
+            SearchApiByUserForm::class,
+            $search)
+            ->getForm()
+        ;
 
         $form->handleRequest($request);
 
@@ -65,7 +69,13 @@ class SearchController extends AbstractController
     {
 
         $search = new Search();
-        $form = $this->createForm(SearchByUserForm::class, $search);
+
+        $form = $this->get('form.factory')->createNamedBuilder(
+            'search',
+            SearchApiByUserForm::class,
+            $search)
+            ->getForm()
+        ;
 
         $form->handleRequest($request);
 

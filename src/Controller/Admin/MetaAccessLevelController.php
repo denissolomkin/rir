@@ -3,11 +3,10 @@
 namespace App\Controller\Admin;
 
 use App\Entity\MetaAccessLevel;
-use App\Form\MetaAccessLevelForm;
 use App\Repository\MetaAccessLevelRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,8 +32,8 @@ class MetaAccessLevelController extends AbstractController
     {
         var_dump($nestedTreeRepository->verify());
 
-       // $nestedTreeRepository->recover();
-       // $entityManager->flush();
+        // $nestedTreeRepository->recover();
+        // $entityManager->flush();
 
         $options = array(
             'decorate' => true,
@@ -72,89 +71,64 @@ class MetaAccessLevelController extends AbstractController
     }
 
     /**
-     * Creates a new ResourceAccessLevel entity.
-     *
-     * @Route("/new", methods={"GET", "POST"}, name="admin_meta_access_level_new")
-     *
-     * NOTE: the Method annotation is optional, but it's a recommended practice
-     * to constraint the HTTP methods each controller responds to (by default
-     * it responds to all methods).
+     * @Route("/{operation}", name="moderator_meta_access_level_operation", methods={"POST"}, requirements={"operation"="\D\w+"})
      */
-    public function new(Request $request): Response
+    public function operation(
+        $operation,
+        Request $request,
+        MetaAccessLevelRepository $nestedTreeRepository,
+        EntityManagerInterface $entityManager
+    ): JsonResponse
     {
-        $object = new MetaAccessLevel();
 
-        $form = $this->createForm(MetaAccessLevelForm::class, $object)
-            ->add('saveAndCreateNew', SubmitType::class);
+        $node = $request->request->all();
 
-        $form->handleRequest($request);
-
-        // the isSubmitted() method is completely optional because the other
-        // isValid() method already checks whether the form is submitted.
-        // However, we explicitly add it to improve code readability.
-        // See https://symfony.com/doc/current/best_practices/forms.html#handling-form-submits
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($object);
-            $em->flush();
-
-            $this->addFlash('success', 'resource.access_level.created_successfully');
-
-            if ($form->get('saveAndCreateNew')->isClicked()) {
-                return $this->redirectToRoute('admin_meta_access_level_new');
-            }
-
-            return $this->redirectToRoute('admin_meta_access_level_index');
+        if (is_numeric($node['id'])) {
+            /** @var MetaAccessLevel $node */
+            $node = $nestedTreeRepository->find((int)$node['id']);
+        } else {
+            $node = new MetaAccessLevel();
+            $node->setName($node['text']);
         }
 
-        return $this->render('admin/meta/access_level/new.html.twig', [
-            'item' => $object,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * Displays a form to edit an existing ResourceAccessLevel entity.
-     *
-     * @Route("/{id<\d+>}/edit",methods={"GET", "POST"}, name="admin_meta_access_level_edit")
-     */
-    public function edit(Request $request, MetaAccessLevel $object): Response
-    {
-        $form = $this->createForm(MetaAccessLevelForm::class, $object);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            $this->addFlash('success', 'resource.access_level.updated_successfully');
-
-            return $this->redirectToRoute('admin_meta_access_level_edit', ['id' => $object->getId()]);
+        if (is_numeric($node['parent'])) {
+            /** @var MetaAccessLevel $parent */
+            $parent = $nestedTreeRepository->find((int)$node['parent']);
+        } else {
+            $parent = null;
         }
 
-        return $this->render('admin/meta/access_level/edit.html.twig', [
-            'form' => $form->createView(),
-            'post' => $object,
-        ]);
-    }
+        $entityManager->persist($node);
 
-    /**
-     * Deletes a ResourceAccessLevel entity.
-     *
-     * @Route("/{id}/delete", methods={"POST"}, name="admin_meta_access_level_delete")
-     */
-    public function delete(Request $request, MetaAccessLevel $object): Response
-    {
-        if (!$this->isCsrfTokenValid('delete', $request->request->get('token'))) {
-            return $this->redirectToRoute('admin_meta_access_level_index');
+        switch ($operation) {
+
+            case "rename_node":
+                $node->setName($node['text']);
+                break;
+
+            case "move_node":
+                $node->setParent($parent);
+                $nestedTreeRepository->persistAsLastChild($node);
+                break;
+
+            case "create_node":
+                if ($parent) {
+                    $nestedTreeRepository->persistAsLastChildOf($node, $parent);
+                } else {
+                    $nestedTreeRepository->persistAsFirstChild($node);
+                }
+                break;
+
+            case "delete_node":
+                $entityManager->remove($node);
+                $nestedTreeRepository->reorder($node, 'name');
+                $nestedTreeRepository->recover();
+                break;
+
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($object);
-        $em->flush();
+        $entityManager->flush();
 
-        $this->addFlash('success', 'resource.access_level.deleted_successfully');
-
-        return $this->redirectToRoute('admin_meta_access_level_index');
+        return new JsonResponse(['id' => $node->getId()]);
     }
 }

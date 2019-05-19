@@ -50,6 +50,7 @@ class SearchFormPreparator
             $choices = $this->getChoices($child, $type);
 
             $json[$field] = array_filter([
+                'id' => $child['name'],
                 'name' => $child['full_name'],
                 'type' => $type,
                 'help' => isset($child['help']) ? $this->translator->trans($child['help']) : '',
@@ -58,7 +59,6 @@ class SearchFormPreparator
                 'expanded' => $child['expanded'] ?? false,
                 'choices' => is_array($choices)?$choices:null,
                 'value' => !is_array($choices)?$choices:null,
-
             ]);
 
         }
