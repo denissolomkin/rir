@@ -55,7 +55,6 @@ class ResourceController extends AbstractController
 
             $resourceFile = new File();
             $resourceFile
-                ->setFilePath($file->getRealPath())
                 ->setFileName($file->getClientOriginalName())
                 ->setSize($file->getSize())
                 ->setExtension($file->guessClientExtension())

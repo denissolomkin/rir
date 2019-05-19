@@ -5,7 +5,7 @@
 {% block main %}
     <h1>{{ 'title.resource.new'|trans }}</h1>
 
-    {% if false and form is defined %}
+    {% if not form.vars.valid %}
         {{ form(form) }}
     {% else %}
         {% include 'author/resource/drug-and-drop.html.twig' %}

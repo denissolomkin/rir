@@ -11,6 +11,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\File;
 use App\Entity\MetaCategory;
 use App\Entity\Resource;
 use App\Entity\MetaAccessLevel;
@@ -21,18 +22,26 @@ use App\Entity\MetaKeyword;
 use App\Entity\MetaPurpose;
 use App\Entity\MetaMedia;
 use App\Entity\User;
+use App\Utils\FileUploader;
 use App\Utils\Slugger;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture
 {
     private $passwordEncoder;
+    private $fileUploader;
     private $references = [];
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(
+        UserPasswordEncoderInterface $passwordEncoder,
+        FileUploader $fileUploader
+    )
     {
+        $this->fileUploader = $fileUploader;
         $this->passwordEncoder = $passwordEncoder;
     }
 
@@ -47,6 +56,7 @@ class AppFixtures extends Fixture
         $this->loadPurposes($manager);
         $this->loadCategories($manager);
         $this->loadResources($manager);
+        $this->loadFiles($manager);
     }
 
     private function loadUsers(ObjectManager $manager): void
@@ -281,6 +291,38 @@ class AppFixtures extends Fixture
         }
     }
 
+    private function loadFiles(ObjectManager $manager): void
+    {
+        foreach ($this->getExtensionData() as $type => $extensions) {
+            foreach ($extensions as $extension) {
+
+                $fileName = 'test.' . $extension;
+                $file = new File();
+                $file->setExtension($extension)
+                    ->setSize(rand())
+                    ->setFileName($fileName)
+                    ->setUpload($fileName)
+                ;
+
+                if (!$this->fileUploader->exists($file)) {
+
+                    $filesystem = new Filesystem();
+                    $filesystem->copy(
+                        dirname($this->fileUploader->getTargetDirectory()) . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR . $fileName,
+                        $this->fileUploader->getTargetExtensionDirectory($extension) . DIRECTORY_SEPARATOR . $fileName
+                    );
+                }
+
+                $manager->persist($file);
+                $ref = 'file-' . $extension;
+                $this->addReference($ref, $file);
+                $this->references[File::class][] = $ref;
+            }
+        }
+
+        $manager->flush();
+
+    }
 
     private function loadAccessLevels(ObjectManager $manager): void
     {
@@ -322,12 +364,13 @@ class AppFixtures extends Fixture
 
     private function getExtensionData(): array
     {
+        /** при добавлении новых файлов - не забудьте добавить физический тестовый такого же формата для фикстур */
         return [
-            'текст' => ['doc', 'txt', 'rtf'],
-            'електронні таблиці' => ['xls'],
-            'рисунок' => ['jpeg', 'jpg', 'png', 'gif', 'tiff', 'bmp'],
-            'відео' => ['avi', 'mov', 'mp4', 'mpg', 'mpeg'],
-            'аудіо' => ['mp3', 'ogg', 'wav'],
+            'текст' => ['doc', 'docx', 'txt', 'rtf'],
+            'електронні таблиці' => ['xls', 'xlsx'],
+            'рисунок' => ['jpg', 'png', 'gif', 'bmp'],
+            'відео' => ['avi', 'flv'],
+            'аудіо' => ['mp3', 'ogg'],
             'сайт' => [],
         ];
     }

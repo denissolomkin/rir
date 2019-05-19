@@ -71,7 +71,7 @@ class ResourceRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('p');
 
         /* включается политика прав доступа */
-        if($searchResource->getUser()){
+        if ($searchResource->getUser()) {
 
         }
 
@@ -186,21 +186,22 @@ class ResourceRepository extends ServiceEntityRepository
 
         if ($category = $searchResource->getCategory()) {
 
-            $ids = [];
-            /** @var User $item */
-            foreach ($collection as $item) {
-                $ids[] = $item->getId();
-            }
             $queryBuilder->join('p.category', 'c');
-            $queryBuilder->andWhere($queryBuilder->expr()->in('k.id', $ids));
 
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->gte(
+                    'c.lft',
+                    $category->getLeft()
+                )
+            );
 
-            $ids = [];
-            foreach ($collection as $item) {
-                $ids[] = $item->getId();
-            }
-            $queryBuilder
-                ->andWhere($queryBuilder->expr()->in('p.documentType', $ids));
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->lte(
+                    'c.rgt',
+                    $category->getRight()
+                )
+            );
+
         }
 
         $query = $queryBuilder
@@ -209,6 +210,9 @@ class ResourceRepository extends ServiceEntityRepository
             ->getQuery()
         ;
 
+        var_dump(
+            $query->getSQL()
+        );
         return $this->createPaginator($query, $page, $limit);
     }
 

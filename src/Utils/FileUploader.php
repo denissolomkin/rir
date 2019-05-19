@@ -2,6 +2,7 @@
 
 namespace App\Utils;
 
+use App\Entity\File;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -14,17 +15,26 @@ class FileUploader
         $this->targetDirectory = $targetDirectory;
     }
 
-    public function upload(UploadedFile $file)
+    public function exists(File $file)
+    {
+        return file_exists(
+            $this->getTargetExtensionDirectory($file->getExtension()) . '/' . $file->getUpload()
+        );
+    }
+
+    public function upload(UploadedFile $file, string $fileName = null)
     {
 
         //$fileName = Urlizer::urlize($file->getClientOriginalName()).'-'.uniqid().'.'.$file->guessExtension();
 
-        $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+        if (!$fileName) {
+            $fileName = md5(uniqid()) . '.' . $file->getClientOriginalExtension();
+        }
 
         try {
-            $file->move($this->getTargetDirectory() . '/' . $file->guessExtension(), $fileName);
+            $file->move($this->getTargetExtensionDirectory($file->getClientOriginalExtension()), $fileName);
         } catch (FileException $e) {
-            // ... handle exception if something happens during file upload
+            var_dump($e->getMessage());
         }
 
         return $fileName;
@@ -33,5 +43,10 @@ class FileUploader
     public function getTargetDirectory()
     {
         return $this->targetDirectory;
+    }
+
+    public function getTargetExtensionDirectory(string $extension)
+    {
+        return $this->getTargetDirectory() . '/' . $extension;
     }
 }

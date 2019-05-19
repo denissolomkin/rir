@@ -85,27 +85,13 @@ class SearchByUserForm extends AbstractType
                 'required' => false,
                 'multiple' => true,
             ])
-        ;
-
-        if ($this->isApi) {
-            $builder
-                ->add('category', HiddenType::class, [
-                    'help' => 'help.resource.category',
-                    'label' => 'label.resource.category',
-                    'required' => false,
-                ]);
-        } else {
-            $builder
-                ->add('category', EntityType::class, [
-                    'class' => MetaCategory::class,
-                    'help' => 'help.resource.category',
-                    'label' => 'label.resource.category',
-                    'choice_label' => 'name',
-                    'required' => false,
-                ]);
-        }
-
-        $builder
+            ->add('category', EntityType::class, [
+                'class' => MetaCategory::class,
+                'help' => 'help.resource.category',
+                'label' => 'label.resource.category',
+                'choice_label' => 'name',
+                'required' => false,
+            ])
             ->add('keywords', EntityType::class, [
                 'class' => MetaKeyword::class,
                 'label' => 'label.resource.keywords',

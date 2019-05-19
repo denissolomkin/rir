@@ -30,11 +30,6 @@ class File implements \JsonSerializable
     /**
      * @ORM\Column(type="string")
      */
-    private $filePath;
-
-    /**
-     * @ORM\Column(type="string")
-     */
     private $extension;
 
     /**
@@ -94,24 +89,6 @@ class File implements \JsonSerializable
     public function setFileName($fileName)
     {
         $this->fileName = $fileName;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFilePath()
-    {
-        return $this->filePath;
-    }
-
-    /**
-     * @param mixed $filePath
-     * @return File
-     */
-    public function setFilePath($filePath)
-    {
-        $this->filePath = $filePath;
         return $this;
     }
 
