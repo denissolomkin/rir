@@ -1,11 +1,14 @@
+
 {% extends 'base.html.twig' %}
 
 {% block body_id 'blog_index' %}
 
 {% block main %}
 
+    <div id="root"></div>
+{#
     {{ include('resource/_list.html.twig') }}
-
+#}
 {% endblock %}
 
 {% block sidebar %}
@@ -13,4 +16,6 @@
 
     {{ (_self) }}
     {{ include('_rss.html.twig') }}
+    {{ encore_entry_link_tags('js/react') }}
+    {{ encore_entry_script_tags('js/react') }}
 {% endblock %}

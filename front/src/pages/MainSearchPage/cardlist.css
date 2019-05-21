@@ -1,0 +1,30 @@
+.resourceCard {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0), 0 1px 1px rgba(0, 0, 0, 0);
+    transition: all 0.25s ease-in-out;
+   /* min-height: 320px; */
+ }
+
+.resourceCard:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    cursor: pointer;
+}
+/*
+.resourceCardBody {
+    min-height: 214px;
+}*/
+
+.cardWrapper {
+    padding-bottom: 20px;
+    min-height: 330px;
+}
+.ant-tag{
+    margin: 2px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    float: left;
+    max-width: 100%;
+}
+.ant-card-head-title{
+    white-space: normal;
+}

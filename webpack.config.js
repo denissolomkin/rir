@@ -9,6 +9,9 @@ Encore
         "window.Bloodhound": require.resolve('bloodhound-js'),
         "jQuery.tagsinput": "bootstrap-tagsinput"
     })
+    .configureBabel(function(babelConfig) {
+        babelConfig.plugins.push('transform-class-properties');
+    })
     .enableSassLoader()
     .enableVersioning()
     .enableReactPreset()
@@ -18,7 +21,7 @@ Encore
     .addEntry('js/search', './assets/js/search.js')
     .addStyleEntry('css/app', ['./assets/scss/app.scss'])
     .addStyleEntry('css/admin', ['./assets/scss/admin.scss'])
-    .addEntry('js/react', './ui/src/index.js')
+    .addEntry('js/react', './front/src/index.js')
     .splitEntryChunks()
     .enableSingleRuntimeChunk()
 ;
