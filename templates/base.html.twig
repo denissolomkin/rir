@@ -12,6 +12,8 @@
     <link rel="alternate" type="application/rss+xml" title="{{ 'rss.title'|trans }}" href="{{ path('resource_rss') }}">
     {% block stylesheets %}
         {{ encore_entry_link_tags('css/app') }}
+        {{ encore_entry_link_tags('js/react') }}
+
     {% endblock %}
 
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
@@ -211,6 +213,9 @@
 
             <div id="sidebar" class="col-sm-3">
                 {% block sidebar %}
+
+                    <div id="root"></div>
+
                     {{ render_esi(controller('Symfony\\Bundle\\FrameworkBundle\\Controller\\TemplateController::templateAction', {
                         'template': 'user/resource/about.html.twig',
                         'sharedAge': 600,
@@ -250,6 +255,7 @@
 
 {% block javascripts %}
     {{ encore_entry_script_tags('js/app') }}
+    {{ encore_entry_script_tags('js/react') }}
 {% endblock %}
 
 {# it's not mandatory to set the timezone in localizeddate(). This is done to

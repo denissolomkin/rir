@@ -24,7 +24,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  * Controller used to manage current user.
  *
  * @Route("/account")
- * @IsGranted("ROLE_USER")
  *
  * @author Romain Monteil <monteil.romain@gmail.com>
  */

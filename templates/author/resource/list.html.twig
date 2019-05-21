@@ -42,7 +42,7 @@
                             </div>
                         </div>
 
-                        <form action="{{ url('admin_resource_delete', {id: item.id}) }}" method="post" data-confirmation="true" id="delete-form">
+                        <form action="{{ url('author_resource_delete', {id: item.id}) }}" method="post" data-confirmation="true" id="delete-form">
                             <input type="hidden" name="token" value="{{ csrf_token('delete') }}" />
                             <button type="submit" class="btn btn-sm btn-block btn-danger">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
@@ -55,7 +55,7 @@
                             <i class="fa fa-eye" aria-hidden="true"></i> {{ 'action.show'|trans }}
                         </a>
 
-                        <a href="{{ path('admin_resource_edit', {id: item.id}) }}" class="btn btn-sm btn-primary">
+                        <a href="{{ path('author_resource_edit', {id: item.id}) }}" class="btn btn-sm btn-primary">
                             <i class="fa fa-edit" aria-hidden="true"></i> {{ 'action.edit'|trans }}
                         </a>
 

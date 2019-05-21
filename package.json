@@ -1,6 +1,10 @@
 {
   "devDependencies": {
+    "@babel/preset-react": "7.0.0",
     "@symfony/webpack-encore": "^0.22.0",
+    "babel-loader": "8.0.5",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
     "bloodhound-js": "^1.2.3",
     "bootstrap-sass": "^3.3.7",
     "bootstrap-tagsinput": "^0.7.1",
@@ -24,6 +28,9 @@
     "build": "encore production --progress"
   },
   "dependencies": {
+    "prop-types": "^15.7.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "yarn": "^1.13.0"
   }
 }
